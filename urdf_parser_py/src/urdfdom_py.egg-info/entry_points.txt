@@ -1,0 +1,2 @@
+[console_scripts]
+display_urdf = urdf_parser_py.display_urdf:main

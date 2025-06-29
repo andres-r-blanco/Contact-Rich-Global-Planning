@@ -1,0 +1,13 @@
+File,Number of States Under 0.01 Manipulability,Average Total Joint Norm Distance
+rovcs_weight1_contactsamplechance0.0_objreduction0.0_Min Iterations1500.csv,8.92,5.693740000000002
+rovcs_weight1_contactsamplechance0.2_objreduction0.0_Min Iterations1500.csv,9.040816326530612,5.226020408163265
+rovcs_weight0.8_contactsamplechance0.0_objreduction0.02_Min Iterations1500.csv,5.18,5.8684199999999995
+rovcs_weight1_contactsamplechance0.0_objreduction0.02_Min Iterations5000.csv,7.0,5.4479999999999995
+rovcs_weight1_contactsamplechance0.0_objreduction0.0_Min Iterations5000.csv,17.0,8.806000000000001
+rovcs_weight1_contactsamplechance0.2_objreduction0.0_Min Iterations5000.csv,8.0,4.3469999999999995
+rovcs_weight0.8_contactsamplechance0.2_objreduction0.0_Min Iterations5000.csv,8.0,5.618
+rovcs_weight0.8_contactsamplechance0.0_objreduction0.02_Min Iterations5000.csv,7.0,5.678
+rovcs_weight0.8_contactsamplechance0.0_objreduction0.0_Min Iterations5000.csv,3.0,5.929
+rovcs_weight0.8_contactsamplechance0.2_objreduction0.0_Min Iterations1500.csv,7.795918367346939,6.059938775510204
+rovcs_weight1_contactsamplechance0.0_objreduction0.02_Min Iterations1500.csv,6.56,5.499459999999999
+rovcs_weight0.8_contactsamplechance0.0_objreduction0.0_Min Iterations1500.csv,7.142857142857143,5.73834693877551

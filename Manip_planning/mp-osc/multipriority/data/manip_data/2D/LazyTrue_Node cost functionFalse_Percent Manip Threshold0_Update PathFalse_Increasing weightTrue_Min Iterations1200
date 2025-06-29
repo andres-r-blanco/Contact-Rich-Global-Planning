@@ -1,0 +1,40 @@
+Trial,5,2D Sim,True,Distance Weight,0.9,Random Seed,75,Min Iterations,1200,Lazy,True,Distance cost,0.23423728905078905,Manip Cost,7.2724410345226005,Total cost,0.4876126238877745,Node cost function,False,Percent Manip Threshold,0,Update Path,False,Increasing weight,True,Parent finding radius R,0.6,Step Size,0.2,Goal Area Sample Probability,0.05,Goal Area Delta,0.6
+Manipulability,0.081,0.163,0.24,0.235,0.162,0.114,0.079,0.078
+Distance to Last Node,0.0,0.378,0.597,0.585,0.53,0.594,0.302,0.56
+Joint 0: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 1: ,1.1,0.929,0.556,0.055,-0.472,-0.88,-0.912,-1.101
+Joint 2: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 3: ,0.1,0.436,0.893,1.185,1.125,0.694,0.393,-0.097
+Joint 4: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 5: ,0.2,0.165,0.071,0.0,0.0,0.0,0.0,-0.191
+Joint 6: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Trial,1,2D Sim,True,Distance Weight,0.9,Random Seed,15,Min Iterations,1200,Lazy,True,Distance cost,0.26875303387039184,Manip Cost,6.740104694751866,Total cost,0.5017216936621252,Node cost function,False,Percent Manip Threshold,0,Update Path,False,Increasing weight,True,Parent finding radius R,0.6,Step Size,0.2,Goal Area Sample Probability,0.05,Goal Area Delta,0.6
+Manipulability,0.081,0.164,0.265,0.254,0.206,0.165,0.145,0.079,0.081
+Distance to Last Node,0.0,0.566,0.585,0.536,0.567,0.446,0.362,0.488,0.517
+Joint 0: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 1: ,1.1,0.869,0.554,0.067,-0.485,-0.863,-0.995,-0.983,-1.1
+Joint 2: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 3: ,0.1,0.577,1.07,1.294,1.425,1.188,0.851,0.363,-0.1
+Joint 4: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 5: ,0.2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.199
+Joint 6: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Trial,2,2D Sim,True,Distance Weight,0.9,Random Seed,30,Min Iterations,1200,Lazy,True,Distance cost,0.22953939392720607,Manip Cost,7.517135728150407,Total cost,0.49189286195924153,Node cost function,False,Percent Manip Threshold,0,Update Path,False,Increasing weight,True,Parent finding radius R,0.6,Step Size,0.2,Goal Area Sample Probability,0.05,Goal Area Delta,0.6
+Manipulability,0.081,0.156,0.208,0.197,0.142,0.136,0.117,0.095,0.076
+Distance to Last Node,0.0,0.587,0.445,0.52,0.516,0.389,0.327,0.155,0.536
+Joint 0: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 1: ,1.1,0.655,0.404,-0.063,-0.578,-0.917,-1.046,-1.086,-1.106
+Joint 2: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 3: ,0.1,0.48,0.832,1.058,1.049,0.858,0.557,0.408,-0.096
+Joint 4: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 5: ,0.2,0.162,0.056,0.021,0.0,0.0,0.0,0.0,-0.183
+Joint 6: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Trial,3,2D Sim,True,Distance Weight,0.9,Random Seed,45,Min Iterations,1200,Lazy,True,Distance cost,0.22308887954898735,Manip Cost,7.5580707065629955,Total cost,0.4871482253214919,Node cost function,False,Percent Manip Threshold,0,Update Path,False,Increasing weight,True,Parent finding radius R,0.6,Step Size,0.2,Goal Area Sample Probability,0.05,Goal Area Delta,0.6
+Manipulability,0.081,0.199,0.194,0.149,0.123,0.103,0.081
+Distance to Last Node,0.0,0.595,0.553,0.572,0.499,0.575,0.583
+Joint 0: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 1: ,1.1,0.797,0.322,-0.239,-0.735,-1.09,-1.1
+Joint 2: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 3: ,0.1,0.608,0.857,0.963,0.9,0.449,-0.1
+Joint 4: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Joint 5: ,0.2,0.138,0.0,0.0,0.0,0.0,-0.198
+Joint 6: ,0.0,0.0,0.0,0.0,0.0,0.0,0.0

@@ -1,0 +1,76 @@
+Head:
+  - Face
+  - Head
+  - Forehead
+  - Occiput
+  - Right Ear
+  - Left Ear
+  - Left Eye
+  - Right Eye
+  - Nose
+  - Mouth
+  - Neck
+  - Nape
+  - Chin
+
+Left Arm:
+  - Left Arm
+  - Left Hand
+  - Left Forearm
+  - Left Upper Arm
+  - Left Shoulder
+  - Left Elbow
+  - Left Wrist
+  - Left Palm
+  - Left Knuckles
+  - Left Bicep
+  - Left Armpit
+
+Right Arm:
+  - Right Arm
+  - Right Hand
+  - Right Forearm
+  - Right Upper Arm
+  - Right Shoulder
+  - Right Elbow
+  - Right Wrist
+  - Right Palm
+  - Right Knuckles
+  - Right Bicep
+  - Right Armpit
+
+Torso:
+  - Torso
+  - Chest
+  - Breast
+  - Stomach
+  - Abdomen
+  - Umbilicus
+  - Groin
+  - Waist
+  - Upper Back
+  - Lower Back
+  - Midsection
+  - Loin
+  - Sacrum
+  - Buttock
+
+Left Leg:
+  - Left Leg
+  - Left Thigh
+  - Left Calf
+  - Left Foot
+  - Left Knee
+  - Left Kneecap
+  - Left Ankle
+  - Left Heel
+
+Right Leg:
+  - Right Leg
+  - Right Thigh
+  - Right Calf
+  - Right Foot
+  - Right Knee
+  - Right Kneecap
+  - Right Ankle
+  - Right Heel

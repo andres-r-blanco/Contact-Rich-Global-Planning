@@ -1,0 +1,4 @@
+{
+    "cmake.sourceDirectory": "/home/rishabh/Andres/Manip planning/mp-osc/pybullet_planning_master/models/franka_description",
+    "ros.distro": "noetic"
+}

@@ -1,0 +1,15 @@
+name: New model
+version: 1.0.0
+schema: v1
+models:
+  - provider: ollamna
+    model: deepseek-r1
+    name: deepseek r1
+context:
+  - provider: code
+  - provider: docs
+  - provider: diff
+  - provider: terminal
+  - provider: problems
+  - provider: folder
+  - provider: codebase

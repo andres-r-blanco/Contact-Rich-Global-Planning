@@ -1,0 +1,850 @@
+<robot name="GEN3_URDF_V12" version="1.0">
+    <material name="carbon_fiber">
+        <color rgba="0.9 0.9 0.9 1" />
+    </material>
+    <link name="base_link">
+        <inertial>
+            <origin xyz="-0.000648 -0.000166 0.084487" rpy="0 0 0" />
+            <mass value="1.697" />
+            <inertia ixx="0.004622" ixy="9E-06" ixz="6E-05" iyy="0.004495" iyz="9E-06"
+                izz="0.002079" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/base_link.STL" />
+            </geometry>
+            <material name="carbon_fiber" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/base_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="Shoulder_Link">
+        <inertial>
+            <origin xyz="-2.3E-05 -0.010364 -0.07336" rpy="0 0 0" />
+            <mass value="1.3773" />
+            <inertia ixx="0.00457" ixy="1E-06" ixz="2E-06" iyy="0.004831" iyz="0.000448"
+                izz="0.001409" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/shoulder_link.STL" />
+            </geometry>
+            <material name="carbon_fiber" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/shoulder_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Actuator1" type="revolute">
+        <origin xyz="0 0 0.15643" rpy="3.1416 2.7629E-18 -4.9305E-36" />
+        <parent link="base_link" />
+        <child link="Shoulder_Link" />
+        <axis xyz="0 0 1" />
+        <limit effort="39" velocity="0.8727" />
+    </joint>
+    <link name="HalfArm1_Link">
+        <inertial>
+            <origin xyz="-4.4E-05 -0.09958 -0.013278" rpy="0 0 0" />
+            <mass value="1.1636" />
+            <inertia ixx="0.011088" ixy="5E-06" ixz="0" iyy="0.001072" iyz="-0.000691"
+                izz="0.011255" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/half_arm_1_link.STL" />
+            </geometry>
+            <material name="carbon_fiber" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/half_arm_1_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Actuator2" type="revolute">
+        <origin xyz="0 0.005375 -0.12838" rpy="1.5708 2.1343E-17 -1.1102E-16" />
+        <parent link="Shoulder_Link" />
+        <child link="HalfArm1_Link" />
+        <axis xyz="0 0 1" />
+        <limit lower="-2.41" upper="2.41" effort="39" velocity="0.8727" />
+    </joint>
+    <link name="HalfArm2_Link">
+        <inertial>
+            <origin xyz="-4.4E-05 -0.006641 -0.117892" rpy="0 0 0" />
+            <mass value="1.1636" />
+            <inertia ixx="0.010932" ixy="0" ixz="-7E-06" iyy="0.011127" iyz="0.000606"
+                izz="0.001043" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/half_arm_2_link.STL" />
+            </geometry>
+            <material name="carbon_fiber" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/half_arm_2_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Actuator3" type="revolute">
+        <origin xyz="0 -0.21038 -0.006375" rpy="-1.5708 1.2326E-32 -2.9122E-16" />
+        <parent link="HalfArm1_Link" />
+        <child link="HalfArm2_Link" />
+        <axis xyz="0 0 1" />
+        <limit effort="39" velocity="0.8727" />
+    </joint>
+    <link name="ForeArm_Link">
+        <inertial>
+            <origin xyz="-1.8E-05 -0.075478 -0.015006" rpy="0 0 0" />
+            <mass value="0.9302" />
+            <inertia ixx="0.008147" ixy="-1E-06" ixz="0" iyy="0.000631" iyz="-0.0005" izz="0.008316" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/forearm_link.STL" />
+            </geometry>
+            <material name="carbon_fiber" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/forearm_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Actuator4" type="revolute">
+        <origin xyz="0 0.006375 -0.21038" rpy="1.5708 -6.6954E-17 -1.6653E-16" />
+        <parent link="HalfArm2_Link" />
+        <child link="ForeArm_Link" />
+        <axis xyz="0 0 1" />
+        <limit lower="-2.66" upper="2.66" effort="39" velocity="0.8727" />
+    </joint>
+    <link name="SphericalWrist1_Link">
+        <inertial>
+            <origin xyz="1E-06 -0.009432 -0.063883" rpy="0 0 0" />
+            <mass value="0.6781" />
+            <inertia ixx="0.001596" ixy="0" ixz="0" iyy="0.001607" iyz="0.000256" izz="0.000399" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/spherical_wrist_1_link.STL" />
+            </geometry>
+            <material name="carbon_fiber" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/spherical_wrist_1_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Actuator5" type="revolute">
+        <origin xyz="0 -0.20843 -0.006375" rpy="-1.5708 2.2204E-16 -6.373E-17" />
+        <parent link="ForeArm_Link" />
+        <child link="SphericalWrist1_Link" />
+        <axis xyz="0 0 1" />
+        <limit effort="9" velocity="0.8727" />
+    </joint>
+    <link name="SphericalWrist2_Link">
+        <inertial>
+            <origin xyz="1E-06 -0.045483 -0.00965" rpy="0 0 0" />
+            <mass value="0.6781" />
+            <inertia ixx="0.001641" ixy="0" ixz="0" iyy="0.00041" iyz="-0.000278" izz="0.001641" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/spherical_wrist_2_link.STL" />
+            </geometry>
+            <material name="carbon_fiber" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/spherical_wrist_2_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Actuator6" type="revolute">
+        <origin xyz="0 0.00017505 -0.10593" rpy="1.5708 9.2076E-28 -8.2157E-15" />
+        <parent link="SphericalWrist1_Link" />
+        <child link="SphericalWrist2_Link" />
+        <axis xyz="0 0 1" />
+        <limit lower="-2.23" upper="2.23" effort="9" velocity="0.8727" />
+    </joint>
+    <link name="Bracelet_Link">
+        <inertial>
+            <origin xyz="-0.000281 -0.011402 -0.029798" rpy="0 0 0" />
+            <mass value="0.5006" />
+            <inertia ixx="0.000587" ixy="3E-06" ixz="3E-06" iyy="0.000369" iyz="0.000118"
+                izz="0.000609" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/bracelet_link.STL" />
+            </geometry>
+            <material name="carbon_fiber" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/meshes/bracelet_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Actuator7" type="revolute">
+        <origin xyz="0 -0.10593 -0.00017505" rpy="-1.5708 -5.5511E-17 9.6396E-17" />
+        <parent link="SphericalWrist2_Link" />
+        <child link="Bracelet_Link" />
+        <axis xyz="0 0 1" />
+        <limit effort="9" velocity="0.8727" />
+    </joint>
+    <link name="EndEffector_Link">
+        <inertial>
+            <origin xyz="2.607703E-08 -0.06152506 -1.476509E-22" rpy="0 0 3.14159265358979" />
+            <mass value="1e-6" />
+            <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+        </inertial>
+    </link>
+    <joint name="EndEffector" type="fixed">
+        <origin xyz="0 0 -0.0615250000000001" rpy="3.14159265358979 1.09937075168372E-32 0" />
+        <parent link="Bracelet_Link" />
+        <child link="EndEffector_Link" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <link name="GraspPoint_Link">
+        <inertial>
+            <origin xyz="-1.683871E-08 0.15 -9.884628E-23" rpy="0 0 0" />
+            <mass value="1e-6" />
+            <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+        </inertial>
+    </link>
+    <joint name="GraspPoint" type="fixed">
+        <origin xyz="0 0 0.15" rpy="0 0 0" />
+        <parent link="EndEffector_Link" />
+        <child link="GraspPoint_Link" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1000">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_0.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1000_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1000_joint" type="fixed">
+        <origin xyz="-0.04250419541867655 -0.07646850041798192 0.0007855905951708805"
+            rpy="-3.0890651379540226 -1.4616505955674315 -1.7314738657660091" />
+        <parent link="SphericalWrist2_Link" />
+        <child link="Taxel_1000" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1001">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_1.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1001_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1001_joint" type="fixed">
+        <origin xyz="-1.4938605298674768e-05 -0.040050790502569544 -0.051076626480111506"
+            rpy="0.8051031730330349 1.1810370681142643 -0.8047010596119213" />
+        <parent link="SphericalWrist2_Link" />
+        <child link="Taxel_1001" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1002">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_2.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1002_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1002_joint" type="fixed">
+        <origin xyz="0.04271566985884755 -0.07873195857060433 -0.00022802633048775445"
+            rpy="-3.0885418743915634 1.4614478801616508 1.7319294614617435" />
+        <parent link="SphericalWrist2_Link" />
+        <child link="Taxel_1002" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1003">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_3.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1003_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1003_joint" type="fixed">
+        <origin xyz="-1.241750836219415e-05 -0.07730975191366674 0.0431837840229755"
+            rpy="0.7858420871596947 -1.4940900297599693 -2.3552058558069366" />
+        <parent link="SphericalWrist2_Link" />
+        <child link="Taxel_1003" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1004">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_4.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1004_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1004_joint" type="fixed">
+        <origin xyz="0.043150247276728726 -0.0001254639437208889 -0.02783098306648868"
+            rpy="-0.10804878460644929 0.10728206669616602 -1.572018748036638" />
+        <parent link="SphericalWrist1_Link" />
+        <child link="Taxel_1004" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1005">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_5.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1005_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1005_joint" type="fixed">
+        <origin xyz="-0.0002382337409993086 -0.05179760671765822 -0.06710984221647054"
+            rpy="-3.141572926305186 0.2887493170310713 1.85959195023485" />
+        <parent link="SphericalWrist1_Link" />
+        <child link="Taxel_1005" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1006">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_6.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1006_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1006_joint" type="fixed">
+        <origin xyz="-0.04318974980140639 -0.00010915210035311942 -0.02761946835919482"
+            rpy="-3.0338279148872993 -0.10703935821961919 -1.5720999606389767" />
+        <parent link="SphericalWrist1_Link" />
+        <child link="Taxel_1006" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1007">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_7.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1007_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1007_joint" type="fixed">
+        <origin xyz="-1.1618120415300221e-05 0.043922698718644126 -0.02686054939608018"
+            rpy="-3.1415753633450887 0.03470509551820333 1.5361425157308872" />
+        <parent link="SphericalWrist1_Link" />
+        <child link="Taxel_1007" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1008">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_8.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1008_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1008_joint" type="fixed">
+        <origin xyz="0.047082560876994604 0.016625508860321547 -0.046140884202656954"
+            rpy="-2.1225565301587195 -0.006017370331153238 0.35511138283130794" />
+        <parent link="ForeArm_Link" />
+        <child link="Taxel_1008" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1009">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_9.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1009_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1009_joint" type="fixed">
+        <origin xyz="-6.7198083501523495e-06 0.05300935180393007 -0.04461977697709482"
+            rpy="0.01962196621053769 1.2859131033980793 -1.5519825273381962" />
+        <parent link="ForeArm_Link" />
+        <child link="Taxel_1009" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1010">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_10.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1010_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1010_joint" type="fixed">
+        <origin xyz="-0.047097438974916264 0.016627161287515402 -0.04613586787243025"
+            rpy="2.5894382405952054 0.005855314805167655 2.7166321094460137" />
+        <parent link="ForeArm_Link" />
+        <child link="Taxel_1010" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1011">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_11.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1011_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1011_joint" type="fixed">
+        <origin xyz="-7.590645030513553e-06 0.006405133918228834 -0.06439226342932816"
+            rpy="0.7852530052851794 1.5048366469793386 -0.7866488104429923" />
+        <parent link="ForeArm_Link" />
+        <child link="Taxel_1011" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1012">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_12.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1012_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1012_joint" type="fixed">
+        <origin xyz="-8.828563007841432e-06 -0.08046080686920276 -0.059019306181966213"
+            rpy="2.3538499386692475 1.4409128165004068 -2.354328272494772" />
+        <parent link="ForeArm_Link" />
+        <child link="Taxel_1012" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1013">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_13.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1013_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1013_joint" type="fixed">
+        <origin xyz="-9.803819467654521e-06 -0.16267771019312338 -0.050246400171184896"
+            rpy="2.355099881798253 1.496349777845535 -2.3559203713851997" />
+        <parent link="ForeArm_Link" />
+        <child link="Taxel_1013" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1014">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_14.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1014_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1014_joint" type="fixed">
+        <origin xyz="-0.04173526667542263 -0.15496948117011622 -0.005150262600599035"
+            rpy="2.5046383948751085 1.33042878555269 0.839330839979433" />
+        <parent link="ForeArm_Link" />
+        <child link="Taxel_1014" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1015">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_15.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1015_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1015_joint" type="fixed">
+        <origin xyz="0.04171973319335233 -0.15497094542273304 -0.005154707682772205"
+            rpy="0.6368924235168598 1.330412382902857 -0.8394259869845486" />
+        <parent link="ForeArm_Link" />
+        <child link="Taxel_1015" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1016">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_16.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1016_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1016_joint" type="fixed">
+        <origin xyz="-5.302853516851408e-06 -0.15282581480448965 0.031012491151505076"
+            rpy="0.8199999767698127 -1.056927003774864 0.8198628370685848" />
+        <parent link="ForeArm_Link" />
+        <child link="Taxel_1016" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1017">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_17.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1017_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1017_joint" type="fixed">
+        <origin xyz="-6.150508083981775e-06 -0.07701626534250128 -0.00987434420722404"
+            rpy="0.8113037932073812 -1.1238328528427193 0.8111496978970347" />
+        <parent link="ForeArm_Link" />
+        <child link="Taxel_1017" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1018">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_18.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1018_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1018_joint" type="fixed">
+        <origin xyz="0.04775940299230756 -0.029172408330763868 -0.2301544199406168"
+            rpy="-2.4460869817984157 0.3504669400695146 1.684170583195792" />
+        <parent link="HalfArm2_Link" />
+        <child link="Taxel_1018" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1019">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_19.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1019_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1019_joint" type="fixed">
+        <origin xyz="-2.092488763690554e-06 -0.02694220419582137 -0.2644489118296661"
+            rpy="2.2999855857040767 1.5707831143460753 -2.5519764715808315" />
+        <parent link="HalfArm2_Link" />
+        <child link="Taxel_1019" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1020">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_20.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1020_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1020_joint" type="fixed">
+        <origin xyz="-0.04713575005582718 -0.026383465676048472 -0.23055139832768035"
+            rpy="2.766356220239003 0.3454780726652773 3.002022745094881" />
+        <parent link="HalfArm2_Link" />
+        <child link="Taxel_1020" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1021">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_21.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1021_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1021_joint" type="fixed">
+        <origin xyz="-1.2173507245044695e-06 -0.054580934607185494 -0.22775170878253925"
+            rpy="-3.1415806783350835 0.13439616083551265 1.7052415470541025" />
+        <parent link="HalfArm2_Link" />
+        <child link="Taxel_1021" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1022">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_22.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1022_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1022_joint" type="fixed">
+        <origin xyz="-0.0001333060986898991 -0.05338028930573722 -0.1389517161450241"
+            rpy="3.141582095148209 -0.057603831417926354 -1.6283383209798288" />
+        <parent link="HalfArm2_Link" />
+        <child link="Taxel_1022" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1023">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_23.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1023_contact_site" pos="0 0 0.02" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1023_joint" type="fixed">
+        <origin xyz="-3.23855682768594e-05 -0.05187961469696644 -0.04785172827035311"
+            rpy="3.1415814150437598 -0.03491354341370023 -1.535836086193854" />
+        <parent link="HalfArm2_Link" />
+        <child link="Taxel_1023" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1024">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_24.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1024_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1024_joint" type="fixed">
+        <origin xyz="-0.0500349226337144 -0.007382389594276225 -0.06305150607070498"
+            rpy="-3.0185224846261898 0.1212507004418315 -1.555781857794618" />
+        <parent link="HalfArm2_Link" />
+        <child link="Taxel_1024" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1025">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_25.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1025_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1025_joint" type="fixed">
+        <origin xyz="0.05086506074464583 -0.00737702635118296 -0.06455261415550584"
+            rpy="3.000600918223358 -0.13826586736296864 -1.5511845056165126" />
+        <parent link="HalfArm2_Link" />
+        <child link="Taxel_1025" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1026">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_26.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1026_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1026_joint" type="fixed">
+        <origin xyz="0.0018625242094073681 0.04412050179254166 -0.0457524543636606"
+            rpy="1.1844515798387079e-05 0.3839797815321262 1.5708540271714284" />
+        <parent link="HalfArm2_Link" />
+        <child link="Taxel_1026" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <link name="Taxel_1027">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/taxel_27.STL" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <mujoco>
+            <site name="Taxel_1027_contact_site" pos="0 0 0.01" />
+        </mujoco>
+    </link>
+
+    <joint name="Taxel_1027_joint" type="fixed">
+        <origin xyz="0.0008638901480674864 0.004619954887956686 -0.11295215320413332"
+            rpy="1.2325445467364915e-05 0.471246244125481 1.5708551857728619" />
+        <parent link="HalfArm2_Link" />
+        <child link="Taxel_1027" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+</robot>

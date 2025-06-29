@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>urdfdom_py</name>
+  <version>1.2.1</version>
+  <description>Python implementation of the URDF parser.</description>
+
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
+
+  <license>BSD</license>
+
+  <author>Antonio El Khoury</author>
+  <author>David Lu</author>
+  <author>Eric Cousineau</author>
+  <author email="isucan@gmail.com">Ioan Sucan</author>
+  <author email="jacquelinekay1@gmail.com">Jackie Kay</author>
+  <author>Kelsey Hawkins</author>
+  <author email="sloretz@osrfoundation.org">Shane Loretz</author>
+  <author>Thomas Moulard</author>
+
+  <url type="website">http://wiki.ros.org/urdfdom_py</url>
+  <url type="bugtracker">https://github.com/ros/urdf_parser_py/issues</url>
+  <url type="repository">https://github.com/ros/urdf_parser_py</url>
+
+  <exec_depend>rclpy</exec_depend>
+
+  <exec_depend>python3-lxml</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

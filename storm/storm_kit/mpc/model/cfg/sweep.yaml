@@ -1,0 +1,69 @@
+project: learned-dynamics-sweep
+program: /home/angchen/xac/projects/world_model/multi_priority_control/multipriority/multipriority/learned_dynamics/code/scripts/train_world_model.py
+method: grid
+parameters:
+  # sequence_length:
+  #   values:
+  #     - 1
+  #     - 3
+  #     - 5
+  #     - 10
+  # horizon:
+  #   values:
+  #     - 1
+  #     - 5
+  #     - 10
+  #     - 15
+  #     - 20
+  # train_separate:
+  #   values:
+  #     - true
+  #     - false
+  # recon_loss_enabled:
+  #   values:
+  #     - true
+  #     - false
+  # train_AE_epochs:
+  #   values:
+  #     - 3
+  #     - 5
+  #     - 10
+  # AE_type: 
+  #   values:
+  #     - 'AE'
+  #     - 'VAE'
+
+  # hidden_size: 
+  #   values:
+  #     - 16
+  #     - 64
+  #     - 256
+  #     - 1024
+
+  # dyn_hidden_size: 
+  #   values:
+  #     - 32
+  #     - 128
+  #     - 512
+  #     - 2048
+
+  AE_num_layers: 
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+
+  Dyn_num_layers: 
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+
+  simnorm_dim: 
+    values:
+      - 2
+      - 8
+      - 16
+

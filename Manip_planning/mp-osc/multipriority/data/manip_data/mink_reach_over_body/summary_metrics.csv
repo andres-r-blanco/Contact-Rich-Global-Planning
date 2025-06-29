@@ -1,0 +1,5 @@
+File,Number of States Under 0.01 Manipulability,Average Total Joint Norm Distance
+mink_reach_weight0.8_contactsamplechance0.0_objreduction0.0_Min Iterations2000.csv,3.1785714285714284,1.2524285714285714
+mink_reach_weight1_contactsamplechance0.0_objreduction0.0_Min Iterations2000.csv,3.5714285714285716,1.0475714285714286
+mink_reach_weight1_contactsamplechance0.0_objreduction0.02_Min Iterations2000.csv,3.413793103448276,1.1061724137931035
+mink_reach_weight0.8_contactsamplechance0.0_objreduction0.02_Min Iterations2000.csv,2.206896551724138,1.1053793103448275

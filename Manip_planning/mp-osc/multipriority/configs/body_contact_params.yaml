@@ -1,0 +1,49 @@
+b0:
+  goalF: 0
+  force: 0
+  Kp: [20, 20, 13]
+  Kd: [0.5, 0.7, 0.1]
+  soft_factor: 0.0
+  priority: 0
+b1:
+  goalF: 0
+  force: 0
+  Kp: [20, 20, 13]
+  Kd: [0.5, 0.7, 0.1]
+  soft_factor: 0.0
+  priority: 0
+b2:
+  goalF: 1
+  force: 3
+  Kp: [20, 20, 13]
+  Kd: [0.5, 0.7, 0.1]
+  soft_factor: 0.0
+  priority: 0
+b3:
+  goalF: 0
+  force: 0
+  Kp: [20, 20, 13]
+  Kd: [0.5, 0.7, 0.1]
+  soft_factor: 0.0
+  priority: 0
+b4:
+  goalF: 1
+  force: 3
+  Kp: [20, 20, 13]
+  Kd: [0.5, 0.7, 0.1]
+  soft_factor: 0.0
+  priority: 0
+b5:
+  goalF: 0
+  force: 0
+  Kp: [20, 20, 13]
+  Kd: [0.5, 0.7, 0.1]
+  soft_factor: 0.0
+  priority: 0
+b6:
+  goalF: 0
+  force: 0
+  Kp: [20, 20, 13]
+  Kd: [0.5, 0.7, 0.1]
+  soft_factor: 0.0
+  priority: 0

@@ -1,0 +1,81 @@
+b0:
+  goalF: 0
+  force: 100.0
+  Kp: [0, 0, 0] # 0.75
+  Kd: [0, 0, 0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 1
+b1:
+  goalF: 0
+  force: 100.0
+  Kp: [0, 0, 0] # 0.75
+  Kd: [0, 0, 0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 2
+b2:
+  goalF: 0
+  force: 100.0
+  Kp: [0, 0, 0] # 0.75
+  Kd: [0, 0, 0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 3
+b3:
+  goalF: 0
+  force: 100.0
+  Kp: [0, 0, 0] # 0.75
+  Kd: [0, 0, 0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 4
+b4:
+  goalF: 0
+  force: 100.0
+  Kp: [0, 0, 0] # 0.75
+  Kd: [0, 0, 0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 5
+b5:
+  goalF: 0
+  force: 100.0
+  Kp: [0, 0, 0] # 0.75
+  Kd: [0, 0, 0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 6
+b6:
+  goalF: 0
+  force: 100.0
+  Kp: [0, 0, 0] # 0.75
+  Kd: [0, 0, 0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 6
+b7:
+  goalF: 0
+  force: 100.0
+  Kp: [0, 0, 0] # 0.75
+  Kd: [0, 0, 0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 7
+b8:
+  goalF: 0
+  force: 100.0
+  Kp: [0, 0, 0] # 0.75
+  Kd: [0, 0, 0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 8

@@ -1,0 +1,250 @@
+user_0:
+  Head:
+    desired_force: 1
+    priority: 1
+    sensitivity: 0.7402831057733914
+  Left Arm:
+    desired_force: 4
+    priority: 6
+    sensitivity: 1.1428785056673343
+  Left Leg:
+    desired_force: 5
+    priority: 5
+    sensitivity: 0.9834711391315885
+  Right Arm:
+    desired_force: 1
+    priority: 4
+    sensitivity: 1.4122696915397455
+  Right Leg:
+    desired_force: 2
+    priority: 2
+    sensitivity: 1.353907524062952
+  Torso:
+    desired_force: 1
+    priority: 3
+    sensitivity: 0.9695698587136211
+user_1:
+  Head:
+    desired_force: 4
+    priority: 1
+    sensitivity: 1.6208839984165275
+  Left Arm:
+    desired_force: 5
+    priority: 6
+    sensitivity: 0.9659675933252746
+  Left Leg:
+    desired_force: 1
+    priority: 4
+    sensitivity: 0.6678041570219232
+  Right Arm:
+    desired_force: 2
+    priority: 5
+    sensitivity: 1.951387646087503
+  Right Leg:
+    desired_force: 3
+    priority: 2
+    sensitivity: 1.0663117641415756
+  Torso:
+    desired_force: 5
+    priority: 3
+    sensitivity: 0.9508847492690438
+user_2:
+  Head:
+    desired_force: 5
+    priority: 2
+    sensitivity: 1.8797356737685753
+  Left Arm:
+    desired_force: 5
+    priority: 5
+    sensitivity: 1.6168206334883999
+  Left Leg:
+    desired_force: 2
+    priority: 1
+    sensitivity: 1.605199648999287
+  Right Arm:
+    desired_force: 1
+    priority: 6
+    sensitivity: 1.864770684982525
+  Right Leg:
+    desired_force: 3
+    priority: 4
+    sensitivity: 1.5324609130498201
+  Torso:
+    desired_force: 1
+    priority: 3
+    sensitivity: 1.1928056192111156
+user_3:
+  Head:
+    desired_force: 5
+    priority: 3
+    sensitivity: 1.1147535178161374
+  Left Arm:
+    desired_force: 5
+    priority: 2
+    sensitivity: 1.9577215873841025
+  Left Leg:
+    desired_force: 2
+    priority: 1
+    sensitivity: 1.9602798251544984
+  Right Arm:
+    desired_force: 3
+    priority: 6
+    sensitivity: 1.557896558606854
+  Right Leg:
+    desired_force: 1
+    priority: 4
+    sensitivity: 1.8632152118301972
+  Torso:
+    desired_force: 4
+    priority: 5
+    sensitivity: 1.811894747230809
+user_4:
+  Head:
+    desired_force: 4
+    priority: 4
+    sensitivity: 1.3295314638108424
+  Left Arm:
+    desired_force: 2
+    priority: 1
+    sensitivity: 0.8698875916049615
+  Left Leg:
+    desired_force: 4
+    priority: 6
+    sensitivity: 1.287574076323275
+  Right Arm:
+    desired_force: 5
+    priority: 2
+    sensitivity: 0.9376049226256709
+  Right Leg:
+    desired_force: 2
+    priority: 3
+    sensitivity: 1.4653651651113242
+  Torso:
+    desired_force: 2
+    priority: 5
+    sensitivity: 1.0282427951882365
+user_5:
+  Head:
+    desired_force: 4
+    priority: 5
+    sensitivity: 0.9760812989352083
+  Left Arm:
+    desired_force: 5
+    priority: 4
+    sensitivity: 0.7988930233113136
+  Left Leg:
+    desired_force: 4
+    priority: 1
+    sensitivity: 1.9899424651839277
+  Right Arm:
+    desired_force: 4
+    priority: 3
+    sensitivity: 1.0345386235436478
+  Right Leg:
+    desired_force: 5
+    priority: 2
+    sensitivity: 0.5263109776222863
+  Torso:
+    desired_force: 1
+    priority: 6
+    sensitivity: 1.0300151866681346
+user_6:
+  Head:
+    desired_force: 5
+    priority: 4
+    sensitivity: 0.5730265149614686
+  Left Arm:
+    desired_force: 1
+    priority: 1
+    sensitivity: 0.8281154253969539
+  Left Leg:
+    desired_force: 5
+    priority: 5
+    sensitivity: 0.6832606647013255
+  Right Arm:
+    desired_force: 2
+    priority: 3
+    sensitivity: 1.5438942227661259
+  Right Leg:
+    desired_force: 1
+    priority: 6
+    sensitivity: 1.2777373172864883
+  Torso:
+    desired_force: 4
+    priority: 2
+    sensitivity: 1.2366522772167625
+user_7:
+  Head:
+    desired_force: 2
+    priority: 1
+    sensitivity: 1.5927010911920858
+  Left Arm:
+    desired_force: 4
+    priority: 5
+    sensitivity: 0.7768384911695329
+  Left Leg:
+    desired_force: 1
+    priority: 4
+    sensitivity: 1.0684619715630277
+  Right Arm:
+    desired_force: 4
+    priority: 6
+    sensitivity: 0.5922960937876534
+  Right Leg:
+    desired_force: 1
+    priority: 2
+    sensitivity: 0.5578880230369663
+  Torso:
+    desired_force: 4
+    priority: 3
+    sensitivity: 1.4005634517771612
+user_8:
+  Head:
+    desired_force: 4
+    priority: 6
+    sensitivity: 1.2537349124214763
+  Left Arm:
+    desired_force: 4
+    priority: 4
+    sensitivity: 1.8612836287989993
+  Left Leg:
+    desired_force: 4
+    priority: 2
+    sensitivity: 1.3316185830450862
+  Right Arm:
+    desired_force: 1
+    priority: 5
+    sensitivity: 1.5211999310643165
+  Right Leg:
+    desired_force: 5
+    priority: 3
+    sensitivity: 1.5089950030491313
+  Torso:
+    desired_force: 3
+    priority: 1
+    sensitivity: 1.830437190217589
+user_9:
+  Head:
+    desired_force: 3
+    priority: 5
+    sensitivity: 1.811923285091439
+  Left Arm:
+    desired_force: 5
+    priority: 4
+    sensitivity: 1.6232628883978606
+  Left Leg:
+    desired_force: 5
+    priority: 1
+    sensitivity: 1.9666145923606668
+  Right Arm:
+    desired_force: 4
+    priority: 3
+    sensitivity: 0.6246364939180108
+  Right Leg:
+    desired_force: 2
+    priority: 2
+    sensitivity: 1.5756285594436474
+  Torso:
+    desired_force: 2
+    priority: 6
+    sensitivity: 1.6180541867425915

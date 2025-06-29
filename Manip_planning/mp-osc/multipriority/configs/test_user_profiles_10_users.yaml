@@ -1,0 +1,250 @@
+user_0:
+  b0:
+    desired_force: 4
+    priority: 1
+    sensitivity: 0.5017177836075588
+  b1:
+    desired_force: 3
+    priority: 6
+    sensitivity: 0.7280464545955089
+  b2:
+    desired_force: 2
+    priority: 4
+    sensitivity: 1.4873114792117776
+  b3:
+    desired_force: 3
+    priority: 5
+    sensitivity: 1.5711196459043664
+  b4:
+    desired_force: 2
+    priority: 3
+    sensitivity: 1.4825960096484054
+  b5:
+    desired_force: 3
+    priority: 2
+    sensitivity: 1.5537962728146046
+user_1:
+  b0:
+    desired_force: 3
+    priority: 2
+    sensitivity: 1.3669519431859212
+  b1:
+    desired_force: 5
+    priority: 1
+    sensitivity: 1.9267045153372404
+  b2:
+    desired_force: 4
+    priority: 3
+    sensitivity: 1.700831016810724
+  b3:
+    desired_force: 4
+    priority: 4
+    sensitivity: 1.6062760684832125
+  b4:
+    desired_force: 5
+    priority: 5
+    sensitivity: 0.5633805082104395
+  b5:
+    desired_force: 5
+    priority: 6
+    sensitivity: 1.3825791847238178
+user_2:
+  b0:
+    desired_force: 2
+    priority: 4
+    sensitivity: 1.4112619823642774
+  b1:
+    desired_force: 1
+    priority: 6
+    sensitivity: 1.0564006793739575
+  b2:
+    desired_force: 1
+    priority: 2
+    sensitivity: 1.6143853001627984
+  b3:
+    desired_force: 4
+    priority: 3
+    sensitivity: 0.9979819775827762
+  b4:
+    desired_force: 4
+    priority: 5
+    sensitivity: 1.324485615922316
+  b5:
+    desired_force: 5
+    priority: 1
+    sensitivity: 1.5870247946822569
+user_3:
+  b0:
+    desired_force: 1
+    priority: 6
+    sensitivity: 1.0597043698924278
+  b1:
+    desired_force: 4
+    priority: 4
+    sensitivity: 0.8378415282321792
+  b2:
+    desired_force: 1
+    priority: 2
+    sensitivity: 1.7903160888519851
+  b3:
+    desired_force: 1
+    priority: 1
+    sensitivity: 0.9039377945570338
+  b4:
+    desired_force: 4
+    priority: 5
+    sensitivity: 0.8027348087311186
+  b5:
+    desired_force: 3
+    priority: 3
+    sensitivity: 1.5946474391390908
+user_4:
+  b0:
+    desired_force: 3
+    priority: 3
+    sensitivity: 1.80098109216412
+  b1:
+    desired_force: 4
+    priority: 4
+    sensitivity: 0.9012460318755211
+  b2:
+    desired_force: 3
+    priority: 2
+    sensitivity: 0.8222422188603142
+  b3:
+    desired_force: 4
+    priority: 6
+    sensitivity: 1.7595308169090775
+  b4:
+    desired_force: 5
+    priority: 5
+    sensitivity: 0.8391978986707969
+  b5:
+    desired_force: 5
+    priority: 1
+    sensitivity: 1.784124080323327
+user_5:
+  b0:
+    desired_force: 4
+    priority: 4
+    sensitivity: 1.0064777892960661
+  b1:
+    desired_force: 1
+    priority: 3
+    sensitivity: 1.9383575432462596
+  b2:
+    desired_force: 3
+    priority: 2
+    sensitivity: 1.189439409894079
+  b3:
+    desired_force: 2
+    priority: 5
+    sensitivity: 1.0035784017232192
+  b4:
+    desired_force: 4
+    priority: 6
+    sensitivity: 0.7326186366946902
+  b5:
+    desired_force: 2
+    priority: 1
+    sensitivity: 0.621108537681395
+user_6:
+  b0:
+    desired_force: 5
+    priority: 1
+    sensitivity: 0.9440828799723819
+  b1:
+    desired_force: 3
+    priority: 3
+    sensitivity: 0.8776434928966721
+  b2:
+    desired_force: 4
+    priority: 4
+    sensitivity: 1.432559818000951
+  b3:
+    desired_force: 4
+    priority: 5
+    sensitivity: 1.9642204417657163
+  b4:
+    desired_force: 2
+    priority: 6
+    sensitivity: 1.5491245833092568
+  b5:
+    desired_force: 1
+    priority: 2
+    sensitivity: 1.2499334632349535
+user_7:
+  b0:
+    desired_force: 4
+    priority: 1
+    sensitivity: 1.4281617352591713
+  b1:
+    desired_force: 4
+    priority: 5
+    sensitivity: 1.2641492822159819
+  b2:
+    desired_force: 4
+    priority: 6
+    sensitivity: 1.863061112141143
+  b3:
+    desired_force: 4
+    priority: 2
+    sensitivity: 0.9444121479239221
+  b4:
+    desired_force: 3
+    priority: 4
+    sensitivity: 1.749923194605898
+  b5:
+    desired_force: 3
+    priority: 3
+    sensitivity: 1.3704310281057737
+user_8:
+  b0:
+    desired_force: 1
+    priority: 6
+    sensitivity: 1.9573164860026937
+  b1:
+    desired_force: 2
+    priority: 5
+    sensitivity: 1.8633736061193535
+  b2:
+    desired_force: 2
+    priority: 2
+    sensitivity: 1.1356343739469996
+  b3:
+    desired_force: 1
+    priority: 1
+    sensitivity: 1.3780248962750523
+  b4:
+    desired_force: 3
+    priority: 3
+    sensitivity: 1.7906137697944169
+  b5:
+    desired_force: 3
+    priority: 4
+    sensitivity: 1.5849020138152587
+user_9:
+  b0:
+    desired_force: 1
+    priority: 3
+    sensitivity: 1.9088638866358407
+  b1:
+    desired_force: 1
+    priority: 4
+    sensitivity: 1.1886784777531503
+  b2:
+    desired_force: 4
+    priority: 5
+    sensitivity: 1.3246617921570338
+  b3:
+    desired_force: 4
+    priority: 6
+    sensitivity: 1.8440865570481466
+  b4:
+    desired_force: 1
+    priority: 2
+    sensitivity: 0.6702273958408627
+  b5:
+    desired_force: 1
+    priority: 1
+    sensitivity: 0.5278449287511615

@@ -1,0 +1,6 @@
+openai
+openai-whisper
+pvporcupine
+pvrecorder
+pydub
+wave

@@ -1,0 +1,20 @@
+b0:
+  goalF: 0
+  min_force: 2
+  max_force: 15
+  Kp: [300,300,300] # 0.75 Kp: [3.9,1.5, 1.5]
+  Kd: [0.0, 0.0, 0.0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 1
+b1:
+  goalF: 5
+  min_force: 2
+  max_force: 15
+  Kp: [50,50,50] # 0.75 Kp: [3.9,1.5, 1.5]
+  Kd: [0.0, 0.0, 0.0]
+  Ki: [0.0, 0.0, 0.0]
+  soft_factor: 1.0
+  time_scale: 1
+  priority: 1

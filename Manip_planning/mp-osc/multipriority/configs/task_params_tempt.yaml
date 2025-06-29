@@ -1,0 +1,9 @@
+Kp:  [0, 0, 0]
+Kd:  [0, 0, 0]
+Kp_ori: [0, 0, 0]
+scheduling: 0.02
+Kp_scheduled: [3, 3, 3]
+Kd_scheduled: [0.1, 0.1, 0.1]
+Kd_ori: 47
+
+velocity_limit: 0.7

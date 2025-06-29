@@ -1,0 +1,157 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+%Template version as of 6/27/2024
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{setspace}
+\usepackage{algorithmicx}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Manipulability-Based Long-Horizon Planning for Whole Arm Contact and Human-Aware MPC
+*\\
+
+\thanks{Identify applicable funding agency here. If none, delete this.}
+}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address or ORCID}
+}
+
+\maketitle
+
+\begin{abstract}
+In this paper, we propose an offline planning strategy for robot arms 
+equipped with external force sensors. The manipulability of sensors 
+closest to obstacles is incorporated into RRT* so as to find trajectories 
+that best allow force-regulating reactive controllers such as MPC to adjust 
+to movements in dynamic and uncertain environments such as human assistance 
+scenarios. The greater freedom of movement afforded by this higher manipulability 
+ensures the robot is able to remain compliant to changes in contact forces with 
+minimal disruption to its task. This combination of offline planning and online 
+control is implemented on 7 DOF robot arm equipped with CushSense taxels [1].
+\end{abstract}
+
+\begin{IEEEkeywords}
+whole-arm contact, pHRI, manipulation.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Robotics research is moving from avoiding contacts to embracing them. The need for robots that can physically interact with and around humans in a safe, efficient manner is clear. For example, over XXXX people need assistance with activities of daily living globally. Moreover, there is an ever pressing need from blue collar workers for reliable robotic partners that don’t just replace humans, but work alongside them. Humans often move in unpredictable ways, making contact and collisions much more likely while making it difficult to ensure safe robotic manipulation in pHRI scenarios.
+
+In some situations, contact mitigation and harm reduction is enough. The current most common approaches for safe robot motion around humans focuses on minimizing the potential for injury via either pre-collision strategies or a changing robot behavior. A combination of various strategies can be used. Firstly, focus can be placed on reducing energy from collisions, such as through lightweight manufacturing, passive compliance, soft skin, or backdrivable motors [12], [13], [14]. Other researchers have focused on using various sensors such as RGB-D to plan and control robots so as to avoid humans or lower the potential for harm upon collision by either predicting human motion, planning around humans, or reducing robot speed and control parameters when close to humans [14]. While these approaches might effectively avoid collisions entirely or improve the safety of undesired collisions, in a large number of pHRI situations robots cannot perform many key tasks without intentionally making whole-arm contact with humans, not just at the end effector. For example, scenarios such as human transportation, dressing, or collaborative object manipulation cannot be done without human-robot contact. Each requires explicit sharing of forces between humans and robots at contact points. Even when collaboration is not directly required, the cluttered nature of many pHRI scenarios and proximity to humans means that permitting contacts across an entire robot arm can allow for more feasible end-effector poses, more reliable robot manipulation, and faster task completion [2]. When obstacles are forced to be avoided, a clearance distance is needed around all objects. On the other hand, allowing not just contacts, but partial penetration (thanks to squishy material) as part of a trajectory planning allows for a much larger set of possibilities for robot motion. 
+
+Safely allowing and managing these contacts as part of a robot trajectory is a key challenge of pHRI [3]. The state of the art method for dealing with intentional whole arm contacts for pHRI relies on using admittance or impedance control (such as with model predictive control (MPC)) to regulate contact forces and inform robot motion [2], [4], [6], [15]. Joint sensors or force/torque sensors are often used to detect these forces, as are external whole arm tactile sensors (taxels) such as CushSense [1], their advantage being less noisy reading and the prevention of information loss from multiple contacts. A key benefit using controllers for safe contacts is the ability of controllers to react to sudden human movements and collisions while ensuring intentional contacts are kept within safe force limits; however, these controllers suffer from various drawbacks. Firstly, even with techniques such as using feed-forward control, compensating for post-sensor inertia, optimizing for robot stiffness, or using virtual damping, regulating contact forces is not extremely accurate, fast, or easy to accomplish… no robot dynamics model is perfect [17]. The controllers also suffer from their potential to reach local minima due to the possibility for non-convex constraint sets. Finally, reactive controllers are completely reliant on the ability for the robot arm to compliantly move near contact points [2]. 
+
+These issues mainly arise from the fact that controllers operate on a short-horizon; therefore, we believe combining an offline high level planner with a reactive controller to be a promising strategy thanks to its potential to mitigate the downsides of each method. Using a trajectory for MPC to follow will naturally prevent reaching local minima, but how can such planning ensure that the controller will be resistant to collisions from dynamic obstacles by both being compliant and able to properly regulate forces. If a trajectory which allows for maximum freedom of movement at contact points is selected, we hypothesized that a reactive controller would have a much greater guarantee of its ability to remain compliant and safely respond to obstacle movements. In particular, we propose to focus on approaching this issue through the use of manipulability, a metric that has long been used for avoiding singularities and ensuring robot freedom of motion. The manipulability ellipsoid at a point on a robot allows us to infer its capacity for movement in task space given its current configuration. This metric has been shown to be able to be incorporated into sampling based planning methods through its addition to the node cost function [5].
+
+In this paper we describe our offline planning method for providing optimal trajectories to a whole arm contact force regulating model predictive control (MPC). Our strategy incorporates manipulability at the location of the haptic taxels nearest to obstacles into the cost function for RRT*. We adjust the weight of this manipulability cost based on the signed distance between the soft taxels and obstacles, penalizing higher levels of penetration. The proposed approach is most suitable to pHRI scenarios requiring large robot arm motion close to humans with both significant probability for minor obstacle movement and uncertainty in the model environment. Due to the need for large area coverage, assistive bathing is a particularly prime example of a relevant application for our method.
+
+
+
+\section{Related Work}
+
+\textbf{Controllers for Safe Whole-Arm Contact}
+
+Controllers for whole arm contact are generally focused on admittance control (sensing forces before movement), yet a variety of sensor modalities focused on lowering bandwidth are used across literature. Mariotti uses 6D force torque sensors to perform admittance control on an industrial arm to distinguish soft intentional contacts with accidental collisions, reacting accordingly [15]. In [16], controller schemes are switched from a task-focused controller to a reaction focused one once an undesired physical collision is detected. More focused on robot assistance, Grice et al. [2] use an MPC controller to regulate contact forces based on force feedback across a haptic skin covering a whole robot arm, solving a quadratic program on a quasi-static model at each time-step. Their method allows a target end-effector pose and orientation to be reached, and is demonstrated in various pHRI scenarios involving people with mobility issues, including safe human contact for shaving. In [4] a similar method is utilized using joint level measurements, with QP being used to smoothen discontinuities from breaking and making contact, while in [6] MPC controller is proposed for safe whole arm contacts using distributed tactile sensors. None of these methods address 
+
+\textbf{Contact-aware Planning}
+
+Contact-aware long-horizon whole arm manipulation in literature generally relies on contact sampling and quasi-dynamic assumptions. For example, Natarajan et al.’s INSAT [10] focuses on bracing to make the most of a robot arm’s limited torque by utilizing successive trajectory optimization to provide costs for a low-dimensional graph searched with A*, while [11] implements RRT through contact for in-hand manipulation by averaging sampled contact modes. [18] demonstrates a time-optimal planner paired with admittance control for cooperative robot grasping and object manipulation through using dynamic programming and a virtual penetration to ensure stability in admittance control. Although these methods allow for contacts, none of these methods address the selection of trajectories which would allow for robots to properly regulate contact forces or move away without much disturbance. Robot ease of movement or manipulability along the arm is not discussed. 
+
+\textbf{Manipulability Maximization Planning}
+
+On the other hand, manipulability focused past planning research has almost exclusively focused on manipulability at an arm end effector. In particular, Shen et al propose a task space sampling-based integration of manipulability via it’s addition to RRT* cost function by weighing it alongside distance for each node and using the inverse kinematic solution with the highest manipulability [5]. Other methods have included maximizing manipulability via continuous-time trajectory optimization, both via treating the trajectory as a Gausian process in joint space [9], as well as implementing STOMP after RRT [10]. To the author’s knowledge, none of these methods incorporate manipulability at varying locations around the arm, allow for contacts, or focus on manipulability with regards to the distance between points on the arm and obstacles. Moreover, none are used in the context of pHRI, focus on use with force regulating controllers
+
+
+\noindent\textbf{Algorithm 1:} \textbf{Basic RRT* Construction Algorithm.}
+
+\vspace{1ex}
+
+\noindent\textbf{Result:} Build an RRT* Tree \\
+\textbf{Input:} Initial position $x_s$, goal position $x_g$, vertex number $K$, and step size $\epsilon$; \\
+\textbf{Output:} RRT* tree $\mathcal{T}$;
+
+\begin{algorithm}[H]
+\For{$k = 1$ \textbf{to} $K$}{
+    $x_r \leftarrow \text{RandomState}();$ \\
+    $x_{\text{nearest}} \leftarrow \text{NearestVertex}(x_r, \mathcal{T});$ \\
+    $x_{\text{new}} \leftarrow \text{NewVertex}(x_r, x_{\text{nearest}}, \epsilon);$ \\
+    $x_{\text{new}}.x_{\text{parent}} \leftarrow \text{FindParent}(x_{\text{new}}, \mathcal{T}, \mathcal{C}, R);$ \\
+    $x_{\text{new}}.c_{\text{new}} \leftarrow \text{UpdateCost}(\mathcal{C}, x_{\text{new}}, x_{\text{parent}});$ \\
+    $\mathcal{T}.\text{AddVertex}(x_{\text{new}}, x_{\text{nearest}});$ \\
+    $\mathcal{T}.\text{AddEdge}(x_{\text{parent}}, x_{\text{new}});$ \\
+    \textbf{return} $\mathcal{T};$
+}
+\end{algorithm}
+
+\vspace{1ex}
+\noindent\textbf{Result:} Find a minimum-cost path \\
+\textbf{Input:} Parent of the goal $x_{\text{parent}} = x_g.x_{\text{parent}}$, RRT* tree $\mathcal{T}$; \\
+\textbf{Output:} Optimal Path $\mathcal{P}_d$;
+
+\begin{algorithm}[H]
+\While{$x_{\text{parent}} \neq x_s$}{
+    $x_{\text{parent}} = x_{\text{parent}}.x_{\text{parent}};$ \\
+    $x_p = x_{\text{parent}};$ \\
+    $\mathcal{P}_d.\text{AddWayPoint}(x_p);$ \\
+    \textbf{return} $\mathcal{P}_d;$
+}
+\end{algorithm}
+
+
+
+\begin{thebibliography}{00}
+    \bibitem{b1} B. Xu et al., ``CushSense: Soft, Stretchable, and Comfortable Tactile-Sensing Skin for Physical Human-Robot Interaction,'' 2024 IEEE International Conference on Robotics and Automation (ICRA), 2024, pp. 5694--5701.
+
+    \bibitem{b2} P. M. Grice, M. D. Killpack, A. Jain, S. Vaish, J. Hawke, and C. C. Kemp, ``Whole-arm tactile sensing for beneficial and acceptable contact during robotic assistance,'' 2013 IEEE 13th International Conference on Rehabilitation Robotics (ICORR), Seattle, WA, USA, 2013, pp. 1--8.
+    
+    \bibitem{b3} S. Bedaf, P. Marti, F. Amirabdollahian, and L. de Witte, ``A multi-perspective evaluation of a service robot for seniors: the voice of different stakeholders,'' \textit{Disabil. Rehabil. Assist. Technol.}, vol. 13, no. 6, pp. 592--599, Aug. 2018, doi: 10.1080/17483107.2017.1358300.
+    
+    \bibitem{b4} T. Pang and R. Tedrake, ``Easing Reliance on Collision-free Planning with Contact-aware Control,'' 2022 IEEE International Conference on Robotics and Automation (ICRA), IEEE Press, 2022, pp. 8375--8381.
+    
+    \bibitem{b5} H. Shen, W.-F. Xie, J. Tang, and T. Zhou, ``Adaptive Manipulability-Based Path Planning Strategy for Industrial Robot Manipulators,'' \textit{IEEE/ASME Trans. Mechatronics}, vol. 28, no. 3, pp. 1742--1753, June 2023.
+    
+    \bibitem{b6} A. Albini, F. Grella, P. Maiolino, and G. Cannata, ``Exploiting Distributed Tactile Sensors to Drive a Robot Arm Through Obstacles,'' \textit{IEEE Robot. Autom. Lett.}, vol. 6, no. 3, pp. 4361--4368, July 2021.
+    
+    \bibitem{b7} D. Park, A. Kapusta, J. Hawke, and C. C. Kemp, ``Interleaving planning and control for efficient haptically-guided reaching in unknown environments,'' 2014 IEEE-RAS International Conference on Humanoid Robots, Madrid, Spain, 2014, pp. 809--816.
+    
+    \bibitem{b8} Z. Li, M. Zamora, H. Zheng, and S. Coros, ``Embracing Safe Contacts with Contact-Aware Planning and Control,'' \textit{arXiv}, 2023, arxiv.org/abs/2308.04323.
+    
+    \bibitem{b9} F. Marić et al., ``Fast Manipulability Maximization Using Continuous-Time Trajectory Optimization,'' 2019 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS), 2019, pp. 8258--8264.
+    
+    \bibitem{b10} S. Kaden and U. Thomas, ``Maximizing Robot Manipulability along Paths in Collision-free Motion Planning,'' 2019 19th International Conference on Advanced Robotics (ICAR), Belo Horizonte, Brazil, 2019, pp. 105--110, doi: 10.1109/ICAR46387.2019.8981591.
+    
+    \bibitem{b11} R. Natarajan, G. L. Johnston, N. Simaan, M. Likhachev, and H. Choset, ``Torque-limited manipulation planning through contact by interleaving graph search and trajectory optimization,'' 2023 IEEE International Conference on Robotics and Automation (ICRA), 2023, pp. 8148--8154.
+    
+    \bibitem{b12} Y. Ayoubi, M. A. Laribi, M. Arsicault, and S. Zeghloul, ``Safe pHRI via the Variable Stiffness Safety-Oriented Mechanism (V2SOM): Simulation and Experimental Validations,'' \textit{Appl. Sci.}, vol. 10, no. 11, pp. 3810, 2020, doi: 10.3390/app10113810.
+    
+    \bibitem{b13} D. V. Gealy et al., ``Quasi-direct drive for low-cost compliant robotic manipulation,'' 2019 International Conference on Robotics and Automation (ICRA), 2019, pp. 437--443, doi: 10.1109/ICRA.2019.8794236.
+    
+    \bibitem{b14} A. Pervez and J. Ryu, ``Safe physical human-robot interaction-past, present and future,'' \textit{J. Mech. Sci. Technol.}, vol. 22, pp. 469--483, 2008, doi: 10.1007/s12206-007-1109-3.
+    
+    \bibitem{b15} E. Mariotti, E. Magrini, and A. D. Luca, ``Admittance control for human-robot interaction using an industrial robot equipped with a F/T sensor,'' 2019 International Conference on Robotics and Automation (ICRA), 2019, pp. 6130--6136, doi: 10.1109/ICRA.2019.8793657.
+    
+    \bibitem{b16} A. De Luca and F. Flacco, ``Integrated control for pHRI: Collision avoidance, detection, reaction and collaboration,'' 2012 4th IEEE RAS & EMBS International Conference on Biomedical Robotics and Biomechatronics (BioRob), Rome, Italy, 2012, pp. 288--295, doi: 10.1109/BioRob.2012.6290917.
+    
+    \bibitem{b17} M. Abdallah, A. Chen, A. Campeau-Lecours, and C. Gosselin, ``How to reduce the impedance for pHRI: Admittance control or underactuation?,'' \textit{Mechatronics}, vol. 84, 2022, doi: 10.1016/j.mechatronics.2022.102768.
+    
+    \bibitem{b18} D. Kaserer, H. Gattringer, and A. Müller, ``Time Optimal Motion Planning and Admittance Control for Cooperative Grasping,'' \textit{IEEE Robot. Autom. Lett.}, vol. 5, no. 2, pp. 2216--2223, Apr. 2020, doi: 10.1109/LRA.2020.2970644.
+    
+
+\end{thebibliography}
+
+\vspace{12pt}
+\end{document}

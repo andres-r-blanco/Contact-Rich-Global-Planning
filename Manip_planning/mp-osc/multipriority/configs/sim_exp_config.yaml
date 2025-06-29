@@ -1,0 +1,5 @@
+sim: True
+enable_trainer: False
+is_train: False
+task_controller_cfg: 'task_params.yaml'
+skeleton_contact_params: 'skeleton_contact_params.yaml'

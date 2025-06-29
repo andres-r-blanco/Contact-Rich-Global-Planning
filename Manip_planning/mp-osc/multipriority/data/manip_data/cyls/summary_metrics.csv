@@ -1,0 +1,5 @@
+File,Number of States Under 0.01 Manipulability,Average Total Joint Norm Distance
+cyls_weight1_contactsamplechance0.0_objreduction0.0_Min Iterations1000.csv,2.4583333333333335,3.920583333333333
+cyls_weight0.8_contactsamplechance0.0_objreduction0.02_Min Iterations1000.csv,1.4230769230769231,2.999153846153846
+cyls_weight0.8_contactsamplechance0.0_objreduction0.0_Min Iterations1000.csv,1.625,4.123375
+cyls_weight1_contactsamplechance0.0_objreduction0.02_Min Iterations1000.csv,2.3076923076923075,2.899192307692308
