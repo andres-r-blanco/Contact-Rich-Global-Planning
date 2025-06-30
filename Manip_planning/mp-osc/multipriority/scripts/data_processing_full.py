@@ -15,6 +15,9 @@ def detect_data_format(filepath):
     with open(filepath, 'r') as f:
         first_line = f.readline()
         second_line = f.readline()
+        # print(f"this is the file path {filepath}")
+        # print(f"this is the first line {first_line[:50]}...")
+        # print(f"this is the second line {second_line[:50]}...")
         if 'Time (s)' in second_line:
             return 'mpc'
         elif 'Trial,1,Sim Type' in first_line:
@@ -136,13 +139,39 @@ def plot_manip_vs_normalized_joint_norm_all(trials, base_path, show_plot=False):
         cumulative_distance = np.cumsum(joint_norm)
         normalized_distance = cumulative_distance / cumulative_distance[-1]
         plt.plot(normalized_distance, manip, label=f'Trial {trial_num}')
+    plt.yscale('log')  # Use log scale for y-axis
     plt.title('Manipulability vs Normalized Joint Norm Distance (All Trials)')
     plt.xlabel('Normalized Cumulative Joint Norm Distance')
-    plt.ylabel('Manipulability')
+    plt.ylabel('Manipulability (Log Scale)')
     plt.legend()
     plt.tight_layout()
     plot_dir = ensure_plot_dir(base_path)
     filename = os.path.join(plot_dir, 'AllTrials_Manip_vs_NormalizedJointNorm.png')
+    plt.savefig(filename)
+    if show_plot:
+        plt.show()
+    plt.close()
+    
+def plot_closest_taxel_vs_normalized_joint_norm(trials, base_path, show_plot=False):
+    plt.figure()
+    ax = plt.gca()
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.grid(False)
+    for trial_num, data_dict in trials.items():
+        if 'Closest Taxel ID' in data_dict and 'Joint Norm Distance' in data_dict:
+            joint_norm = data_dict['Joint Norm Distance']
+            closest_taxel = data_dict['Closest Taxel ID']
+            cumulative_distance = np.cumsum(joint_norm)
+            normalized_distance = cumulative_distance / cumulative_distance[-1]
+            plt.plot(normalized_distance, closest_taxel, label=f'Trial {trial_num}')
+    plt.title('Closest Taxel vs Normalized Joint Norm Distance (All Trials)')
+    plt.xlabel('Normalized Cumulative Joint Norm Distance')
+    plt.ylabel('Closest Taxel ID')
+    plt.legend()
+    plt.tight_layout()
+    plot_dir = ensure_plot_dir(base_path)
+    filename = os.path.join(plot_dir, 'AllTrials_ClosestTaxel_vs_NormalizedJointNorm.png')
     plt.savefig(filename)
     if show_plot:
         plt.show()
@@ -173,7 +202,7 @@ def plot_total_joint_norm_per_trial(trials, base_path, show_plot=False):
         plt.show()
     plt.close()
 
-def plot_manipulability_histogram(trials, base_path, show_plot=False, name = None):
+def plot_manipulability_histogram(trials, base_path, show_plot=False, name=None):
     all_manip = np.concatenate([trials[trial]['Manipulability'] for trial in trials])
     plt.figure()
     ax = plt.gca()
@@ -181,11 +210,15 @@ def plot_manipulability_histogram(trials, base_path, show_plot=False, name = Non
     ax.spines['right'].set_visible(False)
     ax.grid(False)
     all_manip = all_manip + 1e-15
-    bins = np.logspace(np.log10(min(all_manip)), np.log10(max(all_manip)), num=50)
+    bins = np.logspace(np.log10(1e-15), np.log10(1), num=50)
     hist, bin_edges = np.histogram(all_manip, bins=bins)
     percentages = (hist / len(all_manip)) * 100
     plt.bar(bin_edges[:-1], percentages, width=np.diff(bin_edges), edgecolor='black', align='edge')
     plt.xscale('log')
+    plt.ylim(0, 80)
+    plt.xlim(1e-15, 9)
+    ax.set_xticks([10**i for i in range(-15, 1)])  # Set ticks at every power of 10
+    ax.get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, _: f"$10^{{{int(np.log10(x))}}}$"))
     if name is not None:
         plt.suptitle(name, fontsize=9, fontweight='bold')
         plt.title('Histogram of Manipulability Across All Trials')
@@ -338,18 +371,18 @@ def compute_average_metrics_across_trials(trials, data_format, base_path, print_
 
     return mean_num_low_manip, mean_total_distance
 
-def data_processing_pipeline(file_path, print_output=False, show_plot=False):
-    trials, data_format = parse_file(file_path)
-    base_path = file_path.rsplit('.', 1)[0]
-    name = os.path.basename(file_path).rsplit('.', 1)[0]
-    compute_average_metrics_across_trials(trials, data_format, base_path, print_output)
-    plot_manip_vs_normalized_joint_norm_all(trials, base_path, show_plot)
-    plot_total_joint_norm_per_trial(trials, base_path, show_plot)
-    plot_manipulability_histogram(trials, base_path, show_plot, name = name)
-    plot_distance_vs_avg_manipulability(trials, base_path, show_plot)
-    plot_joint_values_over_distance(trials, base_path, show_plot)
-    plot_distance_vs_low_manip_states(trials, base_path, show_plot)
-    plot_manipulability_boxplot(trials, base_path, show_plot)
+# def data_processing_pipeline(file_path, print_output=False, show_plot=False):
+#     trials, data_format = parse_file(file_path)
+#     base_path = file_path.rsplit('.', 1)[0]
+#     name = os.path.basename(file_path).rsplit('.', 1)[0]
+#     compute_average_metrics_across_trials(trials, data_format, base_path, print_output)
+#     plot_manip_vs_normalized_joint_norm_all(trials, base_path, show_plot)
+#     plot_total_joint_norm_per_trial(trials, base_path, show_plot)
+#     plot_manipulability_histogram(trials, base_path, show_plot, name = name)
+#     plot_distance_vs_avg_manipulability(trials, base_path, show_plot)
+#     plot_joint_values_over_distance(trials, base_path, show_plot)
+#     plot_distance_vs_low_manip_states(trials, base_path, show_plot)
+#     plot_manipulability_boxplot(trials, base_path, show_plot)
 
 def batch_process_folder(folder_path, print_output=False, show_plot=False):
     summary_file = os.path.join(folder_path, "summary_metrics.csv")
@@ -367,6 +400,7 @@ def batch_process_folder(folder_path, print_output=False, show_plot=False):
                 avg_bad_manip_num, mean_total_distance = compute_average_metrics_across_trials(trials, data_format, base_path, print_output)
                 writer.writerow([filename, avg_bad_manip_num, mean_total_distance])
                 plot_manip_vs_normalized_joint_norm_all(trials, base_path, show_plot)
+                plot_closest_taxel_vs_normalized_joint_norm(trials, base_path, show_plot)
                 plot_total_joint_norm_per_trial(trials, base_path, show_plot)
                 plot_manipulability_histogram(trials, base_path, show_plot,name=name)
                 plot_distance_vs_avg_manipulability(trials, base_path, show_plot)
@@ -513,7 +547,7 @@ def plot_summary_metrics(folder_path, show_plots=False):
         plt.show()
 
 if __name__ == "__main__":                  
-    DATA_PATH = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/cyls"
+    DATA_PATH = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_mink_reach_over_body"
     # add_csv_extension_to_files(DATA_PATH)
     compare_manipulability_across_files(DATA_PATH)
     batch_process_folder(DATA_PATH, print_output=True, show_plot=False)
