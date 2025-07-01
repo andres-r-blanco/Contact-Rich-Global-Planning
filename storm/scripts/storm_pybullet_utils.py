@@ -87,30 +87,64 @@ def compute_signed_distance_for_link(robot_id, link_index, obstacle_id, distance
         return closest_point[8], closest_point[5], closest_point[6]
     return None, None, None
 
-def calculate_taxel_manip_and_dist(robot_id, q, obstacles):
-    closest_dist = 10000
-    closest_link = -1
-    for obs_id in obstacles:
-        for link_idx in range(9, p.getNumJoints(robot_id)):
-            dist, _, _ = compute_signed_distance_for_link(robot_id, link_idx, obs_id)
-            if dist is not None and dist < closest_dist:
-                closest_dist = dist
-                closest_link = link_idx
+def calculate_taxel_manip_and_dist(robot_id,q,obstacles):
+    lowest_signed_distances = []
+    closest_taxel_ids = []
+    manipulabilities = []
+    ends = []
+    starts = []
+    signed_dist = None
+    start1 = 0
+    end1 = 0
+    closest_taxel_id = None
+    for obstacle_id in obstacles:
+        for link_index in range(9,p.getNumJoints(robot_id)):
+            signed_dist,start,end = compute_signed_distance_for_link(robot_id, link_index, obstacle_id, distance_threshold=DISTANCE_THRESHOLD)
+            if signed_dist is not None and signed_dist < DISTANCE_THRESHOLD:
+                lowest_signed_distances.append(signed_dist)
+                closest_taxel_ids.append(link_index)
+                ends.append(end)
+                starts.append(start)
+    if not lowest_signed_distances: 
+        return [1], [10000], [-1]
+    
+    for i, closest_taxel_id  in enumerate(closest_taxel_ids):
 
-    if closest_dist > DISTANCE_THRESHOLD:
-        return 1.0, 10000.0, -1
+    
+        J, _ = p.calculateJacobian(robot_id, closest_taxel_id, [0, 0, 0], q.tolist(), [0]*7, [0]*7)
+        J = correct_J_form(robot_id, J)
+        JJT = np.dot(J, np.transpose(J))
+        det_JJT = np.linalg.det(JJT)
+        det_JJT = max(det_JJT, 0)
+        manipulability = np.sqrt(det_JJT)
+        manipulabilities.append(manipulability)
+        
+    return manipulabilities, lowest_signed_distances, closest_taxel_ids
 
-    J, _ = p.calculateJacobian(robot_id, closest_link, [0, 0, 0], q.tolist(), [0]*7, [0]*7)
-    J = correct_J_form(robot_id, J)
-    JJT = np.dot(J, J.T)
-    det = np.linalg.det(JJT)
-    return float(np.sqrt(max(det, 0))), closest_dist, closest_link
+# def calculate_taxel_manip_and_dist(robot_id, q, obstacles):
+#     closest_dist = 10000
+#     closest_link = -1
+#     for obs_id in obstacles:
+#         for link_idx in range(9, p.getNumJoints(robot_id)):
+#             dist, _, _ = compute_signed_distance_for_link(robot_id, link_idx, obs_id)
+#             if dist is not None and dist < closest_dist:
+#                 closest_dist = dist
+#                 closest_link = link_idx
+
+#     if closest_dist > DISTANCE_THRESHOLD:
+#         return 1.0, 10000.0, -1
+
+#     J, _ = p.calculateJacobian(robot_id, closest_link, [0, 0, 0], q.tolist(), [0]*7, [0]*7)
+#     J = correct_J_form(robot_id, J)
+#     JJT = np.dot(J, J.T)
+#     det = np.linalg.det(JJT)
+#     return float(np.sqrt(max(det, 0))), closest_dist, closest_link
 
 # ----------------------
 # Waypoint utilities
 # ----------------------
 
-def get_js_waypoint_list(file_path, row_num):
+def get_js_waypoint_list(file_path, row_num, rows_per_trial=12):
     """Takes in a csv file path and a row number, 
     returns a list of joint space waypoints where each list contains joint values for all joints at a specific state."""
     print(row_num)
@@ -122,7 +156,7 @@ def get_js_waypoint_list(file_path, row_num):
             print(f"this rrt trial had failed moving on to next one")
             return None
         else:
-            for i in range(4, 4 + 7):
+            for i in range(rows_per_trial-7, rows_per_trial):
                 if row_num + i >= len(rows):
                     print(f"Row {row_num + i} does not exist in the file.")
                     return None
@@ -130,10 +164,14 @@ def get_js_waypoint_list(file_path, row_num):
                 js_row = list(map(float, js_row[1:]))
                 # js_row.pop()  # Remove the last value if not needed
                 js_waypoint_list.append(js_row)
+                
+    
 
     # Transpose the list to get n lists of 7 values
     transposed_list = list(map(list, zip(*js_waypoint_list)))
     transposed_list = [list(map(wrap_to_pi, state)) for state in transposed_list]
+    # print(f"First value in transposed list: {transposed_list[0]}")
+    # input()
     return transposed_list
 
 def vis_waypoints(js_waypoint_list, robot_id, interpolate = True, wait = False, res = 0.05, line_color=[1, 0, 0]):
@@ -178,6 +216,41 @@ def draw_waypoints(js_waypoint_list, robot_id, line_color=[1, 0, 0]):
         if isinstance(curr_pos, np.ndarray): curr_pos = curr_pos.tolist()
         p.addUserDebugLine(prev_pos, curr_pos, lineColorRGB=line_color, lineWidth=1.5)
 
+def calculate_manip_cost(lowest_signed_distances, manips, max_penetration = 0.03):
+
+        epsilon = 1e-10
+        mu_min = 1e-10  
+        close_cost_factor1 = 1.5
+        closet_cost_factor2 = 4
+        
+        manip_costs = []
+        for i, lowest_signed_distance in enumerate(lowest_signed_distances):
+            manip = manips[i]
+            mu = max(manip, epsilon)
+            scaled_manip_cost = np.log(mu) / np.log(mu_min)
+            # maps manips from [0,1] linearly ish, 0 being best manip and thus lowest cost
+            scaled_manip_cost = -math.exp(-2 * scaled_manip_cost) + 1
+            # maps manips from [0,1] exponentially, so that cost is goes up faster closer when manip is closer to 1
+            scaled_manip_cost = np.clip(scaled_manip_cost, 0.0, 1.0) # just in case
+            
+            adjusted_lsd = lowest_signed_distance + max_penetration
+            if lowest_signed_distance >= DISTANCE_THRESHOLD:
+                penetration_cost = 0
+                closeness_cost = 0
+            elif lowest_signed_distance >=0:
+                closeness_cost = math.exp(-(close_cost_factor1*(adjusted_lsd)/DISTANCE_THRESHOLD))
+                # penetration_cost = 0
+            else:
+                # penetration_cost = math.exp(-(2.5*lowest_signed_distance/MAX_PENETRATION))/(10)
+                closeness_cost = math.exp(-(closet_cost_factor2*(adjusted_lsd)/DISTANCE_THRESHOLD))
+            
+            final_manip_cost = 2*closeness_cost*scaled_manip_cost
+            manip_costs.append(final_manip_cost)
+        
+        local_manip_cost = np.sum(manip_costs)/len(manip_costs) if manip_costs else 0
+
+        return local_manip_cost
+
 # ----------------------
 # Save data utilities
 # ----------------------
@@ -187,8 +260,31 @@ def save_log_to_csv(log_data,output_path,trial):
         writer.writerow(['Trial', str(trial)])
         writer.writerow(['Time (s)'] + [str(t) for t in log_data['time']])
         writer.writerow(['Joint Norm Distance'] + [str(dist) for dist in log_data['joint_norm_distance_so_far']])
-        writer.writerow(['Manipulability'] + [str(manip) for manip in log_data['manipulability']])
-        writer.writerow(['Distance to Taxel'] + [str(dist if dist is not None else 'N/A') for dist in log_data['distance_to_taxel']])
-        writer.writerow(['Closest Taxel ID'] + [str(taxel_id if taxel_id is not None else 'N/A') for taxel_id in log_data['closest_taxel_id']])
+        # writer.writerow(['Manipulability'] + [str(manip) for manip in log_data['manipulability']])
+        manip_cost_str = ['Local Manip Cost']
+        manip_str = ['Closest Taxel Manip']
+        closest_taxel_str = ['Closest Taxel ID']
+        dist_closest_taxel_str = ['Distance to Taxel']
+        for i, manip in enumerate(log_data['manipulabilities']):
+            closest_idx = np.argmin(log_data['closest_taxel_ids'][i])
+            manip_cost = calculate_manip_cost(log_data['distance_to_taxels'][i], log_data['manipulabilities'][i])
+            manip_cost_str.append(str(manip_cost))
+            manip_str.append(str(log_data['manipulabilities'][i][closest_idx]))
+            if log_data['closest_taxel_ids'][i][closest_idx] is not None:
+                closest_taxel_str.append(str(log_data['closest_taxel_ids'][i][closest_idx]))
+            else:
+                closest_taxel_str.append('N/A')
+            if log_data['distance_to_taxels'][i][closest_idx] is not None:
+                dist_closest_taxel_str.append(str(log_data['distance_to_taxels'][i][closest_idx]))
+            else:
+                dist_closest_taxel_str.append('N/A')
+            
+        writer.writerow(manip_cost_str)
+        writer.writerow(manip_str)
+        writer.writerow(closest_taxel_str)
+        writer.writerow(dist_closest_taxel_str)
+        # writer.writerow(['Local Manip Cost'] + [str(manip) for manip in log_data['manipulability']])
+        # writer.writerow(['Distance to Taxel'] + [str(dist if dist is not None else 'N/A') for dist in log_data['distance_to_taxel']])
+        # writer.writerow(['Closest Taxel ID'] + [str(taxel_id if taxel_id is not None else 'N/A') for taxel_id in log_data['closest_taxel_id']])
         for joint_idx in range(7):
             writer.writerow([f'Joint {joint_idx + 1}'] + [str(q[joint_idx]) for q in log_data['joint_position']])

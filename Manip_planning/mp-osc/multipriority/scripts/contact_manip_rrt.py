@@ -65,13 +65,13 @@ NOCOL = False
 VIZ = False
 NO_DOT = False
 COL_COST_RATIO = 0.05
-DISTANCE_THRESHOLD = 0.2
+DISTANCE_THRESHOLD = 0.1
 MAX_PENETRATION = 0.03
 RANDOM_IK_CHANCE = 0
 PAUSE_TIME = 0.3
 JS_EXTEND_MAX = 1.5
-SAVE_DATA_PREFIX = "cyls"
-DATA_FOLDER_NAME = "cyls"
+SAVE_DATA_PREFIX = "reach_agg_manip_cost"
+DATA_FOLDER_NAME = SAVE_DATA_PREFIX
 # CONTACT_SAMPLE_PROB = 0
 ANGLE_DIF_ALLOWED = math.radians(45)
 DEFAULT_IK_RETRIES = 0
@@ -98,15 +98,16 @@ RANDOM_SEED = 25
 
 def new_main():
     data_gathering()
-    # trial_num = 1
-    # sIM_type = 6
-    # wEIGHT_FOR_DISTANCE =1
-    # mIN_PERCENT_MANIP_INCREASE = 0
-    # lAZY = False
-    # oLD_COST = True
-    # uPDATE_PATH = False
-    # iNCREASE_WEIGHT = False
-    # test_main(trial_num, sIM_type, wEIGHT_FOR_DISTANCE, 0.02, 0.0, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT)
+    trial_num = 1
+    sIM_type = 5
+    wEIGHT_FOR_DISTANCE = 0.9
+    mIN_PERCENT_MANIP_INCREASE = 0
+    min_iterations = 500
+    lAZY = False
+    oLD_COST = True
+    uPDATE_PATH = False
+    iNCREASE_WEIGHT = False
+    test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, 0.02, 0.0, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT)
 
 def data_gathering():
     
@@ -116,16 +117,17 @@ def data_gathering():
     oLD_COST = True
     uPDATE_PATH = False
     iNCREASE_WEIGHT = False
-    sIM_type = 6
+    min_iterations = 2500
+    sIM_type = 5
     # thresholds = [0,5,10,15,20,25]
-    weight_val = [0.8, 1]
+    weight_val = [0.8, 0.9, 1, 0.95,0.97,0.7]
     object_reduction = [0.02,0.0]
     for obj in object_reduction:
         for w in weight_val:
-            test_main(trial_num, sIM_type, w, obj, 0.0, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
+            test_main(trial_num, sIM_type, min_iterations, w, obj, 0.0, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
         # test_main(trial_num, sIM_type, w, 0.0, 0.2, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
         
-def test_main(trial_num, sIM_type, wEIGHT_FOR_DISTANCE, object_reduction, contact_sample_chance, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save = False):
+def test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, object_reduction, contact_sample_chance, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save = False):
     sIM_2D = False
     if sIM_type == 0:
         sIM_2D = True
@@ -149,7 +151,7 @@ def test_main(trial_num, sIM_type, wEIGHT_FOR_DISTANCE, object_reduction, contac
         eXTEND_STEP_SIZE = 0.05
         r_FOR_PARENT = eXTEND_STEP_SIZE*2.5
     rRT_MAX_ITERATIONS = 10000
-    rRT_MIN_ITERATIONS = 1000
+    rRT_MIN_ITERATIONS = min_iterations
     xyz_gOAL_TOLERANCE = 0.01
     gOAL_SAMPLE_PROB = 0.05
     
@@ -444,18 +446,6 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
     else:
         print("No path found")
 
-    # print("Manip percent difference threshold: " + str(mIN_PERCENT_MANIP_INCREASE))
-    # # print("Manip cost difference threshold: " + str(MANIP_DIF_THRESHOLD))
-    # print("Min iterations: " + str(rRT_MIN_ITERATIONS))
-    # print("Step Size: " + str(eXTEND_STEP_SIZE))
-    # print("Parent finding radius R: " + str(round(r_FOR_PARENT,3)))
-    # print("Goal Area Sample Probability: " + str(gOAL_AREA_SAMPLE_PROB))
-    # print("Distance Weight: " + str(wEIGHT_FOR_DISTANCE))
-    # print('Distance cost: ' + str(node_path[-1].d_cost))
-    # print("Manip cost: " + str(node_path[-1].manip_cost))
-    # print('Total cost: ' + str(node_path[-1].total_cost))
-    # plot_manip(node_path)
-    # plot_dist(node_path)
     print('Done?')
     if VIZ:
         wait_for_user()
@@ -469,7 +459,8 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
 def print_path_stuff(node_path):
     i = 1
     for node in node_path:
-        print(f"node {i} lsd: {str(round(node.lowest_signed_distance,4))}, cumulative manip cost: {str(round(node.manip_cost,4))}")
+        rounded_distances = [round(dist, 4) for dist in node.lowest_signed_distances]
+        print(f"node {i} lsd: {str(rounded_distances)}, cumulative manip cost: {str(round(node.manip_cost,4))}")
         i += 1
 
 class RRT_BASE(object):
@@ -509,8 +500,8 @@ class RRT_BASE(object):
         self.xyz_limits = xyz_limits
         self.reference_quat = reference_quat
         self.yzx_euler_angle_limits = yzx_euler_angle_limits
-        manipulability, lowest_signed_distance,closest_taxel_id = self.calculate_taxel_manip_and_dist(self.q_init)
-        self.nodes = [TreeNode(self.xyz_quat_start, self.q_init, manipulability=manipulability,lowest_signed_distance=lowest_signed_distance, closest_taxel_id=closest_taxel_id)]
+        manipulabilities, lowest_signed_distances,closest_taxel_ids = self.calculate_taxel_manip_and_dist(self.q_init)
+        self.nodes = [TreeNode(self.xyz_quat_start, self.q_init, manipulabilities=manipulabilities,lowest_signed_distances=lowest_signed_distances, closest_taxel_ids=closest_taxel_ids)]
         self.extend_step =extend_step
         self.max_samples = max_samples
         self.min_samples = min_samples
@@ -591,15 +582,16 @@ class RRT_BASE(object):
             self.samples_taken = self.samples_taken + 1
             # print(f"sampled target xyz: {target_xyz_quat}")
             closest_node = self.get_closest_node(target_xyz_quat) # getting nearest node
+            closest_q = closest_node.config
             # print(f"found closest node: {closest_node}")
             if sampling_goal:
                 set_joint_state(self.robot_id, closest_node.config, self.joint_indices)
                 if self.samples_taken == self.min_samples+1:
                     print("sample min reached")
-                    print(closest_node.config)
+                    print(closest_q)
                     # self.visualize_path(configs(closest_node.retrace()), line_color=[1, 0, 0])
                 if VIZ:
-                    current_pos, current_orientation = q_to_endeff(self.robot_id, closest_node.config)
+                    current_pos, current_orientation = q_to_endeff(self.robot_id, closest_q)
                     print(f"Position: {current_pos}, Orientation: {current_orientation}")
                     wait_for_user()
                 if self.goal_test(closest_node.xyz_quat):
@@ -608,15 +600,14 @@ class RRT_BASE(object):
                     return closest_node.retrace()
             if closest_node.c_sample == True or self.rng.random() > self.contact_sample_chance:
                 extended_target_xyz_quat = self.extend_fn(closest_node, target_xyz_quat) # extending from nearest node
-                # print(f"extended closest node to xyzquat: {extended_target_xyz_quat}")
                 if self.check_if_xyz_in_obstacle(extended_target_xyz_quat[0]):
-                    q = None
+                    q = None #if the xyz sample is in an obstacle don't use 
                 else:
                     random_start = self.rng.random() < RANDOM_IK_CHANCE #chance to use random IK initialization
                     q = self.mink_collision_ik(
                         target_pos=target_xyz_quat[0],
                         target_quat=None,
-                        initial_guess=closest_node.config,
+                        initial_guess=closest_q,
                         taxel_target = None,
                         random_start = random_start
                         )
@@ -624,20 +615,21 @@ class RRT_BASE(object):
             else:
                 c_sample = True
                 closest_node.c_sample = True
-                closest_taxel_id = closest_node.closest_taxel_id
+                closest_idx = np.argmin(closest_node.lowest_signed_distances)
+                closest_taxel_ids = closest_node.closest_taxel_ids
+                closest_taxel_id = closest_taxel_ids[closest_idx]
                 contact_target_xyz_quat, line_id = self.contact_sample(closest_node,closest_taxel_id)
                 if contact_target_xyz_quat is None or closest_taxel_id < 7:
                     q = None
                 else:
-                    #using goal as secondary objective
                     print("contact IK start")
-                    set_joint_state(self.robot_id, closest_node.config, self.joint_indices)
                     if VIZ:
+                        set_joint_state(self.robot_id, closest_q, self.joint_indices)
                         wait_for_user()
                     q = self.mink_collision_ik(
                         target_pos=contact_target_xyz_quat[0],
                         target_quat=None,
-                        initial_guess=q,
+                        initial_guess=closest_q,
                         taxel_target = closest_taxel_id-9,
                         random_start = False
                         )
@@ -653,23 +645,14 @@ class RRT_BASE(object):
                         if VIZ:
                             wait_for_user()
             if q is not None:
-                # print(f"no collision for viable q: {q}")
                 set_joint_state(self.robot_id, q, self.joint_indices)
-                # if VIZ: wait_for_user()
-                # wait_for_user()
-                manip, lowest_signed_distance,closest_taxel_id = self.calculate_taxel_manip_and_dist(q)
-                # print(f"returned lsd and manip: {manip}, lsd: {lowest_signed_distance}")
-                if lowest_signed_distance >= -MAX_PENETRATION:
-                    # print(f"validated manip and lsd")
+                manips, lowest_signed_distances,closest_taxel_ids = self.calculate_taxel_manip_and_dist(q)
+                if all(lowest_signed_distances) >= -MAX_PENETRATION:
                     if self.classic_rrt:
                         new_parent = closest_node
                     else:
                         new_parent = None
-                    # if new_parent is not None:
-                    #     print(f"new parent: {new_parent.xyz_quat}")
-                    #     print(self.classic_rrt)
-                    #     wait_for_user()
-                    [_,node_path] = self.create_node(extended_target_xyz_quat,q,manip, lowest_signed_distance,closest_taxel_id, new_parent = new_parent, c_sample = c_sample) # TODO maybe dont compute new parent
+                    [_,node_path] = self.create_node(extended_target_xyz_quat,q,manips, lowest_signed_distances,closest_taxel_ids, new_parent = new_parent, c_sample = c_sample) # TODO maybe dont compute new parent
                     if self.samples_taken > self.min_samples and node_path is not None:
                         print("FOUND PATH!")
                         # if self.will_update_path:
@@ -995,13 +978,14 @@ class RRT_BASE(object):
     #         return None
     #         return np.array(q_eigen)
         
-    def create_node(self, xyz_quat, q, manip, lowest_signed_distance,closest_taxel_id, c_sample = False, new_parent = None):
+    def create_node(self, xyz_quat, q, manips, lowest_signed_distances,closest_taxel_ids, c_sample = False, new_parent = None):
             same_node_idx, new_node = self.check_for_same_node(q)
             if same_node_idx < 0:
-                new_node = TreeNode(xyz_quat, q, manipulability=manip,lowest_signed_distance=lowest_signed_distance, closest_taxel_id=closest_taxel_id, c_sample = c_sample)
+                new_node = TreeNode(xyz_quat, q, manipulabilities=manips,lowest_signed_distances=lowest_signed_distances, closest_taxel_ids=closest_taxel_ids, c_sample = c_sample)
                 set_joint_state(self.robot_id, q, self.joint_indices)
                 if VIZ:
-                    dot_id = gradient_dot(self.robot_id, manip)
+                    closest_idx = np.argmin(lowest_signed_distances)
+                    dot_id = gradient_dot(self.robot_id, manips[closest_idx])
                 else:
                     dot_id = None
                 # dot(xyz_quat[0], [0.9,0,0,1])
@@ -1022,7 +1006,7 @@ class RRT_BASE(object):
                     return None, None
             new_node.parent = new_parent
             new_node.num_in_path = new_parent.num_in_path + 1
-            [new_node.total_cost, new_node.d_cost, new_node.dist_to_last, new_node.manip_cost] = self.cost_fn(new_parent,new_node)
+            [new_node.total_cost, new_node.d_cost, new_node.dist_to_last, new_node.manip_cost, new_node.node_manip_cost] = self.cost_fn(new_parent,new_node)
             if prev_node == False: 
                 self.nodes.append(new_node)
                 print(f"NODE NUMBER: {len(self.nodes)}")
@@ -1078,13 +1062,13 @@ class RRT_BASE(object):
                     col = self.collision_fn(q_interp)
                     link_state = p.getLinkState(self.robot_id, 7)
                     xyz_quat =[np.array(link_state[4]), np.array(link_state[5])]
-                    manip, lowest_signed_distance,closest_taxel_id = self.calculate_taxel_manip_and_dist(q_interp)
+                    manips, lowest_signed_distances,closest_taxel_ids = self.calculate_taxel_manip_and_dist(q_interp)
                     in_xyz_quat_lims = self.check_xyz_quat_lims(xyz_quat)
-                    if col or lowest_signed_distance < -MAX_PENETRATION or not in_xyz_quat_lims:
+                    if col or any(lowest_signed_distances) < -MAX_PENETRATION or not in_xyz_quat_lims:
                         print("failed interpolation")
                         return None
                     else:
-                        [parent_interp_node,_] = self.create_node(xyz_quat, q_interp, manip, lowest_signed_distance, closest_taxel_id, new_parent = parent_interp_node)
+                        [parent_interp_node,_] = self.create_node(xyz_quat, q_interp, manips, lowest_signed_distances, closest_taxel_ids, new_parent = parent_interp_node)
                         if parent_interp_node is None:
                             print("failed interpolation")
                             return None
@@ -1207,40 +1191,44 @@ class RRT_BASE(object):
         parent_dist_cost = start_node.d_cost
         distance_cost = normalized_dist_to_last + parent_dist_cost
         
-        lowest_signed_distance = start_node.lowest_signed_distance
-        if lowest_signed_distance >= DISTANCE_THRESHOLD:
-            penetration_cost = 0
-            closeness_cost = 0
-        elif lowest_signed_distance >=0:
-            closeness_cost = math.exp(-(2.5*lowest_signed_distance/DISTANCE_THRESHOLD))
-            penetration_cost = 0
-        else:
-            penetration_cost = math.exp(-(2.5*lowest_signed_distance/MAX_PENETRATION))/(10)
-            closeness_cost = 0
-            # print(f"lowest signed dist: {lowest_signed_distance}")
-            # print(f"col cost: {col_cost}")
-
-        # avg_manip_cost = 2 / (target_node.get_manip() + start_node.get_manip())
-        # added_manip_cost = normalized_dist_to_last * avg_manip_cost
-        # parent_manip_times_dist = parent_dist_cost * start_node.manip_cost
-        # manip_cost = (added_manip_cost + parent_manip_times_dist) / distance_cost
-        
+        lowest_signed_distances = start_node.lowest_signed_distances
+        manips = start_node.manipulabilities
         epsilon = 1e-10
-        mu_min = 1e-10  # Worst-case manipulability mapped to cost = 1
-        # Scale target manipulability to [0, 1]
-        mu = max(target_node.get_manip(), epsilon)
-        target_scaled_manip_cost = -np.log(mu) / -np.log(mu_min)
-        target_scaled_manip_cost = np.clip(target_scaled_manip_cost, 0.0, 1.0)
+        mu_min = 1e-10  
+        close_cost_factor1 = 1.5
+        closet_cost_factor2 = 4
         
-        # target_scaled_manip_cost = 1/(target_node.get_manip())
-        manip_cost = (target_scaled_manip_cost + start_node.manip_cost*start_node.num_in_path)/(1+start_node.num_in_path)
-        # print(f"manip_cost = {manip_cost} manip = {target_node.get_manip()}, parent manip_cost = {start_node.manip_cost}, num in path = {start_node.num_in_path}")
-        # wait_for_user()
-        total_cost = (1-COL_COST_RATIO)*(self.weight_dist*distance_cost + closeness_cost*manip_cost*(1-self.weight_dist)) + COL_COST_RATIO*penetration_cost
-        # total_cost = (1-COL_COST_RATIO)*(self.weight_dist*distance_cost + manip_cost*(1-self.weight_dist)) + COL_COST_RATIO*col_cost
-        # total_cost = (self.weight_dist*distance_cost + manip_cost*(1-self.weight_dist)) + col_cost
+        manip_costs = []
+        for i, lowest_signed_distance in enumerate(lowest_signed_distances):
+            manip = manips[i]
+            mu = max(manip, epsilon)
+            scaled_manip_cost = np.log(mu) / np.log(mu_min)
+            # maps manips from [0,1] linearly ish, 0 being best manip and thus lowest cost
+            scaled_manip_cost = -math.exp(-2 * scaled_manip_cost) + 1
+            # maps manips from [0,1] exponentially, so that cost is goes up faster closer when manip is closer to 1
+            scaled_manip_cost = np.clip(scaled_manip_cost, 0.0, 1.0) # just in case
+            
+            adjusted_lsd = lowest_signed_distance + MAX_PENETRATION
+            if lowest_signed_distance >= DISTANCE_THRESHOLD:
+                penetration_cost = 0
+                closeness_cost = 0
+            elif lowest_signed_distance >=0:
+                closeness_cost = math.exp(-(close_cost_factor1*(adjusted_lsd)/DISTANCE_THRESHOLD))
+                # penetration_cost = 0
+            else:
+                # penetration_cost = math.exp(-(2.5*lowest_signed_distance/MAX_PENETRATION))/(10)
+                closeness_cost = math.exp(-(closet_cost_factor2*(adjusted_lsd)/DISTANCE_THRESHOLD))
+            
+            final_manip_cost = 2*closeness_cost*scaled_manip_cost
+            manip_costs.append(final_manip_cost)
+        
+        node_weighted_manip_cost = np.sum(manip_costs)/len(manip_costs) if manip_costs else 0
+        total_manip_cost = (node_weighted_manip_cost + start_node.manip_cost*start_node.num_in_path)/(1+start_node.num_in_path)
+        # normalized_final_manip_cost = final_manip_cost * distance_cost
+        total_cost = self.weight_dist*distance_cost + distance_cost*total_manip_cost*(1-self.weight_dist) #TODO is this legit, otherwise farther goals will weight distance more??
+        # total_cost = (1-COL_COST_RATIO)*total_cost + COL_COST_RATIO*penetration_cost
 
-        return total_cost, distance_cost, distance, manip_cost
+        return total_cost, distance_cost, distance, total_manip_cost, node_weighted_manip_cost
         
 
     def argmin(self, function, nodes):
@@ -1392,9 +1380,14 @@ class RRT_BASE(object):
             return True  # The point is in the obstacle
         return False  # The point is not inside any obstacle
 
+    
     def calculate_taxel_manip_and_dist(self,q,debug_life = -1):
         set_joint_state(self.robot_id, q, self.joint_indices)
-        lowest_signed_distance = 10000
+        lowest_signed_distances = []
+        closest_taxel_ids = []
+        manipulabilities = []
+        ends = []
+        starts = []
         signed_dist = None
         start1 = 0
         end1 = 0
@@ -1402,40 +1395,27 @@ class RRT_BASE(object):
         for obstacle_id in self.obstacles:
             for link_index in range(9,p.getNumJoints(self.robot_id)):
                 signed_dist,start,end = compute_signed_distance_for_link(self.robot_id, link_index, obstacle_id, distance_threshold=DISTANCE_THRESHOLD)
-                if signed_dist is not None and signed_dist < lowest_signed_distance:
-                    lowest_signed_distance = signed_dist
-                    closest_taxel_id = link_index
-                    end1 = end
-                    start1 = start
-        if lowest_signed_distance > DISTANCE_THRESHOLD: 
-            # print(f"FAR lowest_signed_distance is : {lowest_signed_distance}")
-            return 1, 10000, -1
-        # print(f"CLOSE lowest_signed_distance is : {lowest_signed_distance}")
-        if debug_life >= 0:
-            p.addUserDebugLine(start1, end1, lineColorRGB=[0, 1, 0], lineWidth=2, lifeTime=debug_life)
-            # if TEST_Q:
-            #     p.addUserDebugLine([end1[0],-5,end1[2]], [end1[0],5,end1[2]], lineColorRGB=[1, 0, 0], lineWidth=2, lifeTime=0)
-            #     p.addUserDebugLine([-5,end1[1],end1[2]], [5,end1[1],end1[2]], lineColorRGB=[1, 0, 0], lineWidth=2, lifeTime=0)
-            #     p.addUserDebugLine([end1[0],end1[1],-5], [end1[0],end1[1],5], lineColorRGB=[1, 0, 0], lineWidth=2, lifeTime=0)
-            #     p.addUserDebugLine([start1[0],-5,start1[2]], [start1[0],5,start1[2]], lineColorRGB=[0, 0, 1], lineWidth=2, lifeTime=0)
-            #     p.addUserDebugLine([-5,start1[1],start1[2]], [5,start1[1],start1[2]], lineColorRGB=[0, 0, 1], lineWidth=2, lifeTime=0)
-            #     p.addUserDebugLine([start1[0],start1[1],-5], [start1[0],start1[1],5], lineColorRGB=[0, 0, 1], lineWidth=2, lifeTime=0)
-
-        # time.sleep(1)
-        # print("calculating jacobian")
-        # print(f"returned manip of {}, closest link index is : {closest_link_index}")
-        # print(f"q is : {q} with type {type(q)}")
-        # set_joint_state(self.robot_id, q, self.joint_indices)
-        J, _ = p.calculateJacobian(self.robot_id, closest_taxel_id, [0, 0, 0], q.tolist(), [0]*7, [0]*7)
-        # print(f"found jacobian: {J}")
-        J = correct_J_form(self.robot_id, J)
-        JJT = np.dot(J, np.transpose(J))
-        det_JJT = np.linalg.det(JJT)
-        det_JJT = max(det_JJT, 0)
-        manipulability = np.sqrt(det_JJT)
-        # print("returning lsd and manip")
+                if signed_dist is not None and signed_dist < DISTANCE_THRESHOLD:
+                    lowest_signed_distances.append(signed_dist)
+                    closest_taxel_ids.append(link_index)
+                    ends.append(end)
+                    starts.append(start)
+        if not lowest_signed_distances: 
+            return [1], [10000], [-1]
+       
+        for i, closest_taxel_id  in enumerate(closest_taxel_ids):
+            if debug_life >= 0:
+                p.addUserDebugLine(starts[i], ends[i], lineColorRGB=[0, 1, 0], lineWidth=2, lifeTime=debug_life)
         
-        return manipulability, lowest_signed_distance, closest_taxel_id
+            J, _ = p.calculateJacobian(self.robot_id, closest_taxel_id, [0, 0, 0], q.tolist(), [0]*7, [0]*7)
+            J = correct_J_form(self.robot_id, J)
+            JJT = np.dot(J, np.transpose(J))
+            det_JJT = np.linalg.det(JJT)
+            det_JJT = max(det_JJT, 0)
+            manipulability = np.sqrt(det_JJT)
+            manipulabilities.append(manipulability)
+            
+        return manipulabilities, lowest_signed_distances, closest_taxel_ids
 
     def goal_test(self, xyz_quat):
         # Check if the current configuration is within the tolerance of the goal
@@ -1458,60 +1438,60 @@ class RRT_BASE(object):
     def test_q(self):
         q1 = [0.0, -0.116, 0.0, -1.848, 0.0, 0.0, 0.0]
         set_joint_state(self.robot_id, q1, self.joint_indices)
-        manip, lowest_signed_distance,closest_taxel_id = self.calculate_taxel_manip_and_dist(q1,0)
-        print(f"manip is : {manip}")
-        print(f"lowest signed dif is : {lowest_signed_distance}")
+        manips, lowest_signed_distances,closest_taxel_ids = self.calculate_taxel_manip_and_dist(q1,0)
+        print(f"manips are : {manips}")
+        print(f"lowest signed difs are : {lowest_signed_distances}")
         wait_for_user()
         disconnect()
 
-    def update_path(self, node_path):
-        return
-        node_path2 = []
-        for node in node_path:
-            if not node_path2 or node_path2[-1].config != node.config:
-                node_path2.append(node)
-        node_path = node_path2
+    # def update_path(self, node_path):
+    #     return
+    #     node_path2 = []
+    #     for node in node_path:
+    #         if not node_path2 or node_path2[-1].config != node.config:
+    #             node_path2.append(node)
+    #     node_path = node_path2
 
-        upper = 2
-        lower = 0
-        while upper < len(node_path) and lower >= 0:
-            parent = node_path[lower]
-            target = node_path[upper]
-            initial_cost  = target.total_cost + node_path[upper-1].total_cost + parent.total_cost
-            new_nodes = []
-            new_nodes.append(parent)
-            num_steps = math.floor(np.max(np.abs(np.array(parent.config)[:]-np.array(target.config)[:]))/self.extend_step) 
-            q_list = self.interpolate_configs(parent.config, target.config, num_steps = num_steps)
-            parent_interp_node = parent
-            fail = False
-            for i in range(len(q_list)):
-                q_interp = q_list[i]
-                col = self.collision_fn(q_interp)
-                manip, lowest_signed_distance = self.calculate_taxel_manip_and_dist(q_interp)
-                if not col and lowest_signed_distance >= -MAX_PENETRATION:
-                    [parent_interp_node,_] = self.create_node(q_interp, manip, lowest_signed_distance=lowest_signed_distance) 
-                    new_nodes.append(parent_interp_node)
-                else:
-                    fail = True
-                    i = len(q_list)
-            new_cost = target.total_cost
-            for node in new_nodes:
-                new_cost = new_cost + node.total_cost
-            if fail == False and new_cost < initial_cost:
-                node_path = node_path[0:lower] + new_nodes + node_path[upper:]
-            lower = lower + 1
-            upper = upper + 1
+    #     upper = 2
+    #     lower = 0
+    #     while upper < len(node_path) and lower >= 0:
+    #         parent = node_path[lower]
+    #         target = node_path[upper]
+    #         initial_cost  = target.total_cost + node_path[upper-1].total_cost + parent.total_cost
+    #         new_nodes = []
+    #         new_nodes.append(parent)
+    #         num_steps = math.floor(np.max(np.abs(np.array(parent.config)[:]-np.array(target.config)[:]))/self.extend_step) 
+    #         q_list = self.interpolate_configs(parent.config, target.config, num_steps = num_steps)
+    #         parent_interp_node = parent
+    #         fail = False
+    #         for i in range(len(q_list)):
+    #             q_interp = q_list[i]
+    #             col = self.collision_fn(q_interp)
+    #             manip, lowest_signed_distance = self.calculate_taxel_manip_and_dist(q_interp)
+    #             if not col and lowest_signed_distance >= -MAX_PENETRATION:
+    #                 [parent_interp_node,_] = self.create_node(q_interp, manip, lowest_signed_distance=lowest_signed_distance) 
+    #                 new_nodes.append(parent_interp_node)
+    #             else:
+    #                 fail = True
+    #                 i = len(q_list)
+    #         new_cost = target.total_cost
+    #         for node in new_nodes:
+    #             new_cost = new_cost + node.total_cost
+    #         if fail == False and new_cost < initial_cost:
+    #             node_path = node_path[0:lower] + new_nodes + node_path[upper:]
+    #         lower = lower + 1
+    #         upper = upper + 1
                     
         
-        # goal = node_path[-1]
-        # node = goal
-        # while node.dist_to_last > 0:
-        #     new_parent = self.find_parent(node,0)
-        #     if new_parent is not None:
-        #         node.parent = new_parent
-        #         [node.total_cost, node.d_cost, node.dist_to_last, node.manip_cost] = self.cost_fn(new_parent,node)
-        #     node = node.parent
-        return node_path
+    #     # goal = node_path[-1]
+    #     # node = goal
+    #     # while node.dist_to_last > 0:
+    #     #     new_parent = self.find_parent(node,0)
+    #     #     if new_parent is not None:
+    #     #         node.parent = new_parent
+    #     #         [node.total_cost, node.d_cost, node.dist_to_last, node.manip_cost] = self.cost_fn(new_parent,node)
+    #     #     node = node.parent
+    #     return node_path
 
     def get_joint_limits(self):
         upper_limits = [0] * len(self.joint_indices)
@@ -1534,8 +1514,9 @@ class RRT_BASE(object):
         for node in node_path:
             config = node.config
             set_joint_state(self.robot_id, config)
-            manip = node.manipulability
-            gradient_dot(self.robot_id, manip)
+            closest_idx = np.argmin(node.lowest_signed_distances)
+            manips = node.manipulabilities
+            gradient_dot(self.robot_id, manips[closest_idx])
 
     def visualize_path(self, path, line_color=[1, 0, 0]):
         """
@@ -1960,7 +1941,6 @@ def get_taxels(robot_id, yaml_file=r'C:\Users\arbxe\OneDrive\Desktop\code stuff\
 
 
 def compute_signed_distance_for_link(robot_id, link_index, obstacle_id, distance_threshold=DISTANCE_THRESHOLD):
-    distance_threshold = 0.1 #TODO: delete
     closest_points = p.getClosestPoints(bodyA=robot_id, bodyB=obstacle_id, linkIndexA=link_index, distance=distance_threshold)
     if closest_points:
         # Extract the closest point (smallest distance)
@@ -1982,46 +1962,6 @@ def get_distance_between_bodies(body_id1, body_id2):
     # Calculate the Euclidean distance between the two positions
     distance = np.linalg.norm(np.array(pos1) - np.array(pos2))
     return distance
-
-def plot_dist(path_nodes):
-    dist = []
-    for node in path_nodes:
-        if node.dist_to_last is not None:
-            dist.append(node.dist_to_last)
-
-    dist = np.array(dist)
-    dist = [round(x, 3) for x in dist]
-
-    print("Dist:", dist)
-
-def plot_manip(path_nodes):
-    manip = []
-    for node in path_nodes:
-        manip.append(node.manipulability)
-
-    manip = np.array(manip)
-    manip = [round(x, 3) for x in manip]
-    x  = np.linspace(0, len(manip)-1, len(manip))
-    x = np.array(x)
-
-    print("Manip:", manip)
-    # print("X:", x)
-
-    # plt.figure(figsize=(8, 6))
-
-    # Plot Manip against X
-    # plt.plot(x, manip, marker='o', label='Manip Values')
-
-    # # Add titles and labels
-    # plt.title('Manip over Trajectory')
-    # plt.xlabel('Nodes')
-    # plt.ylabel('Manip Values')
-    # plt.ylim(bottom=0)  # Set the lower limit of y-axis to 0 for better visualization
-    # plt.legend()
-    # plt.grid(True)
-
-    # Show the plot
-    # plt.show(block=False)
     
 def viz_mujoco():
     # MUJOCO viz test
@@ -2115,18 +2055,22 @@ def draw_xyz_bounding_box(xyz_limits, color=[1, 0, 0], line_width=1, life_time=0
 
 class TreeNode(object):
 
-    def __init__(self, xyz_quat, config, parent=None,manipulability=0, lowest_signed_distance = DISTANCE_THRESHOLD, closest_taxel_id = -1, dist_to_last = 0, d_cost = 0, manip_cost = 0, num_in_path = 1, c_sample = False):
+    def __init__(self, xyz_quat, config, parent=None,manipulabilities=[], lowest_signed_distances = [], 
+                 closest_taxel_ids = [], dist_to_last = 0, d_cost = 0, 
+                 manip_cost = 0, node_manip_cost = 0, num_in_path = 1, 
+                 c_sample = False):
         self.xyz_quat = xyz_quat
         self.config = np.array(config)
         self.parent = parent
-        self.manipulability = manipulability
-        self.lowest_signed_distance = lowest_signed_distance
+        self.manipulabilities = manipulabilities
+        self.lowest_signed_distances = lowest_signed_distances
         self.dist_to_last = dist_to_last
         self.manip_cost = manip_cost
+        self.node_manip_cost = node_manip_cost
         self.d_cost = d_cost
         self.total_cost = manip_cost+d_cost
         self.num_in_path = num_in_path
-        self.closest_taxel_id = closest_taxel_id
+        self.closest_taxel_ids = closest_taxel_ids
         self.c_sample = c_sample
 
     #def retrace(self):
@@ -2143,7 +2087,7 @@ class TreeNode(object):
         return sequence[::-1]
 
     def get_manip(self):
-        return self.manipulability
+        return self.manipulabilities
 
     def clear(self):
         self.node_handle = None
@@ -2225,6 +2169,7 @@ def save_data (trial_num, node_path, rANDOM_SEED, sim_type,gOAL_AREA_SAMPLE_PROB
              r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,object_reduction,contact_sample_chance):
     
     manip = []
+    node_manip_cost = []
     total_costs = []
     dist_to_last = []
     if node_path is not None and len(node_path) != 0:
@@ -2237,9 +2182,16 @@ def save_data (trial_num, node_path, rANDOM_SEED, sim_type,gOAL_AREA_SAMPLE_PROB
             joint_path_matrix = np.hstack((joint_path_matrix, rounded_config))
 
         for node in node_path:
-            manip.append(node.manipulability)
+            closest_idx = np.argmin(node.lowest_signed_distances)
+            manips = node.manipulabilities
+            manip.append(manips[closest_idx])
         manip = np.array(manip)
         manip = [round(x, 20) for x in manip]
+        
+        for node in node_path:
+            node_manip_cost.append(node.node_manip_cost)
+        node_manip_cost = np.array(node_manip_cost)
+        node_manip_cost = [round(x, 20) for x in node_manip_cost]
         
         for node in node_path:
             total_costs.append(node.total_cost)
@@ -2280,9 +2232,10 @@ def save_data (trial_num, node_path, rANDOM_SEED, sim_type,gOAL_AREA_SAMPLE_PROB
                         + ["Goal Area Sample Probability"] + [str(gOAL_AREA_SAMPLE_PROB)] + ["Goal Area Delta"] + [str(gOAL_AREA_DELTA)])
         
         if len(manip) != 0:
-            writer.writerow(['Manipulability'] + manip)
+            writer.writerow(['Closest Taxel Manip'] + manip)
             writer.writerow(['Distance to Last Node'] + dist_to_last)
             writer.writerow(['Total Cost'] + total_costs)
+            writer.writerow(['Local Manip Cost'] + node_manip_cost)
         for i in range(joint_path_matrix.shape[0]):
             row = joint_path_matrix[i,:]
             row = [str(x) for x in row]

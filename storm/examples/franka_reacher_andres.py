@@ -113,8 +113,48 @@ DISTANCE_THRESHOLD = 0.2
 # from multipriority.controllers import TaskController, ContactController, MultiPriorityController
 # from multipriority.bandit import PriorityLinUCB
 # from collections import deque
+
+def main():
+    parser = argparse.ArgumentParser(description='pass args')
+    parser.add_argument('--robot', type=str, default='gen3', help='Robot to spawn')
+    parser.add_argument('--cuda', action='store_true', default=True, help='use cuda')
+    parser.add_argument('--headless', action='store_true', default=False, help='headless gym')
+    parser.add_argument('--control_space', type=str, default='acc', help='Robot to spawn')
+    parser.add_argument('--js_waypoint_csv_file', type=str, default='', help='Path to the joint space waypoint CSV file')
+    parser.add_argument('--output_save_file', type=str, default='', help='Path to the output data CSV file')
+    parser.add_argument('--trial_num', type=int, default=1, help='number of trials to run')
+    args = parser.parse_args()
+    
+    weight_list = [0.9, 1, 0.8]
+    object_reduction_list = [0.02]
+    min_iterations = 2500
+    trial_num = 30
+    
+    args.sim_type = 5
+    
+    args.trial_num = trial_num
+    # args.js_waypoint_csv_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mink_reach_over_body/mink_reach_weight0.8_contactsamplechance0.0_objreduction0.02_Min Iterations2000.csv"
+    # args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_mink_reach_over_body/mink_reach_weight0.8_contactsamplechance0.0_objreduction0.02_Min Iterations2000.csv"
+    # sim_params = load_yaml(join_path(get_gym_configs_path(),'physx.yml'))
+    # sim_params['headless'] = args.headless
+    # # gym_instance = Gym(**sim_params)
+
+    # mpc_robot_interactive(args, None)
+    for obj_reduction in object_reduction_list:
+        for w in weight_list:
+            if obj_reduction == 0.02 and w == 1:
+                continue
+            # Manually set the file path for the joint space waypoint CSV file
+            args.js_waypoint_csv_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/reach_agg_manip_cost/reach_agg_manip_cost_weight{w}_contactsamplechance0.0_objreduction{obj_reduction}_Min Iterations{min_iterations}.csv"
+            args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_pt2_reach_agg_manip_cost/reach_agg_manip_cost_mpc_weight{w}_contactsamplechance0.0_objreduction{obj_reduction}_Min Iterations{min_iterations}.csv"
+    
+            sim_params = load_yaml(join_path(get_gym_configs_path(),'physx.yml'))
+            sim_params['headless'] = args.headless
+            # gym_instance = Gym(**sim_params)
+    
+            mpc_robot_interactive(args, None)
         
-def setup_pybullet_env(sim_type = 3):
+def setup_pybullet_env(sim_type = 5):
     if p.isConnected():
         p.disconnect()
     p.connect(p.GUI)
@@ -129,7 +169,7 @@ def setup_pybullet_env(sim_type = 3):
     plane_id = p.loadURDF("plane.urdf") 
     robot_id = p.loadURDF(TACTILE_KINOVA_URDF, [0, 0, 0],useFixedBase=1)
     
-    if sim_type == 3:
+    if sim_type == 5:
         set_camera_pose(camera_point=[0.9, 0.2, 1], target_point = [0.35, -0.2, 0.13])
         box1_position = [0.35, -0.3, 0.13]
         box1_dims = [0.26,1,0.14]
@@ -212,11 +252,12 @@ def mpc_robot_interactive(args, gym_instance):
     waypoint_file_path = args.js_waypoint_csv_file
     obstacles, robot_id, plane_id = setup_pybullet_env(args.sim_type)
     row_adjust = 0
+    rows_per_trial = 12
     for trial in range(trial_num):
         print(f"trial {trial} of {trial_num}")
-        js_waypoint_list = get_js_waypoint_list(waypoint_file_path, trial*11-row_adjust)
+        js_waypoint_list = get_js_waypoint_list(waypoint_file_path, trial*rows_per_trial-row_adjust, rows_per_trial=rows_per_trial)
         if js_waypoint_list is None:
-            row_adjust += 10
+            row_adjust += rows_per_trial-1
             continue
         # js_waypoint_list = js_waypoint_list[6:]
         #add waypoints so that all are at most some distance away
@@ -311,9 +352,9 @@ def mpc_robot_interactive(args, gym_instance):
             'time': [],
             'joint_position': [],
             'joint_norm_distance_so_far': [],
-            'manipulability': [],
-            'distance_to_taxel': [],
-            'closest_taxel_id': [],
+            'manipulabilities': [],
+            'distance_to_taxels': [],
+            'closest_taxel_ids': [],
         }
         cumulative_distance = 0.0
         previous_q = init_config
@@ -391,13 +432,13 @@ def mpc_robot_interactive(args, gym_instance):
                 curr_q = current_robot_state['position']
                 step_distance = np.linalg.norm(angle_diff(curr_q, previous_q))
                 cumulative_distance += step_distance
-                manipulability, lowest_signed_distance, closest_taxel_id = calculate_taxel_manip_and_dist(robot_id, q_des[:7], obstacles)
+                manipulabilites, lowest_signed_distances, closest_taxel_ids = calculate_taxel_manip_and_dist(robot_id, q_des[:7], obstacles)
                 log_data['time'].append(curr_time)
                 log_data['joint_position'].append(curr_q.tolist())
                 log_data['joint_norm_distance_so_far'].append(cumulative_distance)
-                log_data['manipulability'].append(manipulability)
-                log_data['distance_to_taxel'].append(lowest_signed_distance)
-                log_data['closest_taxel_id'].append(closest_taxel_id)
+                log_data['manipulabilities'].append(manipulabilites)
+                log_data['distance_to_taxels'].append(lowest_signed_distances)
+                log_data['closest_taxel_ids'].append(closest_taxel_ids)
                 previous_q = curr_q
 
                 # print(f"Pybullet robot move step took {time.time() - start:.3f} seconds")
@@ -473,42 +514,5 @@ def extend_state(target_state, current_state,gain = 3):
     
 if __name__ == '__main__':
     # instantiate empty gym:
-    parser = argparse.ArgumentParser(description='pass args')
-    parser.add_argument('--robot', type=str, default='gen3', help='Robot to spawn')
-    parser.add_argument('--cuda', action='store_true', default=True, help='use cuda')
-    parser.add_argument('--headless', action='store_true', default=False, help='headless gym')
-    parser.add_argument('--control_space', type=str, default='acc', help='Robot to spawn')
-    parser.add_argument('--js_waypoint_csv_file', type=str, default='', help='Path to the joint space waypoint CSV file')
-    parser.add_argument('--output_save_file', type=str, default='', help='Path to the output data CSV file')
-    parser.add_argument('--trial_num', type=int, default=1, help='number of trials to run')
-    args = parser.parse_args()
-    
-    weight_list = [1,0.8]
-    object_reduction_list = [0.02,0.0]
-    min_iterations = 1000
-    trial_num = 30
-    
-    args.sim_type = 6    
-    
-    args.trial_num = trial_num
-    # args.js_waypoint_csv_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mink_reach_over_body/mink_reach_weight0.8_contactsamplechance0.0_objreduction0.02_Min Iterations2000.csv"
-    # args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_mink_reach_over_body/mink_reach_weight0.8_contactsamplechance0.0_objreduction0.02_Min Iterations2000.csv"
-    # sim_params = load_yaml(join_path(get_gym_configs_path(),'physx.yml'))
-    # sim_params['headless'] = args.headless
-    # # gym_instance = Gym(**sim_params)
-
-    # mpc_robot_interactive(args, None)
-    for obj_reduction in object_reduction_list:
-        for w in weight_list:
-            if obj_reduction == 0.02 and w == 1:
-                continue
-            # Manually set the file path for the joint space waypoint CSV file
-            args.js_waypoint_csv_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/cyls/cyls_weight{w}_contactsamplechance0.0_objreduction{obj_reduction}_Min Iterations{min_iterations}.csv"
-            args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_cyls/cyls_mpc_weight{w}_contactsamplechance0.0_objreduction{obj_reduction}_Min Iterations{min_iterations}.csv"
-    
-            sim_params = load_yaml(join_path(get_gym_configs_path(),'physx.yml'))
-            sim_params['headless'] = args.headless
-            # gym_instance = Gym(**sim_params)
-    
-            mpc_robot_interactive(args, None)
+    main()
     

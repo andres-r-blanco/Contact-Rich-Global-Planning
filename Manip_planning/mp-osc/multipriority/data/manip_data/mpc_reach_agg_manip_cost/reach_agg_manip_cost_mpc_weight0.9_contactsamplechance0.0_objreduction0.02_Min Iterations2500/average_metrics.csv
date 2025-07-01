@@ -1,0 +1,6 @@
+Metric,Mean,Standard Deviation
+Average Manipulability,0.23318726115855118,0.14651664938491704
+Number of states with manipulability < 0.01,2320.625,738.7239455360394
+Percentage of states with manipulability < 0.01,70.5053901885662,21.84250508137481
+Total Joint Norm Distance,6638.18910537822,5937.962801894455
+Total Time,27.226988742748897,7.919455287227278

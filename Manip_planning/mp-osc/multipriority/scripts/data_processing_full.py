@@ -46,10 +46,10 @@ def parse_file(filepath):
                 i += 1
 
                 if data_format == 'planner':
-                    if key in ['Manipulability', 'Distance to Last Node', 'Total Cost'] or key.startswith('Joint'):
-                        if key == 'Manipulability':
+                    if key in ['Closest Taxel Manip', 'Distance to Last Node', 'Total Cost'] or key.startswith('Joint'):
+                        if key == 'Closest Taxel Manip':
                             valid_trial = True  # we found a valid manipulability row
-                        while i < len(data) and data[i] not in ['Trial', 'Manipulability', 'Distance to Last Node', 'Total Cost'] and not data[i].startswith('Joint'):
+                        while i < len(data) and data[i] not in ['Trial', 'Closest Taxel Manip', 'Distance to Last Node', 'Total Cost'] and not data[i].startswith('Joint'):
                             try:
                                 values.append(float(data[i]))
                                 i += 1
@@ -69,11 +69,12 @@ def parse_file(filepath):
                         i += 1
 
                 elif data_format == 'mpc':
-                    if key in ['Time (s)', 'Joint Norm Distance', 'Manipulability', 'Distance to Taxel', 'Closest Taxel ID', 
+                    if key in ['Time (s)', 'Joint Norm Distance', 'Local Manip Cost','Closest Taxel Manip', 'Distance to Taxel', 'Closest Taxel ID', 
                                'Joint 1', 'Joint 2', 'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6', 'Joint 7']:
-                        if key == 'Manipulability':
+                        if key == 'Local Manip Cost':
                             valid_trial = True
-                        while i < len(data) and data[i] not in ['Trial', 'Time (s)', 'Joint Norm Distance', 'Manipulability', 
+                        while i < len(data) and data[i] not in ['Trial', 'Time (s)', 'Joint Norm Distance', 
+                                                                'Local Manip Cost', 'Closest Taxel Manip', 
                                                                  'Distance to Taxel', 'Closest Taxel ID', 'Joint 1', 'Joint 2', 
                                                                  'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6', 'Joint 7']:
                             try:
@@ -203,32 +204,32 @@ def plot_total_joint_norm_per_trial(trials, base_path, show_plot=False):
     plt.close()
 
 def plot_manipulability_histogram(trials, base_path, show_plot=False, name=None):
-    all_manip = np.concatenate([trials[trial]['Manipulability'] for trial in trials])
+    all_manip = np.concatenate([trials[trial]['Closest Taxel Manip'] for trial in trials])
     plt.figure()
     ax = plt.gca()
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.grid(False)
     all_manip = all_manip + 1e-15
-    bins = np.logspace(np.log10(1e-15), np.log10(1), num=50)
+    bins = np.logspace(np.log10(1e-15), np.log10(1.01), num=50)
     hist, bin_edges = np.histogram(all_manip, bins=bins)
     percentages = (hist / len(all_manip)) * 100
     plt.bar(bin_edges[:-1], percentages, width=np.diff(bin_edges), edgecolor='black', align='edge')
     plt.xscale('log')
     plt.ylim(0, 80)
-    plt.xlim(1e-15, 9)
+    # plt.xlim(1e-15, 9)
     ax.set_xticks([10**i for i in range(-15, 1)])  # Set ticks at every power of 10
     ax.get_xaxis().set_major_formatter(plt.FuncFormatter(lambda x, _: f"$10^{{{int(np.log10(x))}}}$"))
     if name is not None:
         plt.suptitle(name, fontsize=9, fontweight='bold')
-        plt.title('Histogram of Manipulability Across All Trials')
+        plt.title('Histogram of Closest Taxel Manipulability Across All Trials')
     else:
-        plt.title('Histogram of Manipulability Across All Trials')
-    plt.xlabel('Manipulability')
+        plt.title('Histogram of Closest Taxel Manipulability Across All Trials')
+    plt.xlabel('Closest Taxel Manipulability (Log Scale)')
     plt.ylabel('Percentage (%)')
     plt.tight_layout()
     plot_dir = ensure_plot_dir(base_path)
-    filename = os.path.join(plot_dir, 'Manipulability_Histogram.png')
+    filename = os.path.join(plot_dir, 'Closest_Taxel_Manipulability_Histogram.png')
     plt.savefig(filename)
     if show_plot:
         plt.show()
@@ -238,7 +239,7 @@ def plot_distance_vs_avg_manipulability(trials, base_path, show_plot=False):
     total_distances = []
     avg_manips = []
     for trial_num in trials:
-        manip = trials[trial_num]['Manipulability']
+        manip = trials[trial_num]['Closest Taxel Manip']
         joint_norm = trials[trial_num]['Joint Norm Distance']
         total_distance = np.sum(joint_norm)
         avg_manip = np.mean(manip)
@@ -251,9 +252,9 @@ def plot_distance_vs_avg_manipulability(trials, base_path, show_plot=False):
     ax.spines['right'].set_visible(False)
     ax.grid(False)
     plt.scatter(total_distances, avg_manips)
-    plt.title('Total Distance vs Average Manipulability')
+    plt.title('Total Distance vs Average Closest Taxel Manipulability')
     plt.xlabel('Total Joint Norm Distance')
-    plt.ylabel('Average Manipulability')
+    plt.ylabel('Average Closest Taxel Manipulability')
     plt.tight_layout()
     plot_dir = ensure_plot_dir(base_path)
     filename = os.path.join(plot_dir, 'Distance_vs_AvgManipulability.png')
@@ -266,7 +267,7 @@ def plot_distance_vs_low_manip_states(trials, base_path, show_plot=False):
     total_distances = []
     low_manip_states = []
     for trial_num in trials:
-        manip = trials[trial_num]['Manipulability']
+        manip = trials[trial_num]['Closest Taxel Manip']
         joint_norm = trials[trial_num]['Joint Norm Distance']
         total_distance = np.sum(joint_norm)
         num_low_manip_states = np.sum(manip < 0.01)
@@ -291,7 +292,7 @@ def plot_distance_vs_low_manip_states(trials, base_path, show_plot=False):
     plt.close()
 
 def plot_manipulability_boxplot(trials, base_path, show_plot=False):
-    data = [trials[trial]['Manipulability'] for trial in trials]
+    data = [trials[trial]['Closest Taxel Manip'] for trial in trials]
     labels = [f'Trial {trial}' for trial in trials]
     plt.figure(figsize=(10, 6))
     ax = plt.gca()
@@ -299,13 +300,13 @@ def plot_manipulability_boxplot(trials, base_path, show_plot=False):
     ax.spines['right'].set_visible(False)
     ax.grid(False)
     plt.boxplot(data, labels=labels, showfliers=False)
-    plt.title('Boxplot of Manipulability Across Trials')
+    plt.title('Boxplot of Closest Taxel Manipulability Across Trials')
     plt.xlabel('Trial')
-    plt.ylabel('Manipulability')
+    plt.ylabel('Closest Taxel Manip')
     plt.xticks(rotation=45)
     plt.tight_layout()
     plot_dir = ensure_plot_dir(base_path)
-    filename = os.path.join(plot_dir, 'Manipulability_Boxplot.png')
+    filename = os.path.join(plot_dir, 'Closest Taxel Manipulability_Boxplot.png')
     plt.savefig(filename, bbox_inches='tight')
     if show_plot:
         plt.show()
@@ -313,7 +314,7 @@ def plot_manipulability_boxplot(trials, base_path, show_plot=False):
 
 def compute_trial_metrics(trials, trial_num, data_format):
     data = trials[trial_num]
-    manip = data['Manipulability']
+    manip = data['Closest Taxel Manip']
     # print(f"mean manip: {np.mean(manip)}")
     joint_norm = data['Joint Norm Distance']
     avg_manip = np.mean(manip)
@@ -335,7 +336,7 @@ def compute_average_metrics_across_trials(trials, data_format, base_path, print_
         num_low_manips.append(num_low_manip)
         total_distances.append(total_distance)
         total_times.append(total_time)
-        percentage_low_manip = (num_low_manip / len(trials[trial_num]['Manipulability'])) * 100
+        percentage_low_manip = (num_low_manip / len(trials[trial_num]['Closest Taxel Manip'])) * 100
         percentages_low_manip.append(percentage_low_manip)
 
     mean_avg_manip = np.mean(avg_manips)
@@ -355,7 +356,7 @@ def compute_average_metrics_across_trials(trials, data_format, base_path, print_
     with open(metrics_file, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["Metric", "Mean", "Standard Deviation"])
-        writer.writerow(["Average Manipulability", mean_avg_manip, std_avg_manip])
+        writer.writerow(["Average Closest Taxel Manipulability", mean_avg_manip, std_avg_manip])
         writer.writerow(["Number of states with manipulability < 0.01", mean_num_low_manip, std_num_low_manip])
         writer.writerow(["Percentage of states with manipulability < 0.01", mean_percentage_low_manip, std_percentage_low_manip])
         writer.writerow(["Total Joint Norm Distance", mean_total_distance, std_total_distance])
@@ -363,7 +364,7 @@ def compute_average_metrics_across_trials(trials, data_format, base_path, print_
 
     if print_output:
         print("\nAverage metrics across all trials:")
-        print(f"Average Manipulability: {mean_avg_manip:.4f} ± {std_avg_manip:.4f}")
+        print(f"Average Closest Taxel Manipulability: {mean_avg_manip:.4f} ± {std_avg_manip:.4f}")
         print(f"Number of states with manipulability < 0.01: {mean_num_low_manip:.2f} ± {std_num_low_manip:.2f}")
         print(f"Percentage of states with manipulability < 0.01: {mean_percentage_low_manip:.2f}% ± {std_percentage_low_manip:.2f}%")
         print(f"Total Joint Norm Distance: {mean_total_distance:.4f} ± {std_total_distance:.4f}")
@@ -415,7 +416,7 @@ def compare_manipulability_across_files(folder_path):
             file_path = os.path.join(folder_path, filename)
             trials, _ = parse_file(file_path)
             # Concatenate all manipulability arrays in this file
-            all_manip = np.concatenate([trials[t]['Manipulability'] for t in trials])
+            all_manip = np.concatenate([trials[t]['Closest Taxel Manip'] for t in trials])
             file_manip_map[filename] = all_manip
 
     files = list(file_manip_map.keys())
@@ -547,7 +548,7 @@ def plot_summary_metrics(folder_path, show_plots=False):
         plt.show()
 
 if __name__ == "__main__":                  
-    DATA_PATH = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_mink_reach_over_body"
+    DATA_PATH = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_reach_agg_manip_cost"
     # add_csv_extension_to_files(DATA_PATH)
     compare_manipulability_across_files(DATA_PATH)
     batch_process_folder(DATA_PATH, print_output=True, show_plot=False)

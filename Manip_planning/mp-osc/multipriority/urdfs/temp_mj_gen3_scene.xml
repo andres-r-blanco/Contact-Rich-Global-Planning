@@ -12,14 +12,11 @@
   <worldbody>
     <light pos="0 0 1.5" directional="true"/>
     <geom name="floor" size="1 1 0.01" type="plane" material="grid"/>
-    <body name="cylinder_0" pos="0.450000 -0.090000 0.500000" quat="1.000000 0.000000 0.000000 0.000000">
-      <geom name="cylinder_0" contype="1" conaffinity="1" rgba="0.3 0.3 0.3 1" type="cylinder" size="0.100000 0.500000"/>
+    <body name="box_0" pos="0.350000 -0.300000 0.130000" quat="1.000000 0.000000 0.000000 0.000000">
+      <geom name="box_0" contype="1" conaffinity="1" rgba="0.3 0.3 0.3 1" type="box" size="0.260000 1.000000 0.140000"/>
     </body>
-    <body name="cylinder_1" pos="0.220000 0.200000 0.500000" quat="1.000000 0.000000 0.000000 0.000000">
-      <geom name="cylinder_1" contype="1" conaffinity="1" rgba="0.3 0.3 0.3 1" type="cylinder" size="0.100000 0.500000"/>
-    </body>
-    <body name="cylinder_2" pos="0.150000 -0.190000 0.500000" quat="1.000000 0.000000 0.000000 0.000000">
-      <geom name="cylinder_2" contype="1" conaffinity="1" rgba="0.3 0.3 0.3 1" type="cylinder" size="0.100000 0.500000"/>
+    <body name="cylinder_0" pos="0.350000 -0.300000 0.300000" quat="0.707388 0.706825 0.000000 0.000000">
+      <geom name="cylinder_0" contype="1" conaffinity="1" rgba="0.3 0.3 0.3 1" type="cylinder" size="0.180000 0.500000"/>
     </body>
   </worldbody>
 </mujoco>
