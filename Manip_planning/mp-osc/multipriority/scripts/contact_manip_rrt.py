@@ -62,7 +62,6 @@ TEST_Q = False
 # R_FOR_PARENT = EXTEND_STEP_SIZE*3
 # EDGE_COLLISION_RESOLUTION = EXTEND_STEP_SIZE
 NOCOL = False
-VIZ = True
 NO_DOT = False
 CLASSIC_RRT = False
 # COL_COST_RATIO = 0.05
@@ -70,8 +69,8 @@ DISTANCE_THRESHOLD = 0.1
 MAX_PENETRATION = 0.03
 RANDOM_IK_CHANCE = 0
 PAUSE_TIME = 0.3
-JS_EXTEND_MAX = 0.5
-SAVE_DATA_PREFIX = "reach_3"
+JS_EXTEND_MAX = 0.6
+SAVE_DATA_PREFIX = "reach_4"
 DATA_FOLDER_NAME = SAVE_DATA_PREFIX
 # CONTACT_SAMPLE_PROB = 0
 ANGLE_DIF_ALLOWED = math.radians(45)
@@ -97,35 +96,37 @@ OUTPUT_GIF_FOLDER= "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/dat
 # INCREASE_WEIGHT = False
 RANDOM_SEED = 25
 
+VIZ = False
 def new_main():
-    # data_gathering()
-    trial_num = 1
-    sIM_type = 5
-    wEIGHT_FOR_DISTANCE = 0.9
-    mIN_PERCENT_MANIP_INCREASE = 0
-    min_iterations = 1000
-    lAZY = False
-    oLD_COST = True
-    uPDATE_PATH = False
-    iNCREASE_WEIGHT = False
-    test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, 0.02, 0.0, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT)
+    data_gathering()
+    # trial_num = 1
+    # sIM_type = 5
+    # wEIGHT_FOR_DISTANCE = 0.9
+    # mIN_PERCENT_MANIP_INCREASE = 0
+    # min_iterations = 1000
+    # lAZY = False
+    # oLD_COST = False
+    # uPDATE_PATH = False
+    # iNCREASE_WEIGHT = False
+    # test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, 0.02, 0.0, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT)
 
 def data_gathering():
     
     trial_num = 30
     save = True
     lAZY = False
-    oLD_COST = True
+    old_costs = [True,False]
     uPDATE_PATH = False
     iNCREASE_WEIGHT = False
     min_iterations = 2500
     sIM_type = 5
     # thresholds = [0,5,10,15,20,25]
-    weight_val = [0.5, 0.6, 0.7]
+    weight_val = [0.9,0.8,1,0.6,0.7,0.95]
     object_reduction = [0.02,0.0]
     for obj in object_reduction:
         for w in weight_val:
-            test_main(trial_num, sIM_type, min_iterations, w, obj, 0.02, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
+            for oLD_COST in old_costs:
+                test_main(trial_num, sIM_type, min_iterations, w, obj, 0.0, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
         # test_main(trial_num, sIM_type, w, 0.0, 0.2, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
         
 def test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, object_reduction, contact_sample_chance, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save = False):
@@ -320,8 +321,8 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
         mj_obstacle_list = build_mujoco_obstacle_list(box_inputs, cylinder_inputs)
     
 
-        # start = [-0.3,0.3,0.4,1.2,0.5,1.2,0]
-        start = [-0.6,-0.5,0.2,1.7,0.2,0.8,0]
+        start = [-0.2,0.4,0.4,0.9,0.9,0.9,0]
+        # start = [1.8,1.3,-1.4,0.7,-0.5,0.8,0]
 
         # goal = [-0.59131794, -1.41156384,  0.64389399, -0.35700311, -0.85622942,-2.23725663, -1.95666927]
         g_pos = [0.60, -0.42,  0.41]
@@ -472,6 +473,53 @@ def print_path_stuff(node_path):
         rounded_distances = [round(dist, 4) for dist in node.lowest_signed_distances]
         print(f"node {i} lsd: {str(rounded_distances)}, cumulative manip cost: {str(round(node.manip_cost,4))}")
         i += 1
+        
+def calculate_manip_cost(lowest_signed_distances, manips, max_penetration = MAX_PENETRATION):
+
+        epsilon = 1e-10
+        mu_min = 1e-10  
+        close_cost_factor1 = 1.5
+        closet_cost_factor2 = 4
+        
+        manip_costs = []
+        for i, lowest_signed_distance in enumerate(lowest_signed_distances):
+            manip = manips[i]
+            mu = max(manip, epsilon)
+            scaled_manip_cost = np.log(mu) / np.log(mu_min)
+            # maps manips from [0,1] linearly ish, 0 being best manip and thus lowest cost
+            scaled_manip_cost = -math.exp(-2 * scaled_manip_cost) + 1
+            # maps manips from [0,1] exponentially, so that cost is goes up faster closer when manip is closer to 1
+            scaled_manip_cost = np.clip(scaled_manip_cost, 0.0, 1.0) # just in case
+            
+            adjusted_lsd = lowest_signed_distance + max_penetration
+            if lowest_signed_distance >= DISTANCE_THRESHOLD:
+                penetration_cost = 0
+                closeness_cost = 0
+            elif lowest_signed_distance >=0:
+                closeness_cost = math.exp(-(close_cost_factor1*(adjusted_lsd)/DISTANCE_THRESHOLD))
+                # penetration_cost = 0
+            else:
+                # penetration_cost = math.exp(-(2.5*lowest_signed_distance/MAX_PENETRATION))/(10)
+                closeness_cost = math.exp(-(closet_cost_factor2*(adjusted_lsd)/DISTANCE_THRESHOLD))
+            
+            final_manip_cost = 2*closeness_cost*scaled_manip_cost
+            manip_costs.append(final_manip_cost)
+        
+        local_manip_cost = np.sum(manip_costs)/len(manip_costs) if manip_costs else 0
+
+        return local_manip_cost, manip_costs
+    
+def calculate_old_manip_cost(lowest_signed_distances, manips):
+
+        closest_taxel_idx = np.argmin(lowest_signed_distances)
+        manip = manips[closest_taxel_idx]
+        epsilon = 1e-10
+        mu_min = 1e-10
+        
+        mu = max(manip, epsilon)
+        scaled_manip_cost = np.log(mu) / np.log(mu_min)
+
+        return scaled_manip_cost
 
 class RRT_BASE(object):
     def __init__(self, rng, robot_id, ik_solver, pin_model, joint_indices, 
@@ -585,6 +633,7 @@ class RRT_BASE(object):
                     q = None #if the xyz sample is in an obstacle don't use 
                 else:
                     random_start = self.rng.random() < RANDOM_IK_CHANCE #chance to use random IK initialization
+                    
                     q = self.mink_collision_ik(
                         target_pos=extended_target_xyz_quat[0],
                         target_quat=None,
@@ -971,8 +1020,7 @@ class RRT_BASE(object):
                 new_node = TreeNode(xyz_quat, q, manipulabilities=manips,lowest_signed_distances=lowest_signed_distances, closest_taxel_ids=closest_taxel_ids, c_sample = c_sample)
                 set_joint_state(self.robot_id, q, self.joint_indices)
                 if VIZ:
-                    closest_idx = np.argmin(lowest_signed_distances)
-                    dot_id = gradient_dot(self.robot_id, manips[closest_idx])
+                    dot_id = gradient_dot(self.robot_id, manips,lowest_signed_distances)
                     # print(f"created new tree node: {new_node}")
                 else:
                     dot_id = None
@@ -1075,6 +1123,10 @@ class RRT_BASE(object):
         # target_node = TreeNode(xyz_quat, manipulability=manipulability,lowest_signed_distance=lowest_signed_distance)
         return self.argmin(lambda n: self.euclid_distance_fn(n.xyz_quat, xyz_quat), self.nodes)
 
+    def get_closest_and_best_node(self,xyz_quat):
+        # manipulability, lowest_signed_distance = self.calculate_taxel_manip_and_dist(q)
+        # target_node = TreeNode(xyz_quat, manipulability=manipulability,lowest_signed_distance=lowest_signed_distance)
+        return self.argmin(lambda n: self.euclid_distance_fn(n.xyz_quat, xyz_quat), self.nodes)
 
 
     def sample_fn(self):
@@ -1184,43 +1236,19 @@ class RRT_BASE(object):
         distance_cost = normalized_dist_to_last + parent_dist_cost
         
         lowest_signed_distances = start_node.lowest_signed_distances
-        manips = start_node.manipulabilities
-        epsilon = 1e-10
-        mu_min = 1e-10  
-        close_cost_factor1 = 1.5
-        closet_cost_factor2 = 4
+        manips = start_node.manipulabilities  
         
-        manip_costs = []
-        for i, lowest_signed_distance in enumerate(lowest_signed_distances):
-            manip = manips[i]
-            mu = max(manip, epsilon)
-            scaled_manip_cost = np.log(mu) / np.log(mu_min)
-            # maps manips from [0,1] linearly ish, 0 being best manip and thus lowest cost
-            scaled_manip_cost = -math.exp(-2 * scaled_manip_cost) + 1
-            # maps manips from [0,1] exponentially, so that cost is goes up faster closer when manip is closer to 1
-            scaled_manip_cost = np.clip(scaled_manip_cost, 0.0, 1.0) # just in case
-            
-            adjusted_lsd = lowest_signed_distance + MAX_PENETRATION
-            if lowest_signed_distance >= DISTANCE_THRESHOLD:
-                penetration_cost = 0
-                closeness_cost = 0
-            elif lowest_signed_distance >=0:
-                closeness_cost = math.exp(-(close_cost_factor1*(adjusted_lsd)/DISTANCE_THRESHOLD))
-                # penetration_cost = 0
-            else:
-                # penetration_cost = math.exp(-(2.5*lowest_signed_distance/MAX_PENETRATION))/(10)
-                closeness_cost = math.exp(-(closet_cost_factor2*(adjusted_lsd)/DISTANCE_THRESHOLD))
-            
-            final_manip_cost = 2*closeness_cost*scaled_manip_cost
-            manip_costs.append(final_manip_cost)
+        if self.use_old_cost:
+            local_manip_cost = calculate_old_manip_cost(lowest_signed_distances, manips)
+        else:
+            local_manip_cost,manip_costs = calculate_manip_cost(lowest_signed_distances, manips)
         
-        node_weighted_manip_cost = np.sum(manip_costs)/len(manip_costs) if manip_costs else 0
-        total_manip_cost = (node_weighted_manip_cost + start_node.manip_cost*start_node.num_in_path)/(1+start_node.num_in_path)
+        total_manip_cost = (local_manip_cost + start_node.manip_cost*start_node.num_in_path)/(1+start_node.num_in_path)
         # normalized_final_manip_cost = final_manip_cost * distance_cost
         total_cost = self.weight_dist*distance_cost + total_manip_cost*(1-self.weight_dist) #TODO is this legit, otherwise farther goals will weight distance more??
         # total_cost = (1-COL_COST_RATIO)*total_cost + COL_COST_RATIO*penetration_cost
 
-        return total_cost, distance_cost, distance, total_manip_cost, node_weighted_manip_cost
+        return total_cost, distance_cost, distance, total_manip_cost, local_manip_cost
         
 
     def argmin(self, function, nodes):
@@ -1509,9 +1537,7 @@ class RRT_BASE(object):
         for node in node_path:
             config = node.config
             set_joint_state(self.robot_id, config)
-            closest_idx = np.argmin(node.lowest_signed_distances)
-            manips = node.manipulabilities
-            gradient_dot(self.robot_id, manips[closest_idx])
+            gradient_dot(self.robot_id, node.manipulabilities,node.lowest_signed_distances)
 
     def visualize_path(self, path, line_color=[1, 0, 0]):
         """
@@ -1654,14 +1680,15 @@ def correct_J_form(robot_id, J):
     # J_out[2,:] = J[2][:]
     return J_out
 
-def gradient_dot(robot_id, manip,alpha=1,ee_num=7):
+def gradient_dot(robot_id, manips, lowest_signed_distances,alpha=1,ee_num=7):
     if NO_DOT is True: return None
     # Get the position of the end-effector (assuming it's the last joint/link)
     link_state = p.getLinkState(robot_id, ee_num)
     end_effector_position = link_state[4]  # Position is index [4] in the result
-    manip_cost = -np.exp(2 * np.log(manip) / 10) + 1.001
+    manip_cost,_ = calculate_manip_cost(lowest_signed_distances, manips)
     # print(np.log(manip))
-    # print(manip_cost)
+    if VIZ: print(manip_cost)
+    manip_cost = np.clip(manip_cost*1.8, 0, 1)  # Ensure manip_cost is between 0 and 1
     # Create a small visual sphere at the end-effector's position
     dot_radius = 0.008  # A small dot
     color = [manip_cost, 0, 1-manip_cost, alpha]  # RGBA color for blue

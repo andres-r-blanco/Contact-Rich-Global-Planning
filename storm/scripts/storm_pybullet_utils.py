@@ -19,6 +19,7 @@ sys.path.insert(0, ROOT_DIR)
 sys.path.insert(1, os.path.join(ROOT_DIR, 'Manip_planning', 'mp-osc','pybullet_planning_master'))
 sys.path.insert(1, os.path.join(ROOT_DIR, 'Manip_planning', 'mp-osc','multipriority', 'urdfs'))
 from pybullet_tools.utils import wait_for_user, set_camera_pose
+from contact_manip_rrt import calculate_manip_cost
 
 
 JOINT_INDICES = [0, 1, 2, 3, 4, 5, 6]
@@ -216,41 +217,6 @@ def draw_waypoints(js_waypoint_list, robot_id, line_color=[1, 0, 0]):
         if isinstance(curr_pos, np.ndarray): curr_pos = curr_pos.tolist()
         p.addUserDebugLine(prev_pos, curr_pos, lineColorRGB=line_color, lineWidth=1.5)
 
-def calculate_manip_cost(lowest_signed_distances, manips, max_penetration = 0.03):
-
-        epsilon = 1e-10
-        mu_min = 1e-10  
-        close_cost_factor1 = 1.5
-        closet_cost_factor2 = 4
-        
-        manip_costs = []
-        for i, lowest_signed_distance in enumerate(lowest_signed_distances):
-            manip = manips[i]
-            mu = max(manip, epsilon)
-            scaled_manip_cost = np.log(mu) / np.log(mu_min)
-            # maps manips from [0,1] linearly ish, 0 being best manip and thus lowest cost
-            scaled_manip_cost = -math.exp(-2 * scaled_manip_cost) + 1
-            # maps manips from [0,1] exponentially, so that cost is goes up faster closer when manip is closer to 1
-            scaled_manip_cost = np.clip(scaled_manip_cost, 0.0, 1.0) # just in case
-            
-            adjusted_lsd = lowest_signed_distance + max_penetration
-            if lowest_signed_distance >= DISTANCE_THRESHOLD:
-                penetration_cost = 0
-                closeness_cost = 0
-            elif lowest_signed_distance >=0:
-                closeness_cost = math.exp(-(close_cost_factor1*(adjusted_lsd)/DISTANCE_THRESHOLD))
-                # penetration_cost = 0
-            else:
-                # penetration_cost = math.exp(-(2.5*lowest_signed_distance/MAX_PENETRATION))/(10)
-                closeness_cost = math.exp(-(closet_cost_factor2*(adjusted_lsd)/DISTANCE_THRESHOLD))
-            
-            final_manip_cost = 2*closeness_cost*scaled_manip_cost
-            manip_costs.append(final_manip_cost)
-        
-        local_manip_cost = np.sum(manip_costs)/len(manip_costs) if manip_costs else 0
-
-        return local_manip_cost
-
 # ----------------------
 # Save data utilities
 # ----------------------
@@ -267,7 +233,7 @@ def save_log_to_csv(log_data,output_path,trial):
         dist_closest_taxel_str = ['Distance to Taxel']
         for i, manip in enumerate(log_data['manipulabilities']):
             closest_idx = np.argmin(log_data['closest_taxel_ids'][i])
-            manip_cost = calculate_manip_cost(log_data['distance_to_taxels'][i], log_data['manipulabilities'][i])
+            manip_cost,_ = calculate_manip_cost(log_data['distance_to_taxels'][i], log_data['manipulabilities'][i])
             manip_cost_str.append(str(manip_cost))
             manip_str.append(str(log_data['manipulabilities'][i][closest_idx]))
             if log_data['closest_taxel_ids'][i][closest_idx] is not None:
