@@ -46,7 +46,7 @@ def parse_file(filepath):
                 i += 1
 
                 if data_format == 'planner':
-                    if key in ['Closest Taxel Manip', 'Distance to Last Node', 'Total Cost'] or key.startswith('Joint'):
+                    if key in ['Closest Taxel Manip', 'Distance to Last Node', 'Total Cost','Local Manip Cost'] or key.startswith('Joint'):
                         if key == 'Closest Taxel Manip':
                             valid_trial = True  # we found a valid manipulability row
                         while i < len(data) and data[i] not in ['Trial', 'Closest Taxel Manip', 'Distance to Last Node', 'Total Cost'] and not data[i].startswith('Joint'):
@@ -136,7 +136,7 @@ def plot_manip_vs_normalized_joint_norm_all(trials, base_path, show_plot=False):
     ax.grid(False)
     for trial_num, data_dict in trials.items():
         joint_norm = data_dict['Joint Norm Distance']
-        manip = data_dict['Manipulability']
+        manip = data_dict['Closest Taxel Manip']
         cumulative_distance = np.cumsum(joint_norm)
         normalized_distance = cumulative_distance / cumulative_distance[-1]
         plt.plot(normalized_distance, manip, label=f'Trial {trial_num}')
@@ -234,6 +234,34 @@ def plot_manipulability_histogram(trials, base_path, show_plot=False, name=None)
     if show_plot:
         plt.show()
     plt.close()
+    
+def plot_manip_cost_histogram(trials, base_path, show_plot=False, name=None):
+    all_manip = np.concatenate([trials[trial]['Local Manip Cost'] for trial in trials])
+    plt.figure()
+    ax = plt.gca()
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.grid(False)
+    bins = np.logspace(np.log10(1e-15), np.log10(1.01), num=50)
+    hist, bin_edges = np.histogram(all_manip, bins=bins)
+    percentages = (hist / len(all_manip)) * 100
+    plt.bar(bin_edges[:-1], percentages, width=np.diff(bin_edges), edgecolor='black', align='edge')
+    plt.ylim(0, 80)
+    plt.xlim(0, 1)
+    if name is not None:
+        plt.suptitle(name, fontsize=9, fontweight='bold')
+        plt.title('Histogram of Manipulability Cost Across All Trials')
+    else:
+        plt.title('Histogram of Manipulability Cost Across All Trials')
+    plt.xlabel('Manipulability Cost')
+    plt.ylabel('Percentage (%)')
+    plt.tight_layout()
+    plot_dir = ensure_plot_dir(base_path)
+    filename = os.path.join(plot_dir, 'Manip_Cost_Histogram.png')
+    plt.savefig(filename)
+    if show_plot:
+        plt.show()
+    plt.close()
 
 def plot_distance_vs_avg_manipulability(trials, base_path, show_plot=False):
     total_distances = []
@@ -258,6 +286,34 @@ def plot_distance_vs_avg_manipulability(trials, base_path, show_plot=False):
     plt.tight_layout()
     plot_dir = ensure_plot_dir(base_path)
     filename = os.path.join(plot_dir, 'Distance_vs_AvgManipulability.png')
+    plt.savefig(filename)
+    if show_plot:
+        plt.show()
+    plt.close()
+    
+def plot_distance_vs_manip_cost(trials, base_path, show_plot=False):
+    total_distances = []
+    avg_manips = []
+    for trial_num in trials:
+        manip = trials[trial_num]['Local Manip Cost']
+        joint_norm = trials[trial_num]['Joint Norm Distance']
+        total_distance = np.sum(joint_norm)
+        avg_manip = np.mean(manip)
+        total_distances.append(total_distance)
+        avg_manips.append(avg_manip)
+
+    plt.figure()
+    ax = plt.gca()
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.grid(False)
+    plt.scatter(total_distances, avg_manips)
+    plt.title('Total Distance vs Average Manipulability Cost')
+    plt.xlabel('Total Joint Norm Distance')
+    plt.ylabel('Average Manipulability Costy')
+    plt.tight_layout()
+    plot_dir = ensure_plot_dir(base_path)
+    filename = os.path.join(plot_dir, 'Distance_vs_AvgManipCost.png')
     plt.savefig(filename)
     if show_plot:
         plt.show()
@@ -405,6 +461,8 @@ def batch_process_folder(folder_path, print_output=False, show_plot=False):
                 plot_total_joint_norm_per_trial(trials, base_path, show_plot)
                 plot_manipulability_histogram(trials, base_path, show_plot,name=name)
                 plot_distance_vs_avg_manipulability(trials, base_path, show_plot)
+                plot_distance_vs_manip_cost(trials, base_path, show_plot)
+                plot_manip_cost_histogram(trials, base_path, show_plot, name=name)
                 plot_distance_vs_low_manip_states(trials, base_path, show_plot)
                 plot_joint_values_over_distance(trials, base_path, show_plot)
                 plot_manipulability_boxplot(trials, base_path, show_plot)
@@ -548,7 +606,7 @@ def plot_summary_metrics(folder_path, show_plots=False):
         plt.show()
 
 if __name__ == "__main__":                  
-    DATA_PATH = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_reach_agg_manip_cost"
+    DATA_PATH = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/reach_3"
     # add_csv_extension_to_files(DATA_PATH)
     compare_manipulability_across_files(DATA_PATH)
     batch_process_folder(DATA_PATH, print_output=True, show_plot=False)

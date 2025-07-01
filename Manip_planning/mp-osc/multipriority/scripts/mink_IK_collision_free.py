@@ -24,7 +24,7 @@ class MinkIKSolver:
             mujoco.mj_resetDataKeyframe(self.model, self.data, keyframe_id)
             self.home_qpos = self.data.qpos.copy()
         else:
-            print("[WARNING] No 'home' keyframe found in MJCF. Using default qpos=0.")
+            # print("[WARNING] No 'home' keyframe found in MJCF. Using default qpos=0.")
             self.home_qpos = np.zeros(self.model.nq)
 
         # Set end-effector site name
@@ -148,9 +148,9 @@ class MinkIKSolver:
         current_site_task = current_task[0]
             
             
-        print(f"goal_pos: {goal_pos}, goal_quat: {goal_quat}, initial_qpos: {initial_qpos}")
+        # print(f"goal_pos: {goal_pos}, goal_quat: {goal_quat}, initial_qpos: {initial_qpos}")
         tb = mink.SE3(np.concatenate([goal_quat,goal_pos]))
-        print(f"Setting end-effector target: {tb}")
+        # print(f"Setting end-effector target: {tb}")
         current_site_task.set_target(tb)
         
         # IK settings (other than the thresholds)
@@ -163,7 +163,7 @@ class MinkIKSolver:
                     self.configuration, current_task, self.rate.dt, solver, limits=self.limits
                 )
             except mink.NoSolutionFound:
-                print(f"[FAILURE] IK failed at iteration {i+1}. Collision constraint couldn't be satisfied.")
+                # print(f"[FAILURE] IK failed at iteration {i+1}. Collision constraint couldn't be satisfied.")
                 return None  # <-- gracefully exit
 
             self.configuration.integrate_inplace(vel, self.rate.dt)
@@ -174,11 +174,11 @@ class MinkIKSolver:
             else:
                 ori_achieved = np.linalg.norm(err[3:]) <= ori_threshold
             if pos_achieved and ori_achieved:
-                print(f"Iteration {i+1}: pos_error={err[:3]}, ori_error={err[3:]}, pos_achieved={pos_achieved}, ori_achieved={ori_achieved}")
-                print(f"qpos achieved: {self.configuration.q}")
+                # print(f"Iteration {i+1}: pos_error={err[:3]}, ori_error={err[3:]}, pos_achieved={pos_achieved}, ori_achieved={ori_achieved}")
+                # print(f"qpos achieved: {self.configuration.q}")
                 if viz: visualize_model(self.model, self.data, point= goal_pos, robot_q=self.configuration.q)
                 return self.configuration.q
-        print(f"Iteration {i+1}: pos_error={err[:3]}, ori_error={err[3:]}, pos_achieved={pos_achieved}, ori_achieved={ori_achieved}")
+        # print(f"Iteration {i+1}: pos_error={err[:3]}, ori_error={err[3:]}, pos_achieved={pos_achieved}, ori_achieved={ori_achieved}")
         
         # input(f"IK converged in {i+1} iterations. Press Enter to continue...")
         return None
@@ -275,7 +275,7 @@ def inject_obstacles(mjcf_path, obstacle_list):
     new_filename = os.path.join(dir_path, f"temp_mj_gen3_scene.xml")
     with open(new_filename, 'wb') as f:
         f.write(pretty_xml)
-    print(f"Saved wrapper MJCF to {new_filename} with obstacles: {obstacle_name_list}")
+    # print(f"Saved wrapper MJCF to {new_filename} with obstacles: {obstacle_name_list}")
     # visualize_mjcf(new_filename)
 
     return new_filename, obstacle_name_list

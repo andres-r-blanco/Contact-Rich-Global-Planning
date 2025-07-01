@@ -62,15 +62,16 @@ TEST_Q = False
 # R_FOR_PARENT = EXTEND_STEP_SIZE*3
 # EDGE_COLLISION_RESOLUTION = EXTEND_STEP_SIZE
 NOCOL = False
-VIZ = False
+VIZ = True
 NO_DOT = False
-COL_COST_RATIO = 0.05
+CLASSIC_RRT = False
+# COL_COST_RATIO = 0.05
 DISTANCE_THRESHOLD = 0.1
 MAX_PENETRATION = 0.03
 RANDOM_IK_CHANCE = 0
 PAUSE_TIME = 0.3
-JS_EXTEND_MAX = 1.5
-SAVE_DATA_PREFIX = "reach_agg_manip_cost"
+JS_EXTEND_MAX = 0.5
+SAVE_DATA_PREFIX = "reach_3"
 DATA_FOLDER_NAME = SAVE_DATA_PREFIX
 # CONTACT_SAMPLE_PROB = 0
 ANGLE_DIF_ALLOWED = math.radians(45)
@@ -97,12 +98,12 @@ OUTPUT_GIF_FOLDER= "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/dat
 RANDOM_SEED = 25
 
 def new_main():
-    data_gathering()
+    # data_gathering()
     trial_num = 1
     sIM_type = 5
     wEIGHT_FOR_DISTANCE = 0.9
     mIN_PERCENT_MANIP_INCREASE = 0
-    min_iterations = 500
+    min_iterations = 1000
     lAZY = False
     oLD_COST = True
     uPDATE_PATH = False
@@ -120,19 +121,17 @@ def data_gathering():
     min_iterations = 2500
     sIM_type = 5
     # thresholds = [0,5,10,15,20,25]
-    weight_val = [0.8, 0.9, 1, 0.95,0.97,0.7]
+    weight_val = [0.5, 0.6, 0.7]
     object_reduction = [0.02,0.0]
     for obj in object_reduction:
         for w in weight_val:
-            test_main(trial_num, sIM_type, min_iterations, w, obj, 0.0, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
+            test_main(trial_num, sIM_type, min_iterations, w, obj, 0.02, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
         # test_main(trial_num, sIM_type, w, 0.0, 0.2, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
         
 def test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, object_reduction, contact_sample_chance, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save = False):
     sIM_2D = False
     if sIM_type == 0:
         sIM_2D = True
-    elif sIM_type >= 2:
-        obstacle_num = True
 
     if sIM_2D:
         zERO_ANGLES = [0,2,4,5,6]
@@ -146,15 +145,14 @@ def test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, object_r
         gOAL_AREA_SAMPLE_PROB = 0.05
         gOAL_AREA_DELTA = 0.6
         if sIM_type >= 2:
-            gOAL_AREA_SAMPLE_PROB = 0.2
-            gOAL_AREA_DELTA = 0.2
-        eXTEND_STEP_SIZE = 0.05
+            gOAL_AREA_SAMPLE_PROB = 0.1
+            gOAL_AREA_DELTA = 0.15
+        eXTEND_STEP_SIZE = 0.1
         r_FOR_PARENT = eXTEND_STEP_SIZE*2.5
-    rRT_MAX_ITERATIONS = 10000
+    rRT_MAX_ITERATIONS = 6000
     rRT_MIN_ITERATIONS = min_iterations
     xyz_gOAL_TOLERANCE = 0.01
     gOAL_SAMPLE_PROB = 0.05
-    
     eDGE_COLLISION_RESOLUTION = eXTEND_STEP_SIZE
     if save == False:
         rng = np.random.default_rng(15)
@@ -174,16 +172,25 @@ def test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, object_r
 
 def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB,rRT_MAX_ITERATIONS,rRT_MIN_ITERATIONS,eXTEND_STEP_SIZE,xyz_gOAL_TOLERANCE,gOAL_AREA_DELTA,gOAL_SAMPLE_PROB,
              r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,mIN_PERCENT_MANIP_INCREASE,lAZY,uPDATE_PATH,oLD_COST,iNCREASE_WEIGHT,object_reduction,contact_sample_chance, save = False):
-    p.connect(p.GUI)
-    p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)  # Disable GUI elements
-    p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)  # Ensure rendering is enabled
-    p.configureDebugVisualizer(p.COV_ENABLE_SEGMENTATION_MARK_PREVIEW, 0)  # Optional
-    p.configureDebugVisualizer(p.COV_ENABLE_DEPTH_BUFFER_PREVIEW, 0)  # Optional
-    p.configureDebugVisualizer(p.COV_ENABLE_RGB_BUFFER_PREVIEW, 1)  # Ensure RGB rendering is enabled
+    if VIZ:
+        physicsClient = p.connect(p.GUI)
+        p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
+        p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)
+        p.configureDebugVisualizer(p.COV_ENABLE_SEGMENTATION_MARK_PREVIEW, 0)
+        p.configureDebugVisualizer(p.COV_ENABLE_DEPTH_BUFFER_PREVIEW, 0)
+        p.configureDebugVisualizer(p.COV_ENABLE_RGB_BUFFER_PREVIEW, 1)
+    else:
+        physicsClient = p.connect(p.DIRECT)
+        
+    p.setPhysicsEngineParameter(enableFileCaching=0)
+    p.setPhysicsEngineParameter(numSolverIterations=5)  # default is 50; 5–10 is good for fast sim
+    p.setPhysicsEngineParameter(solverResidualThreshold=1e-4)
+    p.setGravity(0, 0, 0)
+    p.setRealTimeSimulation(0)
 
     add_data_path(pybullet_data.getDataPath())
 
-    print(f"Running trial {trial_num} with sim type {sim_type}, min iterations {rRT_MIN_ITERATIONS}, contact sample prob {contact_sample_chance}")
+    print(f"\nRunning trial {trial_num} with sim type {sim_type}, weight {wEIGHT_FOR_DISTANCE}, min iterations {rRT_MIN_ITERATIONS}, object reduction {object_reduction}, contact sample prob {contact_sample_chance}")
 
     # draw_pose(Pose(), length=1.)
     xyz_quat_goal = None
@@ -312,17 +319,17 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
         cylinder_inputs = [{'pos': cyl_position1, 'radius': rad1, 'height': h1, 'quat': cyl_quat1}]
         mj_obstacle_list = build_mujoco_obstacle_list(box_inputs, cylinder_inputs)
     
-        # goal = [0.4,-1.4,0.2,-0.5,0.3,-1,0]
-        # start = [-2.2,-1.7,1.3,-1.7,-0.1,-1,0]
-        start = [-0.3,0.3,0.4,1.2,0.5,1.2,0]
-        # goal = [0.85,0.9,-1,0.5,-0.5,1.2,0]
+
+        # start = [-0.3,0.3,0.4,1.2,0.5,1.2,0]
+        start = [-0.6,-0.5,0.2,1.7,0.2,0.8,0]
 
         # goal = [-0.59131794, -1.41156384,  0.64389399, -0.35700311, -0.85622942,-2.23725663, -1.95666927]
         g_pos = [0.60, -0.42,  0.41]
         g_quat = [ 0.35454866,  0.8174026,  -0.00976152,  0.45393062]
         xyz_quat_goal = [np.array(g_pos),np.array(g_quat)]
         
-        xyz_limits = [[0.3,  -0.7,  0.28],[0.8,  0,  0.7]]
+        xyz_limits = [[0.1,  -0.7,  0.28],[0.8,  0,  0.8]]
+        # xyz_limits = [[0.1,  -0.7,  0.28],[0.8,  0,  0.7]]
         yzx_euler_angle_limits = [[-np.pi,-np.pi,-np.pi],[np.pi,np.pi,np.pi]]
         
     if sim_type == 6:
@@ -389,15 +396,15 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
             time.sleep(0.2)
         goal_xyz,goal_quat = q_to_endeff(robot_id, q_goal)
         xyz_quat_goal = [goal_xyz,goal_quat]
-    print("goal xyz quat")
-    print(xyz_quat_goal)    
+    # print(f"goal xyz quat")
+    # print(xyz_quat_goal)    
     dot(xyz_quat_goal[0], [0.5,0.9,0.5,1])
     
     q_init = start
     set_joint_state(robot_id, q_init, joint_indices)
     start_pos, start_orientation = q_to_endeff(robot_id, q_init)
     xyz_quat_start = [start_pos, start_orientation]
-    print(xyz_quat_start) 
+    # print(xyz_quat_start) 
     dot(xyz_quat_start[0], [0.8,0.8,0.8,1])
     if VIZ:
         time.sleep(0.2)
@@ -432,11 +439,13 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
     if VIZ:
         wait_for_user()
     path = configs(node_path)
+    print(f"total number of nodes: {len(rrt_obj.nodes)} out of {rrt_obj.samples_taken} samples taken")
+    print(f"number of nodes in path: {len(node_path)}")
     print("done with trial num: " + str(trial_num))
     if path:
         # path = smooth(robot_id, path, joint_indices, obstacles)
-        print("Found path:")
-        print_path(path)
+        # print("Found path:")
+        # print_path(path)
         set_joint_state(robot_id, q_init)
         if VIZ:
             print_path_stuff(node_path)
@@ -446,8 +455,9 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
     else:
         print("No path found")
 
-    print('Done?')
+    
     if VIZ:
+        print('Done?')
         wait_for_user()
     # save_screenshot(trial_num, node_path, rANDOM_SEED, sIM_2D,zERO_ANGLES,gOAL_AREA_SAMPLE_PROB,rRT_MAX_ITERATIONS,rRT_MIN_ITERATIONS,eXTEND_STEP_SIZE,gOAL_TOLERANCE,gOAL_AREA_DELTA,gOAL_SAMPLE_PROB,
     #          r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,mIN_PERCENT_MANIP_INCREASE,lAZY,uPDATE_PATH,oLD_COST,iNCREASE_WEIGHT)
@@ -468,7 +478,7 @@ class RRT_BASE(object):
                  obstacles, extend_step, q_init, xyz_quat_goal, xyz_quat_start, agressive_goal_sampling_prob, goal_area_probability,  
                  goal_area_delta, max_samples, min_samples, res, pause_time, weight_dist, goal_tolerance,
                  R, zERO_ANGLES,lAZY,uPDATE_PATH,oLD_COST,iNCREASE_WEIGHT, mIN_PERCENT_MANIP_INCREASE, xyz_limits, yzx_euler_angle_limits, reference_quat, 
-                 object_reduction,contact_sample_chance, classic_rrt = False, max_time=INF, prc=0.01):
+                 object_reduction,contact_sample_chance, max_time=INF, prc=0.01):
         """
         Template RRT planner
         :param extend_step: length of edges added to tree
@@ -517,7 +527,7 @@ class RRT_BASE(object):
         self.use_old_cost = oLD_COST
         self.increase_weight = iNCREASE_WEIGHT
         self.rng = rng
-        self.classic_rrt = classic_rrt
+        self.classic_rrt = CLASSIC_RRT
         self.ik_solver =ik_solver
 
 
@@ -530,35 +540,6 @@ class RRT_BASE(object):
         draw_xyz_bounding_box(self.xyz_limits, color=[1, 0, 0], line_width=1, life_time=0)
         if VIZ:
             wait_for_user()
-        # pos = [0.4,  0.4,  0.2]
-        # target_taxel_xyz_quat = [np.array(pos), np.array([0.9239,0,0.3827,0])]
-        # target_end_eff_xyz_quat = [np.array([0.7,  0.1,  0.3]), np.array([0.9239,0,0.3827,0])]
-        # taxel_link_id = 13
-        # initial_q = self.q_init
-
-        # q = self.taxel_IK(target_taxel_xyz_quat, target_end_eff_xyz_quat, taxel_link_id, initial_q)
-        # dot(pos)
-        # set_joint_state(self.robot_id, q, self.joint_indices)
-        # p.addUserDebugLine([pos[0],-5,pos[2]], [pos[0],5,pos[2]], lineColorRGB=[1, 0, 0], lineWidth=2, lifeTime=0)
-        # p.addUserDebugLine([-5,pos[1],pos[2]], [5,pos[1],pos[2]], lineColorRGB=[1, 0, 0], lineWidth=2, lifeTime=0)
-        # p.addUserDebugLine([pos[0],pos[1],-5], [pos[0],pos[1],5], lineColorRGB=[1, 0, 0], lineWidth=2, lifeTime=0)
-        # wait_for_user()
-        
-        # print(self.xyz_quat_start)
-        # print(self.xyz_quat_goal)
-        # # xyz_quat = [np.array([-0.7,  0.1,  0.3]), np.array([0.9239,0,0.3827,0])]
-        # xyz = np.array([0.2,  0.1,  0.3])
-        # xyz_quat = [xyz, self.reference_quat]
-        # # self.display_point_and_vector(quat,xyz)
-        # q = self.get_closest_config_from_x(xyz_quat, self.q_init, max_retries=0,perturbation_scale=1)
-        # wait_for_user()
-        # for i in range(10000):
-        #     xyz_quat = [xyz, self.get_random_quat()]
-        #     q = self.get_closest_config_from_x(xyz_quat, self.q_init, max_retries=0,perturbation_scale=1)
-        #     wait_for_user()
-        # # # set_joint_state(self.robot_id, q, self.joint_indices)
-        # # # print(q)
-        #detect initial collision
         
         if self.collision_fn(self.q_init):# or self.collision_fn(self.xyz_quat_goal):
             print("collision at start")
@@ -572,7 +553,7 @@ class RRT_BASE(object):
             # tries more aggressively directly sampling goal (trying to get a solution) only when enough samples were taken
             if self.samples_taken >= self.min_samples and (self.samples_taken == self.min_samples or self.rng.random() < self.agressive_goal_sampling_prob): 
                 target_xyz_quat = self.xyz_quat_goal
-                print("sampling goal")
+                if VIZ: print("sampling goal")
                 sampling_goal = True
                 # dot(q_to_endeff(self.robot_id, target_config), [1,0,0,1]) anbd # visualizing sampled point in red             
             else:
@@ -585,12 +566,11 @@ class RRT_BASE(object):
             closest_q = closest_node.config
             # print(f"found closest node: {closest_node}")
             if sampling_goal:
-                set_joint_state(self.robot_id, closest_node.config, self.joint_indices)
-                if self.samples_taken == self.min_samples+1:
-                    print("sample min reached")
-                    print(closest_q)
-                    # self.visualize_path(configs(closest_node.retrace()), line_color=[1, 0, 0])
                 if VIZ:
+                    set_joint_state(self.robot_id, closest_node.config, self.joint_indices)
+                    if self.samples_taken == self.min_samples+1:
+                        print("sample min reached")
+                        print(closest_q)
                     current_pos, current_orientation = q_to_endeff(self.robot_id, closest_q)
                     print(f"Position: {current_pos}, Orientation: {current_orientation}")
                     wait_for_user()
@@ -600,12 +580,13 @@ class RRT_BASE(object):
                     return closest_node.retrace()
             if closest_node.c_sample == True or self.rng.random() > self.contact_sample_chance:
                 extended_target_xyz_quat = self.extend_fn(closest_node, target_xyz_quat) # extending from nearest node
+                # print(f"going from {closest_node.xyz_quat[0]} to {extended_target_xyz_quat[0]}, distance of {np.linalg.norm(extended_target_xyz_quat[0] - closest_node.xyz_quat[0])}")
                 if self.check_if_xyz_in_obstacle(extended_target_xyz_quat[0]):
                     q = None #if the xyz sample is in an obstacle don't use 
                 else:
                     random_start = self.rng.random() < RANDOM_IK_CHANCE #chance to use random IK initialization
                     q = self.mink_collision_ik(
-                        target_pos=target_xyz_quat[0],
+                        target_pos=extended_target_xyz_quat[0],
                         target_quat=None,
                         initial_guess=closest_q,
                         taxel_target = None,
@@ -622,8 +603,8 @@ class RRT_BASE(object):
                 if contact_target_xyz_quat is None or closest_taxel_id < 7:
                     q = None
                 else:
-                    print("contact IK start")
                     if VIZ:
+                        print("contact IK start")
                         set_joint_state(self.robot_id, closest_q, self.joint_indices)
                         wait_for_user()
                     q = self.mink_collision_ik(
@@ -634,18 +615,19 @@ class RRT_BASE(object):
                         random_start = False
                         )
                     # q = self.taxel_IK(contact_target_xyz_quat, self.xyz_quat_goal, closest_taxel_id, closest_node.config)
-                    print("contact IK done")
-                    if q is not None:
-                        print("contact IK SUCCESS")
-                        if VIZ:
-                            wait_for_user()
-                    else:
-                        p.removeUserDebugItem(line_id)
-                        print("contact IK FAIL")
-                        if VIZ:
+                    if VIZ : 
+                        print("contact IK done")
+                        if q is not None:
+                            if VIZ:
+                                print("contact IK SUCCESS")
+                                wait_for_user()
+                        else:
+                            p.removeUserDebugItem(line_id)
+                            print("contact IK FAIL")
                             wait_for_user()
             if q is not None:
-                set_joint_state(self.robot_id, q, self.joint_indices)
+                # set_joint_state(self.robot_id, q, self.joint_indices)
+                # wait_for_user()
                 manips, lowest_signed_distances,closest_taxel_ids = self.calculate_taxel_manip_and_dist(q)
                 if all(lowest_signed_distances) >= -MAX_PENETRATION:
                     if self.classic_rrt:
@@ -658,7 +640,7 @@ class RRT_BASE(object):
                         # if self.will_update_path:
                         #     node_path = self.update_path(node_path) #computes new parents and costs starting from goal
                         return node_path
-            print(f"finished loop\n")
+            # print(f"finished loop\n")
             
         return None
     
@@ -678,7 +660,7 @@ class RRT_BASE(object):
 
         # Reset robot to start pose
         set_joint_state(self.robot_id, self.q_init, self.joint_indices)
-        p.stepSimulation()
+        if VIZ: p.stepSimulation()
         # time.sleep(0.5)
         
         # Draw target goal as green sphere
@@ -720,7 +702,7 @@ class RRT_BASE(object):
             for i in range(50):  # Smooth move to target
                 interp_q = (1 - i / 50) * np.array(self.q_init) + (i / 50) * np.array(q_solution)
                 set_joint_state(self.robot_id, interp_q, self.joint_indices)
-                p.stepSimulation()
+                if VIZ: p.stepSimulation()
                 time.sleep(0.02)
         else:
             print("Mink IK failed to find solution.")
@@ -763,7 +745,7 @@ class RRT_BASE(object):
         guess = initial_guess
         
         for attempt in range(max_attempts):
-            print(f"Mink IK attempt {attempt+1}/{max_attempts}")
+            # print(f"Mink IK attempt {attempt+1}/{max_attempts}")
             
             solution = self.ik_solver.solve(
                 goal_pos=target_pos,
@@ -776,15 +758,20 @@ class RRT_BASE(object):
             )
 
             if solution is None:
-                print("Mink failed to find collison-free IK solution.")
+                # print("Mink failed to find collison-free IK solution.")
                 guess = initial_guess + self.rng.normal(scale=j_delta, size=guess.shape)
                 guess = np.clip(guess, self.lower_limits, self.upper_limits)
                 # return None
             else:
-                print("Found collision-free Mink IK solution.")
+                # print("Found collision-free Mink IK solution.")
+                # end_eff = q_to_endeff(self.robot_id, solution)
+                # init_eff = q_to_endeff(self.robot_id, initial_guess)
+                # print(f"distance between goal_pos and initial state: {np.linalg.norm(target_pos - init_eff[0])}")
+                # if np.linalg.norm(end_eff[0] - target_pos) > 1e-4:
+                #     print(f"Mink End-effector position mismatch of {np.linalg.norm(end_eff[0] - target_pos)}: {end_eff[0]} vs {target_pos}")
                 return solution
 
-        print("Failed to find collision-free Mink IK after retries.")
+        # print("Failed to find collision-free Mink IK after retries.")
         return None
 
     
@@ -986,14 +973,15 @@ class RRT_BASE(object):
                 if VIZ:
                     closest_idx = np.argmin(lowest_signed_distances)
                     dot_id = gradient_dot(self.robot_id, manips[closest_idx])
+                    # print(f"created new tree node: {new_node}")
                 else:
                     dot_id = None
                 # dot(xyz_quat[0], [0.9,0,0,1])
-                print(f"created new tree node: {new_node}")
+                
                 # wait_for_user()
                 prev_node = False
             else: #removes and readds node if it already exists
-                print(f"node already exists at: {same_node_idx}")
+                if VIZ: print(f"node already exists at: {same_node_idx}")
                 new_node = self.nodes[same_node_idx]
                 prev_node = True
                 new_parent = None
@@ -1009,11 +997,12 @@ class RRT_BASE(object):
             [new_node.total_cost, new_node.d_cost, new_node.dist_to_last, new_node.manip_cost, new_node.node_manip_cost] = self.cost_fn(new_parent,new_node)
             if prev_node == False: 
                 self.nodes.append(new_node)
-                print(f"NODE NUMBER: {len(self.nodes)}")
+                if len(self.nodes) % 100 == 0:
+                       print(f"NODE NUMBER: {len(self.nodes)} out of {self.samples_taken} samples taken")
                 if (c_sample):
-                    set_joint_state(self.robot_id, new_node.config, self.joint_indices)
-                    print("valid contact sample!")
                     if VIZ:
+                        set_joint_state(self.robot_id, new_node.config, self.joint_indices)
+                        print("valid contact sample!")
                         wait_for_user()
                 # set_joint_state(self.robot_id, new_node.config, self.joint_indices)
                 # time.sleep(PAUSE_TIME)
@@ -1030,7 +1019,7 @@ class RRT_BASE(object):
         return -1, None
 
     def find_parent(self, new_node, threshold):
-        print(f"finding parent")
+        # print(f"finding parent")
         # self.print_all_nodes()
         nodes_in_radius = [
             node for node in self.nodes 
@@ -1047,30 +1036,33 @@ class RRT_BASE(object):
             # lowest_dist_manip_cost = self.cost_fn(lowest_dist_parent, new_node)[3]
             # full_cost_parent_manip_cost = self.cost_fn(full_cost_parent, new_node)[3]
             parent = full_cost_parent
-            print(f"found parent")
+            # print(f"found parent")
            
             #interpolating between nodes if config space is greater than step size, creating new ones and checking for collisions
             #also ensuring that the two nodes allow for a path within bounds
             #if interpolation doesn't work (or no nodes in range) returns None to indicate that parent cannot be found
             if self.lazy is False and np.max(np.abs(np.array(parent.config)[:]-np.array(new_node.config)[:])) > JS_EXTEND_MAX:
-                print(f"interpolating")
+                # print(f"interpolating")
                 num_steps = math.floor(np.max(np.abs(np.array(parent.config)[:]-np.array(new_node.config)[:]))/JS_EXTEND_MAX)
                 q_list = self.interpolate_configs(parent.config, new_node.config, num_steps = num_steps)
                 parent_interp_node = parent
                 for i in range(len(q_list)):
                     q_interp = np.array(q_list[i])
+                    # if VIZ:
+                    #     set_joint_state(self.robot_id, q_interp, self.joint_indices)
+                    #     wait_for_user()
                     col = self.collision_fn(q_interp)
                     link_state = p.getLinkState(self.robot_id, 7)
                     xyz_quat =[np.array(link_state[4]), np.array(link_state[5])]
                     manips, lowest_signed_distances,closest_taxel_ids = self.calculate_taxel_manip_and_dist(q_interp)
-                    in_xyz_quat_lims = self.check_xyz_quat_lims(xyz_quat)
-                    if col or any(lowest_signed_distances) < -MAX_PENETRATION or not in_xyz_quat_lims:
-                        print("failed interpolation")
+                    # in_xyz_quat_lims = self.check_xyz_quat_lims(xyz_quat)
+                    if col or any(lowest_signed_distances) < -MAX_PENETRATION:# or not in_xyz_quat_lims:
+                        # print("failed interpolation")
                         return None
                     else:
                         [parent_interp_node,_] = self.create_node(xyz_quat, q_interp, manips, lowest_signed_distances, closest_taxel_ids, new_parent = parent_interp_node)
                         if parent_interp_node is None:
-                            print("failed interpolation")
+                            # print("failed interpolation")
                             return None
                 return parent_interp_node
             else:
@@ -1089,7 +1081,7 @@ class RRT_BASE(object):
         # Generate random xyz_quat combinations within the limits
         random_xyz = np.array([self.rng.uniform(low, high) for low, high in zip(self.xyz_limits[0][:], self.xyz_limits[1][:])])
         random_quat = self.get_random_quat()
-        print(f"randomly sampled")
+        # print(f"randomly sampled")
         # wait_for_user()
         return [random_xyz,random_quat]
     
@@ -1120,7 +1112,7 @@ class RRT_BASE(object):
         tax_xyz = taxel_frame_placement.translation
         tax_rot = taxel_frame_placement.rotation
         
-        print(f"contact sampling for {tax_xyz}")
+        # print(f"contact sampling for {tax_xyz}")
         clearance = self.extend_step/2
         radius = 0.00001  # Small radius for proxy object
         collision_shape = p.createCollisionShape(p.GEOM_SPHERE, radius=radius)
@@ -1129,7 +1121,7 @@ class RRT_BASE(object):
         max_dist = self.extend_step*2.5 #TODO choose a good max dist val
         obstacle_id = self.obstacles[0]
         closest_points = p.getClosestPoints(bodyA=proxy_id, bodyB=obstacle_id, distance=max_dist)
-        print(closest_points)
+        # print(closest_points)
         if closest_points:
             closest_point = min(closest_points, key=lambda point: point[8])
             xyz_dist = closest_point[8]  # Distance between the two objects
@@ -1137,13 +1129,13 @@ class RRT_BASE(object):
             closest_xyz = np.array(closest_point[6])  # Point on the obstacle
             # Check if the point is inside the object (based on distance)
             if xyz_dist > clearance:  # If distance is greater than 0 (account for buffer), it's outside the object
-                print(f"contact sample found: from {tax_xyz} to {closest_xyz}")
+                # print(f"contact sample found: from {tax_xyz} to {closest_xyz}")
                 direction = tax_xyz - closest_xyz
                 closest_xyz = closest_xyz + (direction/np.linalg.norm(direction))*clearance
                 line_id = p.addUserDebugLine(closest_xyz, tax_xyz, lineColorRGB=[0,1, 0], lineWidth=2, lifeTime=0)
                 p.removeBody(proxy_id)
                 return [closest_xyz,quat], line_id
-        print(f"no contact sample found")
+        # print(f"no contact sample found")
         p.removeBody(proxy_id)
         return None, -1
     
@@ -1167,10 +1159,10 @@ class RRT_BASE(object):
     def sample_goal_area(self):
         direction = self.rng.normal(size=3) 
         direction /= np.linalg.norm(direction)  
-        distance = self.rng.uniform(0, self.goal_area_delta)
+        distance = abs(self.rng.normal(0, self.goal_area_delta))
         new_xyz = self.xyz_quat_goal[0] + direction * distance
         random_quat = self.get_random_quat()
-        print(f"goal area sampled")
+        # print(f"goal area sampled")
         # wait_for_user()
         return [new_xyz, random_quat] #TODO maybe restrict quat
 
@@ -1225,7 +1217,7 @@ class RRT_BASE(object):
         node_weighted_manip_cost = np.sum(manip_costs)/len(manip_costs) if manip_costs else 0
         total_manip_cost = (node_weighted_manip_cost + start_node.manip_cost*start_node.num_in_path)/(1+start_node.num_in_path)
         # normalized_final_manip_cost = final_manip_cost * distance_cost
-        total_cost = self.weight_dist*distance_cost + distance_cost*total_manip_cost*(1-self.weight_dist) #TODO is this legit, otherwise farther goals will weight distance more??
+        total_cost = self.weight_dist*distance_cost + total_manip_cost*(1-self.weight_dist) #TODO is this legit, otherwise farther goals will weight distance more??
         # total_cost = (1-COL_COST_RATIO)*total_cost + COL_COST_RATIO*penetration_cost
 
         return total_cost, distance_cost, distance, total_manip_cost, node_weighted_manip_cost
@@ -1282,6 +1274,7 @@ class RRT_BASE(object):
         distance = np.linalg.norm(direction)
         
         if distance <= self.extend_step:
+            # print(f"distance = {distance} is less than extend step = {self.extend_step}, not extending")
             return xyz_quat_target
         else:
             # Normalize the direction vector and scale by the extend step
@@ -1296,7 +1289,7 @@ class RRT_BASE(object):
             key_times = [0, 1]
             slerp = Slerp(key_times, key_rots)
             new_quat = slerp([interp_factor]).as_quat()[0]
-            
+            # print(f"distance extend: {self.extend_step}")
             return [np.array(new_xyz), np.array(new_quat)]
         
     # def check_collision_and_manip(self,q,debug_life = -1):
@@ -1413,6 +1406,8 @@ class RRT_BASE(object):
             det_JJT = np.linalg.det(JJT)
             det_JJT = max(det_JJT, 0)
             manipulability = np.sqrt(det_JJT)
+            if manipulability < 1e-20:
+                manipulability = 1e-20
             manipulabilities.append(manipulability)
             
         return manipulabilities, lowest_signed_distances, closest_taxel_ids
@@ -1600,7 +1595,7 @@ def print_path(path):
 def set_joint_state(robot_id, q, joint_indices=[0,1,2,3,4,5,6]):
         for joint_index in joint_indices:
             p.resetJointState(robot_id, joint_index, q[joint_index])
-        p.stepSimulation()
+        if VIZ: p.stepSimulation()
 
 def configs(nodes):
     if nodes is None:
@@ -1664,10 +1659,12 @@ def gradient_dot(robot_id, manip,alpha=1,ee_num=7):
     # Get the position of the end-effector (assuming it's the last joint/link)
     link_state = p.getLinkState(robot_id, ee_num)
     end_effector_position = link_state[4]  # Position is index [4] in the result
-    manip = min(1,manip/0.2)
+    manip_cost = -np.exp(2 * np.log(manip) / 10) + 1.001
+    # print(np.log(manip))
+    # print(manip_cost)
     # Create a small visual sphere at the end-effector's position
     dot_radius = 0.008  # A small dot
-    color = [1-manip, 0, manip, alpha]  # RGBA color for blue
+    color = [manip_cost, 0, 1-manip_cost, alpha]  # RGBA color for blue
 
     # Create a visual shape for the dot (small sphere)
     dot_visual_shape = p.createVisualShape(p.GEOM_SPHERE, radius=dot_radius, rgbaColor=color)

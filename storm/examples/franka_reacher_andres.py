@@ -125,7 +125,7 @@ def main():
     parser.add_argument('--trial_num', type=int, default=1, help='number of trials to run')
     args = parser.parse_args()
     
-    weight_list = [0.9, 1, 0.8]
+    weight_list = [0.97]
     object_reduction_list = [0.02]
     min_iterations = 2500
     trial_num = 30
