@@ -5,6 +5,7 @@ from optas.templates import Manager
 
 INIT_PATH = r"/home/rishabh/Andres"
 sys.path.insert(0, INIT_PATH + "/Manip_planning/optas/example")
+sys.path.insert(0, INIT_PATH + "/Manip_planning/mp-osc/multipriority/scripts")
 sys.path.insert(1, INIT_PATH + "/Manip_planning/mp-osc/pybullet_planning_master")
 from pybullet_api import *
 
@@ -14,19 +15,24 @@ from pybullet_tools.utils import add_data_path, create_box, create_cylinder, qua
     get_movable_joints, get_sample_fn, set_joint_positions, get_joint_name, LockRenderer, link_from_name, get_link_pose, \
     multiply, Pose, Point, interpolate_poses, HideOutput, draw_pose, set_camera_pose, load_pybullet, \
     assign_link_colors, add_line, point_from_pose, remove_handles, BLUE, INF
+    
+from contact_manip_rrt import dot
 
 class SimpleJointSpacePlanner(Manager):
-    def __init__(self, urdf_string, ee_link, duration):
+    def __init__(self, filename, ee_link, duration):
         self.duration = duration
         self.ee_link = ee_link
-        self.urdf_string = urdf_string
+        self.filename = filename
         super().__init__()
 
     def setup_solver(self,orientation_constraint=False):
         T = 20  # number of time steps
         dt = self.duration / float(T - 1)
-
-        self.robot = optas.RobotModel(urdf_string=self.urdf_string, time_derivs=[0, 1])
+        robot_model_input = {}
+        robot_model_input["time_derivs"] = [0, 1]
+        robot_model_input["urdf_filename"] = self.filename
+        
+        self.robot = optas.RobotModel(**robot_model_input)
         self.name = self.robot.get_name()
         builder = optas.OptimizationBuilder(T=T, robots=self.robot, derivs_align=True)
 
@@ -62,10 +68,10 @@ class SimpleJointSpacePlanner(Manager):
             zsafe = z + zpad
             builder.add_geq_inequality_constraint(f"eff_safe_{t}", zsafe)
 
-            p = self.robot.get_global_link_position("lbr_link_3", q)
-            z = p[2]
-            zsafe = z + zpad
-            builder.add_geq_inequality_constraint(f"elbow_safe_{t}", zsafe)
+            # p = self.robot.get_global_link_position("lbr_link_3", q)
+            # z = p[2]
+            # zsafe = z + zpad
+            # builder.add_geq_inequality_constraint(f"elbow_safe_{t}", zsafe)
 
         # Cost: minimize joint velocity
         dQ = builder.get_model_states(self.name, time_deriv=1)
@@ -124,23 +130,25 @@ def main(gui=True):
     hz = 250
     dt = 1.0 / float(hz)
     pb = PyBullet(dt, gui=gui)
+    robot_urdf = TACTILE_KINOVA_URDF
     # kuka = KukaLBR()
-    robot = FixedBaseRobot(TACTILE_KINOVA_URDF)
+    robot = FixedBaseRobot(robot_urdf)
 
     # q0 = np.deg2rad([0, 45, 0, -90, 0, -45, 0])
     # q0 = np.deg2rad([60, 45, 0, -90, 0, -45, 0])
-    q0 = np.array([-0.2,0.4,0.4,0.9,0.9,0.9,0])
-
+    # q0 = np.array([-0.2,0.4,0.4,0.9,0.9,0.9,0])
+    q0 = np.array([1.6,0.7,0,1.5,0,1.5,0])
     robot.reset(q0)
 
     duration = 4.0  # seconds
-    planner = SimpleJointSpacePlanner(robot.urdf_string, "lbr_link_ee", duration)
+    planner = SimpleJointSpacePlanner(robot_urdf, "EndEffector_Link", duration)
     setup_obstacles()
     qc = robot.q()
     # pg = [0.4, 0.3, 0.4]
     og = [0, 1, 0, 0]
     pg = [0.60, -0.42,  0.41]
     # og = None
+    dot(pg, [0.5,0.9,0.5,1])
 
     planner.reset(qc, pg, og, q0)
     plan = planner.plan()
@@ -151,7 +159,8 @@ def main(gui=True):
     while True:
         t = time.time() - start
         if t < duration:
-            robot.cmd(plan(t))
+            # robot.cmd(plan(t))
+            robot.reset(plan(t))
         else:
             print("Completed motion")
             break

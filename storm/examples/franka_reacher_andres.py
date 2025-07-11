@@ -143,16 +143,19 @@ def main():
     # weight_val = [1,0.5,0.8,0.9]
     object_reduction = [0.02]
     
-    weight_val = [1,0.5,0.8]
+    # weight_val = [1,0.5,0.8]
+    weight_val = [0.9,0.7,0.6,0.4,0.3,0.2,0.1]
     args.sim_type = 5
     
     args.trial_num = trial_num
-    old_costs = [False]
-    old_closests = [False]
+    old_costs = [True,False]
+    old_closests = [True,False]
     for obj in object_reduction:
         for old_closest in old_closests:
             for w in weight_val:
                 for oLD_COST in old_costs:
+                    if old_costs is True and old_closest is False:
+                        continue
                     args.js_waypoint_csv_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/cost_comparison_reach/cost_comparison_reach_weight{w}_contactsamplechance0.0_objreduction{obj}_old_cost{oLD_COST}_old_closest{old_closest}_Min Iterations2500.csv"
                     args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_cost_comparison_reach/mpc_cost_comparison_reach_weight{w}_contactsamplechance0.0_objreduction{obj}_old_cost{oLD_COST}_old_closest{old_closest}_Min Iterations2500.csv"
 
