@@ -1,0 +1,6 @@
+Metric,Mean,Standard Deviation
+Average Closest Taxel Manipulability,0.5733333333375819,0.14007934259614005
+Number of states with manipulability < 0.01,1.4,0.4898979485566356
+Percentage of states with manipulability < 0.01,42.66666666666666,14.007934259633796
+Total Joint Norm Distance,0.68116,0.07007634693675178
+Total Time,3.28,0.448998886412873

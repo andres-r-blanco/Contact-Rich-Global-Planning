@@ -101,7 +101,7 @@ import time
 
 LOGGER_RUNNING = False
 TACTILE_KINOVA_URDF = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/GEN3_URDF_V12_w_taxels.urdf"
-CSV_FOLDER_LOCATION = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mink_reach_over_body"
+CSV_FOLDER_LOCATION = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/cost_comparison_reach"
 CSV_FILE_NAME = "nrob_weight1_contactsamplechance0.0_objreduction0.0_Min Iterations4000"
 JS_WAYPOINT_CSV_PATH = os.path.join(CSV_FOLDER_LOCATION, CSV_FILE_NAME)
 JOINT_INDICES = [0,1,2,3,4,5,6]
@@ -125,34 +125,51 @@ def main():
     parser.add_argument('--trial_num', type=int, default=1, help='number of trials to run')
     args = parser.parse_args()
     
-    weight_list = [0.97]
-    object_reduction_list = [0.02]
-    min_iterations = 2500
-    trial_num = 30
+    # weight_list = [0.97]
+    # object_reduction_list = [0.02]
+    # min_iterations = 2500
+    # trial_num = 30
     
+    trial_num = 25
+    save = True
+    lAZY = False
+    
+    uPDATE_PATH = False
+    iNCREASE_WEIGHT = False
+    min_iterations = 2500
+    sIM_type = 5
+    # thresholds = [0,5,10,15,20,25]\
+    counter = 0
+    # weight_val = [1,0.5,0.8,0.9]
+    object_reduction = [0.02]
+    
+    weight_val = [1,0.5,0.8]
     args.sim_type = 5
     
     args.trial_num = trial_num
+    old_costs = [False]
+    old_closests = [False]
+    for obj in object_reduction:
+        for old_closest in old_closests:
+            for w in weight_val:
+                for oLD_COST in old_costs:
+                    args.js_waypoint_csv_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/cost_comparison_reach/cost_comparison_reach_weight{w}_contactsamplechance0.0_objreduction{obj}_old_cost{oLD_COST}_old_closest{old_closest}_Min Iterations2500.csv"
+                    args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_cost_comparison_reach/mpc_cost_comparison_reach_weight{w}_contactsamplechance0.0_objreduction{obj}_old_cost{oLD_COST}_old_closest{old_closest}_Min Iterations2500.csv"
+
+                    sim_params = load_yaml(join_path(get_gym_configs_path(),'physx.yml'))
+                    sim_params['headless'] = args.headless
+                    # gym_instance = Gym(**sim_params)
+            
+                    mpc_robot_interactive(args, None)
+                    
+
     # args.js_waypoint_csv_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mink_reach_over_body/mink_reach_weight0.8_contactsamplechance0.0_objreduction0.02_Min Iterations2000.csv"
     # args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_mink_reach_over_body/mink_reach_weight0.8_contactsamplechance0.0_objreduction0.02_Min Iterations2000.csv"
     # sim_params = load_yaml(join_path(get_gym_configs_path(),'physx.yml'))
     # sim_params['headless'] = args.headless
     # # gym_instance = Gym(**sim_params)
 
-    # mpc_robot_interactive(args, None)
-    for obj_reduction in object_reduction_list:
-        for w in weight_list:
-            if obj_reduction == 0.02 and w == 1:
-                continue
-            # Manually set the file path for the joint space waypoint CSV file
-            args.js_waypoint_csv_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/reach_agg_manip_cost/reach_agg_manip_cost_weight{w}_contactsamplechance0.0_objreduction{obj_reduction}_Min Iterations{min_iterations}.csv"
-            args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_pt2_reach_agg_manip_cost/reach_agg_manip_cost_mpc_weight{w}_contactsamplechance0.0_objreduction{obj_reduction}_Min Iterations{min_iterations}.csv"
-    
-            sim_params = load_yaml(join_path(get_gym_configs_path(),'physx.yml'))
-            sim_params['headless'] = args.headless
-            # gym_instance = Gym(**sim_params)
-    
-            mpc_robot_interactive(args, None)
+            
         
 def setup_pybullet_env(sim_type = 5):
     if p.isConnected():
@@ -426,7 +443,7 @@ def mpc_robot_interactive(args, gym_instance):
                 # print("q_des:", q_des)
                 # start = time.time()
                 move_robot(robot_id, q_des)
-                
+                input()
                 # data saving stuff
                 curr_time = time.time() - start_time
                 curr_q = current_robot_state['position']
@@ -449,7 +466,7 @@ def mpc_robot_interactive(args, gym_instance):
                     break
 
                 # Check if MPC has been running too long
-                max_mpc_runtime = 120  # Maximum runtime in seconds 
+                max_mpc_runtime = 40  # Maximum runtime in seconds 
                 if curr_time > max_mpc_runtime:
                     print(f"MPC has been running for too long ({curr_time:.2f} seconds). Breaking and moving to next trial.")
                     got_stuck = True

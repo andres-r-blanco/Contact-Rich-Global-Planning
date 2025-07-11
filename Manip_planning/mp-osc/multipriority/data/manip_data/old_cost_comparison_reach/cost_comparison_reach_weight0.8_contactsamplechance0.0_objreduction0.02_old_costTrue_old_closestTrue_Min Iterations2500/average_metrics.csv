@@ -1,0 +1,9 @@
+Metric,Mean,Standard Deviation
+Average Closest Taxel Manipulability,0.48392676172111554,0.13351094120350462
+Number of states with closest taxel manipulability < 0.01,5.583333333333333,1.4695993407123664
+Percentage of states with closest taxel manipulability < 0.01,49.77094664594665,15.34412814900814
+Average Manipulability Cost,0.411547536138041,0.14447269619844394
+Number of states with manipulability cost > 0.35,4.583333333333333,1.4695993407123664
+Percentage of states with manipulability cost > 0.35,27.27272727272727,0.0
+Total Joint Norm Distance,3.2680416666666665,0.9616265941607596
+Total Time,11.5,1.6072751268321592

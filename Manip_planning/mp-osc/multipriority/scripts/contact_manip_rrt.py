@@ -70,7 +70,7 @@ MAX_PENETRATION = 0.03
 RANDOM_IK_CHANCE = 0
 PAUSE_TIME = 0.3
 JS_EXTEND_MAX = 0.6
-SAVE_DATA_PREFIX = "reach_4"
+SAVE_DATA_PREFIX = "cost_comparison_reach"
 DATA_FOLDER_NAME = SAVE_DATA_PREFIX
 # CONTACT_SAMPLE_PROB = 0
 ANGLE_DIF_ALLOWED = math.radians(45)
@@ -101,35 +101,51 @@ def new_main():
     data_gathering()
     # trial_num = 1
     # sIM_type = 5
-    # wEIGHT_FOR_DISTANCE = 0.9
+    # wEIGHT_FOR_DISTANCE = 0
     # mIN_PERCENT_MANIP_INCREASE = 0
     # min_iterations = 1000
     # lAZY = False
     # oLD_COST = False
+    # old_closest = False
     # uPDATE_PATH = False
+    # seed = 30
     # iNCREASE_WEIGHT = False
-    # test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, 0.02, 0.0, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT)
+    # test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, 0.02, 0.0, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, old_closest, uPDATE_PATH, iNCREASE_WEIGHT, seed = seed)
 
 def data_gathering():
     
-    trial_num = 30
+    trial_num = 25
     save = True
     lAZY = False
     old_costs = [True,False]
+    old_closests = [True,False]
     uPDATE_PATH = False
     iNCREASE_WEIGHT = False
     min_iterations = 2500
     sIM_type = 5
-    # thresholds = [0,5,10,15,20,25]
-    weight_val = [0.9,0.8,1,0.6,0.7,0.95]
+    # thresholds = [0,5,10,15,20,25]\
+    counter = 0
+    weight_val = [1,0.5,0.8,0.9]
     object_reduction = [0.02,0.0]
+    
+    # for obj in object_reduction:
+    #     for old_closest in old_closests:
+    #         for w in weight_val:
+    #             for oLD_COST in old_costs:
+    #                 test_main(trial_num, sIM_type, min_iterations, w, obj, 0.0, 0, lAZY, oLD_COST, old_closest, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
+                    
+    old_closests = [False] #last one incomplete was old closest false 0.6, 0.02, 
+    weight_val = [0.7,0.6,0.4,0.3,0.2,0.1]
     for obj in object_reduction:
-        for w in weight_val:
-            for oLD_COST in old_costs:
-                test_main(trial_num, sIM_type, min_iterations, w, obj, 0.0, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
+        for old_closest in old_closests:
+            for w in weight_val:
+                if obj == 0.02 and w == 0.7:
+                    continue
+                for oLD_COST in old_costs:
+                    test_main(trial_num, sIM_type, min_iterations, w, obj, 0.0, 0, lAZY, oLD_COST, old_closest, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
         # test_main(trial_num, sIM_type, w, 0.0, 0.2, 0, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save=save)
         
-def test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, object_reduction, contact_sample_chance, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, uPDATE_PATH, iNCREASE_WEIGHT,save = False):
+def test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, object_reduction, contact_sample_chance, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, old_closest, uPDATE_PATH, iNCREASE_WEIGHT,save = False, seed = None):
     sIM_2D = False
     if sIM_type == 0:
         sIM_2D = True
@@ -148,23 +164,25 @@ def test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, object_r
         if sIM_type >= 2:
             gOAL_AREA_SAMPLE_PROB = 0.1
             gOAL_AREA_DELTA = 0.15
-        eXTEND_STEP_SIZE = 0.1
-        r_FOR_PARENT = eXTEND_STEP_SIZE*2.5
-    rRT_MAX_ITERATIONS = 6000
+        eXTEND_STEP_SIZE = 0.05
+        r_FOR_PARENT = eXTEND_STEP_SIZE*1.5
+    rRT_MAX_ITERATIONS = 4000
     rRT_MIN_ITERATIONS = min_iterations
     xyz_gOAL_TOLERANCE = 0.01
     gOAL_SAMPLE_PROB = 0.05
     eDGE_COLLISION_RESOLUTION = eXTEND_STEP_SIZE
     if save == False:
+        if seed is None:
+            seed = 15
         rng = np.random.default_rng(15)
-        main(1,15, rng, sIM_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB,rRT_MAX_ITERATIONS,rRT_MIN_ITERATIONS,eXTEND_STEP_SIZE,xyz_gOAL_TOLERANCE,gOAL_AREA_DELTA,gOAL_SAMPLE_PROB,
-                r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,mIN_PERCENT_MANIP_INCREASE,lAZY,uPDATE_PATH,oLD_COST,iNCREASE_WEIGHT,object_reduction,contact_sample_chance)
+        main(1,seed, rng, sIM_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB,rRT_MAX_ITERATIONS,rRT_MIN_ITERATIONS,eXTEND_STEP_SIZE,xyz_gOAL_TOLERANCE,gOAL_AREA_DELTA,gOAL_SAMPLE_PROB,
+                r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,mIN_PERCENT_MANIP_INCREASE,lAZY,uPDATE_PATH,oLD_COST,old_closest, iNCREASE_WEIGHT,object_reduction,contact_sample_chance)
     else:
         for i in range(1,trial_num+1):
             rANDOM_SEED = i*15
             rng = np.random.default_rng(rANDOM_SEED)
             main(i,rANDOM_SEED, rng, sIM_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB,rRT_MAX_ITERATIONS,rRT_MIN_ITERATIONS,eXTEND_STEP_SIZE,xyz_gOAL_TOLERANCE,gOAL_AREA_DELTA,gOAL_SAMPLE_PROB,
-                r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,mIN_PERCENT_MANIP_INCREASE,lAZY,uPDATE_PATH,oLD_COST,iNCREASE_WEIGHT,object_reduction,contact_sample_chance, save = True)
+                r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,mIN_PERCENT_MANIP_INCREASE,lAZY,uPDATE_PATH,oLD_COST,old_closest,iNCREASE_WEIGHT,object_reduction,contact_sample_chance, save = True)
     
     # rng = np.random.default_rng(RANDOM_SEED)
     
@@ -172,7 +190,7 @@ def test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, object_r
     
 
 def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB,rRT_MAX_ITERATIONS,rRT_MIN_ITERATIONS,eXTEND_STEP_SIZE,xyz_gOAL_TOLERANCE,gOAL_AREA_DELTA,gOAL_SAMPLE_PROB,
-             r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,mIN_PERCENT_MANIP_INCREASE,lAZY,uPDATE_PATH,oLD_COST,iNCREASE_WEIGHT,object_reduction,contact_sample_chance, save = False):
+             r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,mIN_PERCENT_MANIP_INCREASE,lAZY,uPDATE_PATH,oLD_COST,old_closest, iNCREASE_WEIGHT,object_reduction,contact_sample_chance, save = False):
     if VIZ:
         physicsClient = p.connect(p.GUI)
         p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
@@ -432,7 +450,7 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
     rrt_obj = RRT_BASE(rng, robot_id, ik_solver,pin_model, joint_indices, 
                  obstacles, eXTEND_STEP_SIZE, q_init, xyz_quat_goal, xyz_quat_start, gOAL_SAMPLE_PROB, gOAL_AREA_SAMPLE_PROB, 
                  gOAL_AREA_DELTA, rRT_MAX_ITERATIONS, rRT_MIN_ITERATIONS, eDGE_COLLISION_RESOLUTION, PAUSE_TIME, 
-                 wEIGHT_FOR_DISTANCE, xyz_gOAL_TOLERANCE, r_FOR_PARENT, zERO_ANGLES,lAZY,uPDATE_PATH,oLD_COST,iNCREASE_WEIGHT, 
+                 wEIGHT_FOR_DISTANCE, xyz_gOAL_TOLERANCE, r_FOR_PARENT, zERO_ANGLES,lAZY,uPDATE_PATH,oLD_COST,old_closest, iNCREASE_WEIGHT, 
                  mIN_PERCENT_MANIP_INCREASE, xyz_limits, yzx_euler_angle_limits, reference_quat, object_reduction,contact_sample_chance, max_time=INF)
     start_time = time.time()
     node_path = rrt_obj.rrt_star_search()
@@ -441,8 +459,8 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
         wait_for_user()
     path = configs(node_path)
     print(f"total number of nodes: {len(rrt_obj.nodes)} out of {rrt_obj.samples_taken} samples taken")
-    print(f"number of nodes in path: {len(node_path)}")
-    print("done with trial num: " + str(trial_num))
+    # print(f"number of nodes in path: {len(node_path)}")
+    
     if path:
         # path = smooth(robot_id, path, joint_indices, obstacles)
         # print("Found path:")
@@ -455,7 +473,7 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
             rrt_obj.dot_path(node_path)
     else:
         print("No path found")
-
+    print("done with trial num: " + str(trial_num))
     
     if VIZ:
         print('Done?')
@@ -464,7 +482,7 @@ def main(trial_num, rANDOM_SEED, rng,sim_type, zERO_ANGLES,gOAL_AREA_SAMPLE_PROB
     #          r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,mIN_PERCENT_MANIP_INCREASE,lAZY,uPDATE_PATH,oLD_COST,iNCREASE_WEIGHT)
     if save:
         save_data (trial_num, node_path, rANDOM_SEED, sim_type,gOAL_AREA_SAMPLE_PROB,rRT_MAX_ITERATIONS,rRT_MIN_ITERATIONS,eXTEND_STEP_SIZE,xyz_gOAL_TOLERANCE,gOAL_AREA_DELTA,gOAL_SAMPLE_PROB,
-                r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,object_reduction,contact_sample_chance)
+                r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,old_closest,oLD_COST,object_reduction,contact_sample_chance)
     disconnect()
 
 def print_path_stuff(node_path):
@@ -525,7 +543,7 @@ class RRT_BASE(object):
     def __init__(self, rng, robot_id, ik_solver, pin_model, joint_indices, 
                  obstacles, extend_step, q_init, xyz_quat_goal, xyz_quat_start, agressive_goal_sampling_prob, goal_area_probability,  
                  goal_area_delta, max_samples, min_samples, res, pause_time, weight_dist, goal_tolerance,
-                 R, zERO_ANGLES,lAZY,uPDATE_PATH,oLD_COST,iNCREASE_WEIGHT, mIN_PERCENT_MANIP_INCREASE, xyz_limits, yzx_euler_angle_limits, reference_quat, 
+                 R, zERO_ANGLES,lAZY,uPDATE_PATH,oLD_COST,old_closest, iNCREASE_WEIGHT, mIN_PERCENT_MANIP_INCREASE, xyz_limits, yzx_euler_angle_limits, reference_quat, 
                  object_reduction,contact_sample_chance, max_time=INF, prc=0.01):
         """
         Template RRT planner
@@ -577,9 +595,7 @@ class RRT_BASE(object):
         self.rng = rng
         self.classic_rrt = CLASSIC_RRT
         self.ik_solver =ik_solver
-
-
-    
+        self.old_closest = old_closest
 
     def rrt_star_search(self):
         start_time = time.time()
@@ -610,7 +626,10 @@ class RRT_BASE(object):
             # dot(q_to_endeff(self.robot_id, target_config), [1,0,0,1]) # visualizing sampled point in red
             self.samples_taken = self.samples_taken + 1
             # print(f"sampled target xyz: {target_xyz_quat}")
-            closest_node = self.get_closest_node(target_xyz_quat) # getting nearest node
+            if self.old_closest:
+                closest_node = self.get_closest_node(target_xyz_quat) # getting nearest node
+            else:
+                closest_node = self.get_closest_and_best_node(target_xyz_quat)
             closest_q = closest_node.config
             # print(f"found closest node: {closest_node}")
             if sampling_goal:
@@ -1126,7 +1145,24 @@ class RRT_BASE(object):
     def get_closest_and_best_node(self,xyz_quat):
         # manipulability, lowest_signed_distance = self.calculate_taxel_manip_and_dist(q)
         # target_node = TreeNode(xyz_quat, manipulability=manipulability,lowest_signed_distance=lowest_signed_distance)
-        return self.argmin(lambda n: self.euclid_distance_fn(n.xyz_quat, xyz_quat), self.nodes)
+        nodes_in_radius = [
+            node for node in self.nodes 
+            if self.euclid_distance_fn(xyz_quat, node.xyz_quat) < self.R
+        ]
+        if not nodes_in_radius:
+            return self.get_closest_node(xyz_quat)
+        return self.argmin(lambda n: self.cost_estimate_fn(n, xyz_quat), nodes_in_radius)
+    
+    def cost_estimate_fn(self, node,xyz_quat): #Assumes that new cost is 
+        distance = self.euclid_distance_fn(node.xyz_quat, xyz_quat)
+        parent_dist_cost = node.d_cost
+        expected_distance_cost = parent_dist_cost + distance/self.R
+        
+        parent_manip_cost = node.manip_cost
+        expected_manip_cost = parent_manip_cost + node.node_manip_cost
+
+        total_cost_estimate = self.weight_dist*expected_distance_cost + expected_manip_cost*(1-self.weight_dist)
+        return total_cost_estimate
 
 
     def sample_fn(self):
@@ -1227,23 +1263,33 @@ class RRT_BASE(object):
         xyz_dist = np.linalg.norm(np.array(xyz_quat1[0]) - np.array(xyz_quat2[0]))
         #for now not interpolating quat
         return xyz_dist
+    
+    
 
     def cost_fn(self, start_node, target_node):
         distance = self.euclid_distance_fn(start_node.xyz_quat, target_node.xyz_quat)
         max_distance = self.euclid_distance_fn((self.xyz_limits[1],[np.pi,np.pi/2,np.pi]), (self.xyz_limits[0],[-np.pi,-np.pi/2,-np.pi]))
-        normalized_dist_to_last = distance/max_distance
-        parent_dist_cost = start_node.d_cost
-        distance_cost = normalized_dist_to_last + parent_dist_cost
+        
         
         lowest_signed_distances = start_node.lowest_signed_distances
         manips = start_node.manipulabilities  
         
         if self.use_old_cost:
             local_manip_cost = calculate_old_manip_cost(lowest_signed_distances, manips)
+            total_manip_cost = (local_manip_cost + start_node.manip_cost*start_node.num_in_path)/(1+start_node.num_in_path)
+            
+            normalized_dist_to_last = distance/max_distance
+            parent_dist_cost = start_node.d_cost
+            distance_cost = normalized_dist_to_last + parent_dist_cost
         else:
             local_manip_cost,manip_costs = calculate_manip_cost(lowest_signed_distances, manips)
-        
-        total_manip_cost = (local_manip_cost + start_node.manip_cost*start_node.num_in_path)/(1+start_node.num_in_path)
+            total_manip_cost = local_manip_cost + start_node.manip_cost
+            
+            normalized_dist_to_last = distance/self.R
+            parent_dist_cost = start_node.d_cost
+            distance_cost = normalized_dist_to_last + parent_dist_cost
+
+
         # normalized_final_manip_cost = final_manip_cost * distance_cost
         total_cost = self.weight_dist*distance_cost + total_manip_cost*(1-self.weight_dist) #TODO is this legit, otherwise farther goals will weight distance more??
         # total_cost = (1-COL_COST_RATIO)*total_cost + COL_COST_RATIO*penetration_cost
@@ -2190,7 +2236,7 @@ def clear_folder(folder_path):
     
 
 def save_data (trial_num, node_path, rANDOM_SEED, sim_type,gOAL_AREA_SAMPLE_PROB,rRT_MAX_ITERATIONS,rRT_MIN_ITERATIONS,eXTEND_STEP_SIZE,xyz_gOAL_TOLERANCE,gOAL_AREA_DELTA,gOAL_SAMPLE_PROB,
-             r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,object_reduction,contact_sample_chance):
+             r_FOR_PARENT,eDGE_COLLISION_RESOLUTION,wEIGHT_FOR_DISTANCE,old_closest,old_cost,object_reduction,contact_sample_chance):
     
     manip = []
     node_manip_cost = []
@@ -2237,7 +2283,7 @@ def save_data (trial_num, node_path, rANDOM_SEED, sim_type,gOAL_AREA_SAMPLE_PROB
         joint_path_matrix = np.empty((0, 0))
 
     test_type = "".join([
-        SAVE_DATA_PREFIX,"_weight",str(wEIGHT_FOR_DISTANCE),"_contactsamplechance",str(contact_sample_chance),"_objreduction", str(object_reduction), "_Min Iterations", str(rRT_MIN_ITERATIONS)
+        SAVE_DATA_PREFIX,"_weight",str(wEIGHT_FOR_DISTANCE),"_contactsamplechance",str(contact_sample_chance),"_objreduction", str(object_reduction), "_old_cost", str(old_cost), "_old_closest", str(old_closest),"_Min Iterations", str(rRT_MIN_ITERATIONS)
         ])
     csv_filepath = os.path.join(CSV_FOLDER_LOCATION, DATA_FOLDER_NAME, test_type + ".csv")
     os.makedirs(os.path.dirname(csv_filepath), exist_ok=True)

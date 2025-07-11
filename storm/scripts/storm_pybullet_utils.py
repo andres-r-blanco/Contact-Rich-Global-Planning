@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.join(ROOT_DIR, 'storm', 'scripts'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'Manip_planning', 'mp-osc','multipriority'))  # adjust if needed
 sys.path.insert(0, ROOT_DIR)
 sys.path.insert(1, os.path.join(ROOT_DIR, 'Manip_planning', 'mp-osc','pybullet_planning_master'))
+sys.path.insert(1, os.path.join(ROOT_DIR, 'Manip_planning', 'mp-osc','multipriority', 'scripts'))
 sys.path.insert(1, os.path.join(ROOT_DIR, 'Manip_planning', 'mp-osc','multipriority', 'urdfs'))
 from pybullet_tools.utils import wait_for_user, set_camera_pose
 from contact_manip_rrt import calculate_manip_cost

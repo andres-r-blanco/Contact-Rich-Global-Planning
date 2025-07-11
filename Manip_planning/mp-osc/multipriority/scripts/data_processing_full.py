@@ -11,6 +11,10 @@ plt.rcParams.update({
     'figure.figsize': (8, 5)
 })
 
+# ADD DIRECTORY PATH HERE
+DATA_PATH = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/cost_comparison_reach"
+
+
 def detect_data_format(filepath):
     with open(filepath, 'r') as f:
         first_line = f.readline()
@@ -242,7 +246,7 @@ def plot_manip_cost_histogram(trials, base_path, show_plot=False, name=None):
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.grid(False)
-    bins = np.logspace(np.log10(1e-15), np.log10(1.01), num=50)
+    bins = np.linspace(0, 1, num=50)  # Use equal-sized bins between 0 and 1
     hist, bin_edges = np.histogram(all_manip, bins=bins)
     percentages = (hist / len(all_manip)) * 100
     plt.bar(bin_edges[:-1], percentages, width=np.diff(bin_edges), edgecolor='black', align='edge')
@@ -310,7 +314,7 @@ def plot_distance_vs_manip_cost(trials, base_path, show_plot=False):
     plt.scatter(total_distances, avg_manips)
     plt.title('Total Distance vs Average Manipulability Cost')
     plt.xlabel('Total Joint Norm Distance')
-    plt.ylabel('Average Manipulability Costy')
+    plt.ylabel('Average Manipulability Cost')
     plt.tight_layout()
     plot_dir = ensure_plot_dir(base_path)
     filename = os.path.join(plot_dir, 'Distance_vs_AvgManipCost.png')
@@ -371,41 +375,56 @@ def plot_manipulability_boxplot(trials, base_path, show_plot=False):
 def compute_trial_metrics(trials, trial_num, data_format):
     data = trials[trial_num]
     manip = data['Closest Taxel Manip']
+    manip_cost = data['Local Manip Cost']
     # print(f"mean manip: {np.mean(manip)}")
     joint_norm = data['Joint Norm Distance']
     avg_manip = np.mean(manip)
+    avg_manip_cost = np.mean(manip_cost)
     num_low_manip = np.sum(manip < 0.01)
+    num_high_manip_cost = np.sum(manip_cost > 0.35)
     total_distance = np.sum(joint_norm)
     total_time = len(joint_norm) if data_format == 'planner' else (data['Time (s)'][-1] - data['Time (s)'][0])
-    return avg_manip, num_low_manip, total_distance, total_time
+    return avg_manip, num_low_manip, total_distance, total_time, avg_manip_cost, num_high_manip_cost
 
 def compute_average_metrics_across_trials(trials, data_format, base_path, print_output=False):
     avg_manips = []
+    avg_manip_costs = []
     num_low_manips = []
+    num_high_manip_costs = []
     total_distances = []
     total_times = []
     percentages_low_manip = []
+    percentage_high_manip_costs = []
     print(f"Number of trials: {len(trials)}")
     for trial_num in trials:
-        avg_manip, num_low_manip, total_distance, total_time = compute_trial_metrics(trials, trial_num, data_format)
+        avg_manip, num_low_manip, total_distance, total_time, avg_manip_cost, num_high_manip_cost= compute_trial_metrics(trials, trial_num, data_format)
         avg_manips.append(avg_manip)
+        avg_manip_costs.append(avg_manip_cost)
         num_low_manips.append(num_low_manip)
+        num_high_manip_costs.append(num_high_manip_cost)
         total_distances.append(total_distance)
         total_times.append(total_time)
-        percentage_low_manip = (num_low_manip / len(trials[trial_num]['Closest Taxel Manip'])) * 100
+        percentage_low_manip = (num_low_manip / len(trials[trial_num]['Closest Taxel Manip'])) * 100 #TODO this is wrong
         percentages_low_manip.append(percentage_low_manip)
+        percentage_high_manip_costs = (num_high_manip_cost / len(trials[trial_num]['Local Manip Cost'])) * 100
 
     mean_avg_manip = np.mean(avg_manips)
+    mean_avg_manip_cost = np.mean(avg_manip_costs)
     mean_num_low_manip = np.mean(num_low_manips)
+    mean_num_high_manip_cost = np.mean(num_high_manip_costs)
     mean_total_distance = np.mean(total_distances)
     mean_total_time = np.mean(total_times)
     mean_percentage_low_manip = np.mean(percentages_low_manip)
+    mean_percentage_high_manip_costs = np.mean(percentage_high_manip_costs)
 
     std_avg_manip = np.std(avg_manips)
+    std_avg_manip_cost = np.std(avg_manip_costs)
     std_num_low_manip = np.std(num_low_manips)
+    std_num_high_manip_cost = np.std(num_high_manip_costs)
     std_total_distance = np.std(total_distances)
     std_total_time = np.std(total_times)
     std_percentage_low_manip = np.std(percentages_low_manip)
+    std_percentage_high_manip_costs = np.std(percentage_high_manip_costs)
 
     metrics_file = os.path.join(base_path, "average_metrics.csv")
     os.makedirs(base_path, exist_ok=True)
@@ -413,20 +432,26 @@ def compute_average_metrics_across_trials(trials, data_format, base_path, print_
         writer = csv.writer(f)
         writer.writerow(["Metric", "Mean", "Standard Deviation"])
         writer.writerow(["Average Closest Taxel Manipulability", mean_avg_manip, std_avg_manip])
-        writer.writerow(["Number of states with manipulability < 0.01", mean_num_low_manip, std_num_low_manip])
-        writer.writerow(["Percentage of states with manipulability < 0.01", mean_percentage_low_manip, std_percentage_low_manip])
+        writer.writerow(["Number of states with closest taxel manipulability < 0.01", mean_num_low_manip, std_num_low_manip])
+        writer.writerow(["Percentage of states with closest taxel manipulability < 0.01", mean_percentage_low_manip, std_percentage_low_manip])
+        writer.writerow(["Average Manipulability Cost", mean_avg_manip_cost, std_avg_manip_cost])
+        writer.writerow(["Number of states with manipulability cost > 0.35", mean_num_high_manip_cost, std_num_high_manip_cost])
+        writer.writerow(["Percentage of states with manipulability cost > 0.35", mean_percentage_high_manip_costs, std_percentage_high_manip_costs])
         writer.writerow(["Total Joint Norm Distance", mean_total_distance, std_total_distance])
         writer.writerow(["Total Time", mean_total_time, std_total_time])
 
     if print_output:
         print("\nAverage metrics across all trials:")
         print(f"Average Closest Taxel Manipulability: {mean_avg_manip:.4f} ± {std_avg_manip:.4f}")
-        print(f"Number of states with manipulability < 0.01: {mean_num_low_manip:.2f} ± {std_num_low_manip:.2f}")
-        print(f"Percentage of states with manipulability < 0.01: {mean_percentage_low_manip:.2f}% ± {std_percentage_low_manip:.2f}%")
+        print(f"Number of states with closest taxel manipulability < 0.01: {mean_num_low_manip:.2f} ± {std_num_low_manip:.2f}")
+        print(f"Percentage of states with closest taxel manipulability < 0.01: {mean_percentage_low_manip:.2f}% ± {std_percentage_low_manip:.2f}%")
+        print(f"Average Manipulability Cost: {mean_avg_manip_cost:.4f} ± {std_avg_manip_cost:.4f}")
+        print(f"Number of states with manipulability cost > 0.35: {mean_num_high_manip_cost:.2f} ± {std_num_high_manip_cost:.2f}")
+        print(f"Percentage of states with manipulability cost > 0.35: {mean_percentage_high_manip_costs:.2f}% ± {std_percentage_high_manip_costs:.2f}%")
         print(f"Total Joint Norm Distance: {mean_total_distance:.4f} ± {std_total_distance:.4f}")
         print(f"Total Time: {mean_total_time:.4f} ± {std_total_time:.4f}")
 
-    return mean_num_low_manip, mean_total_distance
+    return mean_avg_manip, std_avg_manip, mean_total_distance,std_total_distance, mean_avg_manip_cost, std_avg_manip_cost, mean_percentage_high_manip_costs, std_percentage_high_manip_costs
 
 # def data_processing_pipeline(file_path, print_output=False, show_plot=False):
 #     trials, data_format = parse_file(file_path)
@@ -445,7 +470,7 @@ def batch_process_folder(folder_path, print_output=False, show_plot=False):
     summary_file = os.path.join(folder_path, "summary_metrics.csv")
     with open(summary_file, "w", newline="") as f_summary:
         writer = csv.writer(f_summary)
-        writer.writerow(["File", "Number of States Under 0.01 Manipulability", "Average Total Joint Norm Distance"])
+        writer.writerow(["File", "Mean Avg Manip", "Std Avg Manip", "Mean Total Distance", "Std Total Distance", "Mean Avg Manip Cost", "Std Avg Manip Cost", "Mean % High Manip Cost", "Std % High Manip Cost"])
 
         for filename in os.listdir(folder_path):
             if filename.endswith(".csv") and filename != "summary_metrics.csv":
@@ -454,8 +479,8 @@ def batch_process_folder(folder_path, print_output=False, show_plot=False):
                 print(f"\nProcessing {filename}")
                 trials, data_format = parse_file(file_path)
                 base_path = file_path.rsplit('.', 1)[0]
-                avg_bad_manip_num, mean_total_distance = compute_average_metrics_across_trials(trials, data_format, base_path, print_output)
-                writer.writerow([filename, avg_bad_manip_num, mean_total_distance])
+                mean_avg_manip, std_avg_manip, mean_total_distance,std_total_distance, mean_avg_manip_cost, std_avg_manip_cost, mean_percentage_high_manip_costs, std_percentage_high_manip_costs = compute_average_metrics_across_trials(trials, data_format, base_path, print_output)
+                writer.writerow([filename, mean_avg_manip, std_avg_manip, mean_total_distance,std_total_distance, mean_avg_manip_cost, std_avg_manip_cost, mean_percentage_high_manip_costs, std_percentage_high_manip_costs])
                 plot_manip_vs_normalized_joint_norm_all(trials, base_path, show_plot)
                 plot_closest_taxel_vs_normalized_joint_norm(trials, base_path, show_plot)
                 plot_total_joint_norm_per_trial(trials, base_path, show_plot)
@@ -502,14 +527,16 @@ def plot_summary_metrics(folder_path, show_plots=False):
     contact_sample_chances = []
     obj_reductions = []
     avg_manipulabilities = []
+    avg_manip_costs = []
     avg_total_distances = []
+    avg_percentage_high_manip_costs = []
     filenames = []
 
     with open(summary_file, "r") as f:
         reader = csv.reader(f)
         next(reader)  # Skip header
         for row in reader:
-            filename, avg_manip, avg_distance = row
+            filename, mean_avg_manip, std_avg_manip, mean_total_distance,std_total_distance, mean_avg_manip_cost, std_avg_manip_cost, mean_percentage_high_manip_costs, std_percentage_high_manip_costs = row
             filenames.append(filename)
             if "weight" in filename and "contactsamplechance" in filename and "objreduction" in filename:
                 weight = float(filename.split("weight")[1].split("_")[0])
@@ -518,8 +545,10 @@ def plot_summary_metrics(folder_path, show_plots=False):
                 weights.append(weight)
                 contact_sample_chances.append(contact_sample_chance)
                 obj_reductions.append(obj_reduction)
-                avg_manipulabilities.append(float(avg_manip))
-                avg_total_distances.append(float(avg_distance))
+                avg_manipulabilities.append(float(mean_avg_manip))
+                avg_manip_costs.append(float(mean_avg_manip_cost))
+                avg_total_distances.append(float(mean_total_distance))
+                avg_percentage_high_manip_costs.append(float(mean_percentage_high_manip_costs))
 
     # Plot metrics vs weight
     fig, ax1 = plt.subplots(figsize=(10, 6))
@@ -532,8 +561,8 @@ def plot_summary_metrics(folder_path, show_plots=False):
     ax1.tick_params(axis="y", labelcolor="red")
 
     ax2 = ax1.twinx()  # Create a second y-axis
-    ax2.set_ylabel("Number of States Under 0.01 Manipulability", color="blue")
-    ax2.scatter(weights, avg_manipulabilities, label="Number of States Under 0.01", color="blue", marker="o")
+    ax2.set_ylabel("Average Closest Taxel Manipulability", color="blue")
+    ax2.scatter(weights, avg_manipulabilities, label="Average Closest Taxel Manipulability", color="blue", marker="o")
     ax2.tick_params(axis="y", labelcolor="blue")
 
     fig.tight_layout()
@@ -554,8 +583,8 @@ def plot_summary_metrics(folder_path, show_plots=False):
     ax1.tick_params(axis="y", labelcolor="red")
 
     ax2 = ax1.twinx()  # Create a second y-axis
-    ax2.set_ylabel("Number of States Under 0.01", color="blue")
-    ax2.scatter(obj_reductions, avg_manipulabilities, label="Number of States Under 0.01", color="blue", marker="o")
+    ax2.set_ylabel("Average Closest Taxel Manipulability", color="blue")
+    ax2.scatter(obj_reductions, avg_manipulabilities, label="Average Closest Taxel Manipulability", color="blue", marker="o")
     ax2.tick_params(axis="y", labelcolor="blue")
 
     fig.tight_layout()
@@ -564,28 +593,93 @@ def plot_summary_metrics(folder_path, show_plots=False):
     plt.savefig(os.path.join(folder_path, "Summary_Metrics_vs_ObjectReduction.png"))
     if show_plots:
         plt.show()
+        
+    
+    old_cost_runs = []
+    new_cost_runs = []
+    for i, filename in enumerate(filenames):
+        if "old_costTrue" in filename and "old_closestTrue" in filename:
+            old_cost_runs.append((avg_total_distances[i], avg_manipulabilities[i]))
+        elif "old_closestTrue" in filename:
+            new_cost_runs.append((avg_total_distances[i], avg_manipulabilities[i]))
 
-    # Plot metrics vs contact sample chance
+    old_cost_runs = np.array(old_cost_runs)
+    new_cost_runs = np.array(new_cost_runs)
+
     fig, ax1 = plt.subplots(figsize=(10, 6))
     ax1.spines['top'].set_visible(False)
     ax1.spines['right'].set_visible(False)
     ax1.grid(False)
-    ax1.set_xlabel("Contact Sample Chance")
-    ax1.set_ylabel("Avg Total Distance", color="red")
-    ax1.scatter(contact_sample_chances, avg_total_distances, label="Avg Total Distance", color="red", marker="x")
-    ax1.tick_params(axis="y", labelcolor="red")
+    ax1.set_xlabel("Average Total Distance")
+    ax1.set_ylabel("Average Closest Taxel Manipulability", color="blue")
 
-    ax2 = ax1.twinx()  # Create a second y-axis
-    ax2.set_ylabel("Number of States Under 0.01", color="blue")
-    ax2.scatter(contact_sample_chances, avg_manipulabilities, label="Number of States Under 0.01", color="blue", marker="o")
-    ax2.tick_params(axis="y", labelcolor="blue")
+    if len(old_cost_runs) > 0:
+        ax1.scatter(old_cost_runs[:, 0], old_cost_runs[:, 1], label="Old Cost", color="blue", marker="o")
+    if len(new_cost_runs) > 0:
+        ax1.scatter(new_cost_runs[:, 0], new_cost_runs[:, 1], label="New Cost", color="red", marker="x")
 
-    fig.tight_layout()
-    plt.title("Average Metrics vs Contact Sample Chance")
+    ax1.tick_params(axis="y", labelcolor="blue")
+    plt.legend()
+    plt.title("Average Metrics: Old Cost vs New Cost (Filtered by old_closestFalse)")
     plt.tight_layout()
-    plt.savefig(os.path.join(folder_path, "Summary_Metrics_vs_ContactSampleChance.png"))
+    plt.savefig(os.path.join(folder_path, "Summary_Metrics_OldCost_vs_NewCost_Filtered.png"))
     if show_plots:
         plt.show()
+        
+        
+    old_closest_runs = []
+    new_closest_runs = []
+    for i, filename in enumerate(filenames):
+        if "old_costFalse" in filename:  # Only consider runs with "old_costTrue" in the filename
+            if "old_closestTrue" in filename:
+                old_closest_runs.append((avg_total_distances[i], avg_manipulabilities[i]))
+            else:
+                new_closest_runs.append((avg_total_distances[i], avg_manipulabilities[i]))
+
+    old_closest_runs = np.array(old_closest_runs)
+    new_closest_runs = np.array(new_closest_runs)
+
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    ax1.spines['top'].set_visible(False)
+    ax1.spines['right'].set_visible(False)
+    ax1.grid(False)
+    ax1.set_xlabel("Average Total Distance")
+    ax1.set_ylabel("Average Closest Taxel Manipulability", color="blue")
+
+    if len(old_closest_runs) > 0:
+        ax1.scatter(old_closest_runs[:, 0], old_closest_runs[:, 1], label="Old Closest", color="blue", marker="o")
+    if len(new_closest_runs) > 0:
+        ax1.scatter(new_closest_runs[:, 0], new_closest_runs[:, 1], label="New Closest", color="red", marker="x")
+
+    ax1.tick_params(axis="y", labelcolor="blue")
+    plt.legend()
+    plt.title("Average Metrics: Old Closest vs New Closest (Filtered by old_costTrue)")
+    plt.tight_layout()
+    plt.savefig(os.path.join(folder_path, "Summary_Metrics_OldClosest_vs_NewClosest_Filtered.png"))
+    if show_plots:
+        plt.show()
+
+    # Plot metrics vs contact sample chance
+    # fig, ax1 = plt.subplots(figsize=(10, 6))
+    # ax1.spines['top'].set_visible(False)
+    # ax1.spines['right'].set_visible(False)
+    # ax1.grid(False)
+    # ax1.set_xlabel("Contact Sample Chance")
+    # ax1.set_ylabel("Avg Total Distance", color="red")
+    # ax1.scatter(contact_sample_chances, avg_total_distances, label="Avg Total Distance", color="red", marker="x")
+    # ax1.tick_params(axis="y", labelcolor="red")
+
+    # ax2 = ax1.twinx()  # Create a second y-axis
+    # ax2.set_ylabel("Number of States Under 0.01", color="blue")
+    # ax2.scatter(contact_sample_chances, avg_manipulabilities, label="Number of States Under 0.01", color="blue", marker="o")
+    # ax2.tick_params(axis="y", labelcolor="blue")
+
+    # fig.tight_layout()
+    # plt.title("Average Metrics vs Contact Sample Chance")
+    # plt.tight_layout()
+    # plt.savefig(os.path.join(folder_path, "Summary_Metrics_vs_ContactSampleChance.png"))
+    # if show_plots:
+    #     plt.show()
 
     # Plot manipulability vs total distance for all runs
     plt.figure(figsize=(10, 6))
@@ -594,19 +688,52 @@ def plot_summary_metrics(folder_path, show_plots=False):
     ax.spines['right'].set_visible(False)
     ax.grid(False)
     for i in range(len(avg_manipulabilities)):
-        plt.scatter(avg_manipulabilities[i], avg_total_distances[i], label=filenames[i])
+        plt.scatter(avg_total_distances[i], avg_manipulabilities[i], label=filenames[i])
     plt.title("Manipulability vs Total Distance (All Runs)")
-    plt.xlabel("Number of States Under 0.01")
-    plt.ylabel("Average Total Distance")
-    plt.legend(loc="best", fontsize="small", bbox_to_anchor=(1.05, 1))
+    plt.xlabel("Average Total Distance")
+    plt.ylabel("Average Closest Taxel Manipulability")
     plt.grid()
     plt.tight_layout()
+    plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.15), fontsize="small", ncol=3)
     plt.savefig(os.path.join(folder_path, "Manipulability_vs_TotalDistance_AllRuns.png"), bbox_inches="tight")
+    if show_plots:
+        plt.show()
+        
+    plt.figure(figsize=(10, 6))
+    ax = plt.gca()
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.grid(False)
+    for i in range(len(avg_manipulabilities)):
+        plt.scatter(avg_total_distances[i], avg_manip_costs[i], label=filenames[i])
+    plt.title("Manipulability Cost vs Total Distance (All Runs)")
+    plt.xlabel("Average Total Distance")
+    plt.ylabel("Average Manipulability Cost")
+    plt.grid()
+    plt.tight_layout()
+    plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.15), fontsize="small", ncol=3)
+    plt.savefig(os.path.join(folder_path, "Manipulability_Cost_vs_TotalDistance_AllRuns.png"), bbox_inches="tight")
+    if show_plots:
+        plt.show()
+        
+    plt.figure(figsize=(10, 6))
+    ax = plt.gca()
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.grid(False)
+    for i in range(len(avg_manipulabilities)):
+        plt.scatter(avg_total_distances[i], avg_percentage_high_manip_costs[i], label=filenames[i])
+    plt.title("Percentage of States Above 0.35 Manipulability Cost vs Total Distance (All Runs)")
+    plt.ylabel("Percentage of States Above 0.35 Manipulability Cost")
+    plt.xlabel("Average Total Distance")
+    plt.grid()
+    plt.tight_layout()
+    plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.15), fontsize="small", ncol=3)
+    plt.savefig(os.path.join(folder_path, "Percentage_States_Manipulability_Cost_vs_TotalDistance_AllRuns.png"), bbox_inches="tight")
     if show_plots:
         plt.show()
 
 if __name__ == "__main__":                  
-    DATA_PATH = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/reach_3"
     # add_csv_extension_to_files(DATA_PATH)
     compare_manipulability_across_files(DATA_PATH)
     batch_process_folder(DATA_PATH, print_output=True, show_plot=False)

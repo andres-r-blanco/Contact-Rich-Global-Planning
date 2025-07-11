@@ -1,0 +1,612 @@
+Trial,1,Sim Type,5,Distance Weight,0.9,Random Seed,15,Min Iterations,2500,Distance cost,0.3809714691840204,Manip Cost,0.25,Total cost,0.36787432226561834,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,4.386947084e-11
+Distance to Last Node,0.0,0.098,0.221,0.107
+Total Cost,0.0,0.07876,0.25636,0.36787
+Local Manip Cost,0.0,-0.0,-0.0,1.0
+Joint 0: ,-0.2,-0.115,0.149,0.256
+Joint 1: ,0.4,0.472,0.713,0.899
+Joint 2: ,0.4,0.472,0.38,0.37
+Joint 3: ,0.9,0.969,1.03,0.957
+Joint 4: ,0.9,0.887,0.829,0.938
+Joint 5: ,0.9,0.947,0.936,0.768
+Joint 6: ,0.0,0.304,0.498,0.828
+Trial,2,Sim Type,5,Distance Weight,0.9,Random Seed,30,Min Iterations,2500,Distance cost,0.37940697485582164,Manip Cost,0.25,Total cost,0.3664662773702395,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.118,0.162,0.144
+Total Cost,0.0,0.09528,0.22535,0.36647
+Local Manip Cost,0.0,-0.0,-0.0,1.0
+Joint 0: ,-0.2,-0.13,0.055,0.253
+Joint 1: ,0.4,0.467,0.721,0.907
+Joint 2: ,0.4,0.437,0.442,0.363
+Joint 3: ,0.9,1.061,1.015,0.958
+Joint 4: ,0.9,0.947,0.958,1.012
+Joint 5: ,0.9,0.98,0.91,0.792
+Joint 6: ,0.0,0.11,0.644,0.487
+Trial,3,Sim Type,5,Distance Weight,0.9,Random Seed,45,Min Iterations,2500,Distance cost,0.3885783118329693,Manip Cost,0.0,Total cost,0.34972048064967237,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.11,0.109,0.216
+Total Cost,0.0,0.08861,0.17607,0.34972
+Local Manip Cost,0.0,-0.0,-0.0,-0.0
+Joint 0: ,-0.2,-0.058,0.085,0.274
+Joint 1: ,0.4,0.435,0.47,0.882
+Joint 2: ,0.4,0.329,0.258,0.32
+Joint 3: ,0.9,1.039,1.178,0.996
+Joint 4: ,0.9,0.844,0.788,1.062
+Joint 5: ,0.9,0.925,0.951,0.737
+Joint 6: ,0.0,0.322,0.644,0.393
+Trial,4,Sim Type,5,Distance Weight,0.9,Random Seed,60,Min Iterations,2500,Distance cost,0.384066125437002,Manip Cost,0.0,Total cost,0.3456595128933018,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1.0,4.385060349e-11
+Distance to Last Node,0.0,0.098,0.096,0.235
+Total Cost,0.0,0.079,0.15655,0.34566
+Local Manip Cost,0.0,-0.0,-0.0,-0.0
+Joint 0: ,-0.2,-0.066,0.068,0.264
+Joint 1: ,0.4,0.444,0.488,0.9
+Joint 2: ,0.4,0.32,0.241,0.355
+Joint 3: ,0.9,0.995,1.091,0.942
+Joint 4: ,0.9,0.837,0.774,0.923
+Joint 5: ,0.9,0.966,1.031,0.785
+Joint 6: ,0.0,-0.369,-0.738,-0.707
+Trial,5,Sim Type,5,Distance Weight,0.9,Random Seed,75,Min Iterations,2500,Distance cost,0.39204307361708934,Manip Cost,0.0,Total cost,0.3528387662553804,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.208,0.231
+Total Cost,0.0,0.16714,0.35284
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,0.029,0.259
+Joint 1: ,0.4,0.477,0.882
+Joint 2: ,0.4,0.435,0.381
+Joint 3: ,0.9,1.132,0.991
+Joint 4: ,0.9,0.806,0.918
+Joint 5: ,0.9,0.908,0.678
+Joint 6: ,0.0,0.393,0.754
+Trial,6,Sim Type,5,Distance Weight,0.9,Random Seed,90,Min Iterations,2500,Distance cost,0.37657608548557364,Manip Cost,0.25,Total cost,0.3639184769370163,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.1,0.239,0.082
+Total Cost,0.0,0.08049,0.27283,0.36392
+Local Manip Cost,0.0,-0.0,-0.0,1.0
+Joint 0: ,-0.2,-0.114,0.158,0.251
+Joint 1: ,0.4,0.474,0.794,0.894
+Joint 2: ,0.4,0.431,0.415,0.381
+Joint 3: ,0.9,0.988,0.993,0.979
+Joint 4: ,0.9,0.861,0.968,0.969
+Joint 5: ,0.9,0.931,0.796,0.735
+Joint 6: ,0.0,-0.0,-0.094,-0.33
+Trial,7,Sim Type,5,Distance Weight,0.9,Random Seed,105,Min Iterations,2500,Distance cost,0.37643032355302913,Manip Cost,0.25,Total cost,0.36378729119772624,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.095,0.098,0.228
+Total Cost,0.0,0.07653,0.15515,0.36379
+Local Manip Cost,0.0,-0.0,-0.0,1.0
+Joint 0: ,-0.2,-0.05,0.099,0.389
+Joint 1: ,0.4,0.466,0.532,0.849
+Joint 2: ,0.4,0.311,0.222,0.114
+Joint 3: ,0.9,0.969,1.037,0.94
+Joint 4: ,0.9,0.888,0.875,0.91
+Joint 5: ,0.9,0.908,0.917,0.774
+Joint 6: ,0.0,0.364,0.729,0.974
+Trial,8,Sim Type,5,Distance Weight,0.9,Random Seed,120,Min Iterations,2500,Distance cost,0.40475064062476096,Manip Cost,0.0,Total cost,0.3642755765622849,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.235,0.218
+Total Cost,0.0,0.1888,0.36428
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,0.095,0.402
+Joint 1: ,0.4,0.465,0.846
+Joint 2: ,0.4,0.353,0.091
+Joint 3: ,0.9,1.153,0.934
+Joint 4: ,0.9,0.743,0.884
+Joint 5: ,0.9,1.038,0.772
+Joint 6: ,0.0,-0.094,-0.377
+Trial,9,Sim Type,5,Distance Weight,0.9,Random Seed,135,Min Iterations,2500,Distance cost,0.3765140005112906,Manip Cost,0.25,Total cost,0.3638626004601615,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.121,0.11,0.191
+Total Cost,0.0,0.09701,0.18548,0.36386
+Local Manip Cost,0.0,-0.0,-0.0,1.0
+Joint 0: ,-0.2,-0.047,0.128,0.306
+Joint 1: ,0.4,0.479,0.611,0.879
+Joint 2: ,0.4,0.345,0.276,0.277
+Joint 3: ,0.9,1.027,1.001,0.937
+Joint 4: ,0.9,0.969,0.907,0.892
+Joint 5: ,0.9,0.893,0.83,0.775
+Joint 6: ,0.0,0.032,-0.439,-0.55
+Trial,10,Sim Type,5,Distance Weight,0.9,Random Seed,150,Min Iterations,2500,Distance cost,0.4075057355410172,Manip Cost,0.0,Total cost,0.3667551619869155,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,4.412185507e-11
+Distance to Last Node,0.0,0.239,0.216
+Total Cost,0.0,0.19252,0.36676
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,0.024,0.229
+Joint 1: ,0.4,0.483,0.901
+Joint 2: ,0.4,0.304,0.413
+Joint 3: ,0.9,1.22,1.012
+Joint 4: ,0.9,0.712,1.073
+Joint 5: ,0.9,1.073,0.714
+Joint 6: ,0.0,0.298,0.534
+Trial,11,Sim Type,5,Distance Weight,0.9,Random Seed,165,Min Iterations,2500,Distance cost,0.3814569106161996,Manip Cost,0.0,Total cost,0.3433112195545796,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.179,0.247
+Total Cost,0.0,0.14425,0.34331
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,-0.022,0.39
+Joint 1: ,0.4,0.474,0.837
+Joint 2: ,0.4,0.409,0.1
+Joint 3: ,0.9,1.117,0.995
+Joint 4: ,0.9,0.807,1.057
+Joint 5: ,0.9,0.926,0.718
+Joint 6: ,0.0,0.456,0.723
+Trial,12,Sim Type,5,Distance Weight,0.9,Random Seed,180,Min Iterations,2500,Distance cost,0.38530127584446927,Manip Cost,0.25,Total cost,0.37177114826002233,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.1,0.179,0.152
+Total Cost,0.0,0.08049,0.22456,0.37177
+Local Manip Cost,0.0,-0.0,-0.0,1.0
+Joint 0: ,-0.2,-0.129,0.039,0.22
+Joint 1: ,0.4,0.455,0.681,0.931
+Joint 2: ,0.4,0.392,0.425,0.442
+Joint 3: ,0.9,1.01,1.076,0.961
+Joint 4: ,0.9,0.821,0.876,0.969
+Joint 5: ,0.9,0.984,0.948,0.78
+Joint 6: ,0.0,0.079,0.141,0.189
+Trial,13,Sim Type,5,Distance Weight,0.9,Random Seed,195,Min Iterations,2500,Distance cost,0.4025783020713286,Manip Cost,0.0,Total cost,0.36232047186419575,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.203,0.247
+Total Cost,0.0,0.16319,0.36232
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,-0.106,0.242
+Joint 1: ,0.4,0.466,0.921
+Joint 2: ,0.4,0.443,0.389
+Joint 3: ,0.9,1.209,0.94
+Joint 4: ,0.9,0.747,0.983
+Joint 5: ,0.9,1.067,0.815
+Joint 6: ,0.0,0.22,0.236
+Trial,14,Sim Type,5,Distance Weight,0.9,Random Seed,210,Min Iterations,2500,Distance cost,0.397753047163213,Manip Cost,0.0,Total cost,0.35797774244689173,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.226,0.219
+Total Cost,0.0,0.18188,0.35798
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,-0.023,0.206
+Joint 1: ,0.4,0.478,0.918
+Joint 2: ,0.4,0.437,0.473
+Joint 3: ,0.9,1.217,0.997
+Joint 4: ,0.9,0.803,1.015
+Joint 5: ,0.9,1.002,0.717
+Joint 6: ,0.0,0.518,0.22
+Trial,15,Sim Type,5,Distance Weight,0.9,Random Seed,225,Min Iterations,2500,Distance cost,0.37638130270969633,Manip Cost,0.3333333333333333,Total cost,0.37207650577206003,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,4.499705769e-11
+Distance to Last Node,0.0,0.212,0.209
+Total Cost,0.0,0.17092,0.37208
+Local Manip Cost,0.0,-0.0,1.0
+Joint 0: ,-0.2,0.06,0.201
+Joint 1: ,0.4,0.64,0.932
+Joint 2: ,0.4,0.36,0.478
+Joint 3: ,0.9,0.96,0.986
+Joint 4: ,0.9,0.985,1.072
+Joint 5: ,0.9,0.854,0.715
+Joint 6: ,0.0,0.393,0.55
+Trial,16,Sim Type,5,Distance Weight,0.9,Random Seed,240,Min Iterations,2500,Distance cost,0.3932764127162118,Manip Cost,0.0,Total cost,0.3539487714445906,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.196,0.244
+Total Cost,0.0,0.15794,0.35395
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,-0.016,0.232
+Joint 1: ,0.4,0.455,0.91
+Joint 2: ,0.4,0.392,0.415
+Joint 3: ,0.9,1.155,0.972
+Joint 4: ,0.9,0.791,0.98
+Joint 5: ,0.9,1.048,0.756
+Joint 6: ,0.0,0.173,-0.252
+Trial,17,Sim Type,5,Distance Weight,0.9,Random Seed,255,Min Iterations,2500,Distance cost,0.40939427196782485,Manip Cost,0.028091995523470664,Total cost,0.37126404432338944,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,0.07521772244418881,1e-20
+Distance to Last Node,0.0,0.127,0.213,0.118
+Total Cost,0.0,0.10242,0.2736,0.37126
+Local Manip Cost,0.0,-0.0,-0.0,0.11236798209388266
+Joint 0: ,-0.2,-0.123,0.153,0.313
+Joint 1: ,0.4,0.456,0.647,0.863
+Joint 2: ,0.4,0.394,0.311,0.258
+Joint 3: ,0.9,1.079,1.208,0.981
+Joint 4: ,0.9,0.843,0.822,0.973
+Joint 5: ,0.9,0.98,0.973,0.725
+Joint 6: ,0.0,0.401,0.534,0.66
+Trial,18,Sim Type,5,Distance Weight,0.9,Random Seed,270,Min Iterations,2500,Distance cost,0.39287886329564486,Manip Cost,0.0,Total cost,0.3535909769660804,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.204,0.235
+Total Cost,0.0,0.16417,0.35359
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,0.142,0.248
+Joint 1: ,0.4,0.496,0.912
+Joint 2: ,0.4,0.293,0.384
+Joint 3: ,0.9,1.01,0.942
+Joint 4: ,0.9,0.795,0.944
+Joint 5: ,0.9,0.992,0.807
+Joint 6: ,0.0,0.362,0.157
+Trial,19,Sim Type,5,Distance Weight,0.9,Random Seed,285,Min Iterations,2500,Distance cost,0.3794942610023939,Manip Cost,0.25,Total cost,0.3665448349021545,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,4.406103511e-11
+Distance to Last Node,0.0,0.077,0.236,0.112
+Total Cost,0.0,0.06173,0.2515,0.36654
+Local Manip Cost,0.0,-0.0,-0.0,1.0
+Joint 0: ,-0.2,-0.16,0.085,0.245
+Joint 1: ,0.4,0.429,0.729,0.903
+Joint 2: ,0.4,0.409,0.474,0.396
+Joint 3: ,0.9,1.01,1.06,0.957
+Joint 4: ,0.9,0.851,0.89,0.918
+Joint 5: ,0.9,0.954,0.884,0.763
+Joint 6: ,0.0,0.126,0.346,0.471
+Trial,20,Sim Type,5,Distance Weight,0.9,Random Seed,300,Min Iterations,2500,Distance cost,0.37962948404172503,Manip Cost,0.25,Total cost,0.3666665356375526,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.1,0.199,0.125
+Total Cost,0.0,0.08049,0.24094,0.36667
+Local Manip Cost,0.0,-0.0,-0.0,1.0
+Joint 0: ,-0.2,-0.118,0.105,0.227
+Joint 1: ,0.4,0.437,0.721,0.913
+Joint 2: ,0.4,0.439,0.481,0.446
+Joint 3: ,0.9,1.009,1.001,0.943
+Joint 4: ,0.9,0.823,0.836,0.844
+Joint 5: ,0.9,0.979,0.846,0.772
+Joint 6: ,0.0,0.079,-0.047,-0.393
+Trial,21,Sim Type,5,Distance Weight,0.9,Random Seed,315,Min Iterations,2500,Distance cost,0.4006099647816673,Manip Cost,0.0,Total cost,0.3605489683035006,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.2,0.248
+Total Cost,0.0,0.16123,0.36055
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,0.058,0.284
+Joint 1: ,0.4,0.445,0.888
+Joint 2: ,0.4,0.355,0.307
+Joint 3: ,0.9,1.124,0.954
+Joint 4: ,0.9,0.856,0.958
+Joint 5: ,0.9,1.022,0.78
+Joint 6: ,0.0,0.503,0.55
+Trial,22,Sim Type,5,Distance Weight,0.9,Random Seed,330,Min Iterations,2500,Distance cost,0.3885521742057176,Manip Cost,0.0,Total cost,0.34969695678514584,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,6.10868676e-11
+Distance to Last Node,0.0,0.189,0.246
+Total Cost,0.0,0.152,0.3497
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,0.052,0.29
+Joint 1: ,0.4,0.448,0.883
+Joint 2: ,0.4,0.255,0.306
+Joint 3: ,0.9,1.132,0.95
+Joint 4: ,0.9,0.75,0.92
+Joint 5: ,0.9,1.029,0.763
+Joint 6: ,0.0,0.503,0.518
+Trial,23,Sim Type,5,Distance Weight,0.9,Random Seed,345,Min Iterations,2500,Distance cost,0.38324943096197406,Manip Cost,0.0,Total cost,0.3449244878657767,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.198,0.23
+Total Cost,0.0,0.15955,0.34492
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,0.066,0.307
+Joint 1: ,0.4,0.476,0.867
+Joint 2: ,0.4,0.304,0.28
+Joint 3: ,0.9,1.112,0.962
+Joint 4: ,0.9,0.782,0.888
+Joint 5: ,0.9,0.966,0.736
+Joint 6: ,0.0,0.283,0.314
+Trial,24,Sim Type,5,Distance Weight,0.9,Random Seed,360,Min Iterations,2500,Distance cost,0.40546986031613963,Manip Cost,0.0,Total cost,0.3649228742845257,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,4.38874199e-11
+Distance to Last Node,0.0,0.211,0.243
+Total Cost,0.0,0.16948,0.36492
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,-0.001,0.259
+Joint 1: ,0.4,0.435,0.9
+Joint 2: ,0.4,0.393,0.361
+Joint 3: ,0.9,1.186,0.957
+Joint 4: ,0.9,0.772,0.96
+Joint 5: ,0.9,1.088,0.776
+Joint 6: ,0.0,0.361,0.566
+Trial,25,Sim Type,5,Distance Weight,0.9,Random Seed,375,Min Iterations,2500,Distance cost,0.3770864932153058,Manip Cost,0.3333333333333333,Total cost,0.37271117722710856,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.206,0.216
+Total Cost,0.0,0.16576,0.37271
+Local Manip Cost,0.0,-0.0,1.0
+Joint 0: ,-0.2,-0.003,0.19
+Joint 1: ,0.4,0.624,0.93
+Joint 2: ,0.4,0.449,0.513
+Joint 3: ,0.9,0.997,0.99
+Joint 4: ,0.9,0.865,0.976
+Joint 5: ,0.9,0.839,0.718
+Joint 6: ,0.0,0.401,0.675
+Trial,26,Sim Type,5,Distance Weight,0.9,Random Seed,390,Min Iterations,2500,Distance cost,0.39488011124451355,Manip Cost,0.0,Total cost,0.3553921001200622,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,4.436504656e-11
+Distance to Last Node,0.0,0.214,0.228
+Total Cost,0.0,0.17187,0.35539
+Local Manip Cost,0.0,-0.0,-0.0
+Joint 0: ,-0.2,-0.034,0.212
+Joint 1: ,0.4,0.485,0.906
+Joint 2: ,0.4,0.44,0.452
+Joint 3: ,0.9,1.174,1.019
+Joint 4: ,0.9,0.792,1.064
+Joint 5: ,0.9,1.051,0.691
+Joint 6: ,0.0,0.11,-0.482
+Trial,1,Sim Type,5,Distance Weight,0.9,Random Seed,15,Min Iterations,2500,Distance cost,0.3754147407214803,Manip Cost,0.09140998926763166,Total cost,0.34701426557609544,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.098,0.221,0.101
+Total Cost,0.0,0.07876,0.25636,0.34701
+Local Manip Cost,0.0,0.0,0.0,0.36563995707052666
+Joint 0: ,-0.2,-0.115,0.149,0.199
+Joint 1: ,0.4,0.472,0.713,0.925
+Joint 2: ,0.4,0.472,0.38,0.469
+Joint 3: ,0.9,0.969,1.03,0.955
+Joint 4: ,0.9,0.887,0.829,0.933
+Joint 5: ,0.9,0.947,0.936,0.822
+Joint 6: ,0.0,0.304,0.498,0.655
+Trial,2,Sim Type,5,Distance Weight,0.9,Random Seed,30,Min Iterations,2500,Distance cost,0.37940697485582164,Manip Cost,0.10395965276966863,Total cost,0.35186224264720634,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.118,0.162,0.144
+Total Cost,0.0,0.09528,0.22535,0.35186
+Local Manip Cost,0.0,0.0,0.0,0.41583861107867454
+Joint 0: ,-0.2,-0.13,0.055,0.253
+Joint 1: ,0.4,0.467,0.721,0.907
+Joint 2: ,0.4,0.437,0.442,0.363
+Joint 3: ,0.9,1.061,1.015,0.958
+Joint 4: ,0.9,0.947,0.958,1.012
+Joint 5: ,0.9,0.98,0.91,0.792
+Joint 6: ,0.0,0.11,0.644,0.487
+Trial,3,Sim Type,5,Distance Weight,0.9,Random Seed,45,Min Iterations,2500,Distance cost,0.3768718840469997,Manip Cost,0.09151043794261769,Total cost,0.3483357394365615,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,2.608818559e-11,1e-20
+Distance to Last Node,0.0,0.231,0.191
+Total Cost,0.0,0.18565,0.34834
+Local Manip Cost,0.0,0.0,0.27453131382785306
+Joint 0: ,-0.2,0.121,0.274
+Joint 1: ,0.4,0.554,0.882
+Joint 2: ,0.4,0.262,0.32
+Joint 3: ,0.9,1.087,0.996
+Joint 4: ,0.9,0.851,1.062
+Joint 5: ,0.9,0.881,0.737
+Joint 6: ,0.0,0.581,0.393
+Trial,4,Sim Type,5,Distance Weight,0.9,Random Seed,60,Min Iterations,2500,Distance cost,0.384066125437002,Manip Cost,0.0,Total cost,0.3456595128933018,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1.0,4.385060349e-11
+Distance to Last Node,0.0,0.098,0.096,0.235
+Total Cost,0.0,0.079,0.15655,0.34566
+Local Manip Cost,0.0,0.0,0.0,0.0
+Joint 0: ,-0.2,-0.066,0.068,0.264
+Joint 1: ,0.4,0.444,0.488,0.9
+Joint 2: ,0.4,0.32,0.241,0.355
+Joint 3: ,0.9,0.995,1.091,0.942
+Joint 4: ,0.9,0.837,0.774,0.923
+Joint 5: ,0.9,0.966,1.031,0.785
+Joint 6: ,0.0,-0.369,-0.738,-0.707
+Trial,5,Sim Type,5,Distance Weight,0.9,Random Seed,75,Min Iterations,2500,Distance cost,0.3763845655535627,Manip Cost,0.08997652510678593,Total cost,0.34774376150888503,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.173,0.248
+Total Cost,0.0,0.13941,0.34774
+Local Manip Cost,0.0,0.0,0.2699295753203578
+Joint 0: ,-0.2,-0.008,0.259
+Joint 1: ,0.4,0.538,0.882
+Joint 2: ,0.4,0.412,0.381
+Joint 3: ,0.9,1.032,0.991
+Joint 4: ,0.9,0.838,0.918
+Joint 5: ,0.9,0.836,0.678
+Joint 6: ,0.0,0.393,0.754
+Trial,6,Sim Type,5,Distance Weight,0.9,Random Seed,90,Min Iterations,2500,Distance cost,0.37657608548557364,Manip Cost,0.07698874776301895,Total cost,0.34661735171331814,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.1,0.239,0.082
+Total Cost,0.0,0.08049,0.27283,0.34662
+Local Manip Cost,0.0,0.0,0.0,0.3079549910520758
+Joint 0: ,-0.2,-0.114,0.181,0.251
+Joint 1: ,0.4,0.474,0.775,0.894
+Joint 2: ,0.4,0.431,0.377,0.381
+Joint 3: ,0.9,0.988,0.999,0.979
+Joint 4: ,0.9,0.861,0.932,0.969
+Joint 5: ,0.9,0.931,0.768,0.735
+Joint 6: ,0.0,-0.0,-0.393,-0.33
+Trial,7,Sim Type,5,Distance Weight,0.9,Random Seed,105,Min Iterations,2500,Distance cost,0.3764307794445171,Manip Cost,0.06737361489041455,Total cost,0.34552506298910685,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.095,0.098,0.228
+Total Cost,0.0,0.07653,0.15515,0.34553
+Local Manip Cost,0.0,0.0,0.0,0.2694944595616582
+Joint 0: ,-0.2,-0.05,0.1,0.389
+Joint 1: ,0.4,0.466,0.532,0.849
+Joint 2: ,0.4,0.312,0.223,0.114
+Joint 3: ,0.9,0.967,1.034,0.94
+Joint 4: ,0.9,0.88,0.859,0.91
+Joint 5: ,0.9,0.908,0.917,0.774
+Joint 6: ,0.0,0.346,0.693,0.974
+Trial,8,Sim Type,5,Distance Weight,0.9,Random Seed,120,Min Iterations,2500,Distance cost,0.3816664143905545,Manip Cost,0.08366618242567221,Total cost,0.35186639119406626,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.23,0.197
+Total Cost,0.0,0.18477,0.35187
+Local Manip Cost,0.0,0.0,0.25099854727701665
+Joint 0: ,-0.2,0.192,0.402
+Joint 1: ,0.4,0.518,0.846
+Joint 2: ,0.4,0.18,0.091
+Joint 3: ,0.9,1.077,0.934
+Joint 4: ,0.9,0.821,0.884
+Joint 5: ,0.9,0.952,0.772
+Joint 6: ,0.0,-0.196,-0.377
+Trial,9,Sim Type,5,Distance Weight,0.9,Random Seed,135,Min Iterations,2500,Distance cost,0.37650704176720495,Manip Cost,0.07044710187450388,Total cost,0.34590104777793484,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.121,0.11,0.19
+Total Cost,0.0,0.09701,0.18557,0.3459
+Local Manip Cost,0.0,0.0,0.0,0.28178840749801554
+Joint 0: ,-0.2,-0.049,0.127,0.306
+Joint 1: ,0.4,0.482,0.612,0.879
+Joint 2: ,0.4,0.346,0.276,0.277
+Joint 3: ,0.9,1.025,1.0,0.937
+Joint 4: ,0.9,0.981,0.913,0.892
+Joint 5: ,0.9,0.901,0.834,0.775
+Joint 6: ,0.0,0.001,-0.454,-0.55
+Trial,10,Sim Type,5,Distance Weight,0.9,Random Seed,150,Min Iterations,2500,Distance cost,0.3794144140128881,Manip Cost,0.09309699904023555,Total cost,0.35078267251562284,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,2.684158645e-11,4.412185507e-11
+Distance to Last Node,0.0,0.204,0.22
+Total Cost,0.0,0.16417,0.35078
+Local Manip Cost,0.0,0.0,0.27929099712070665
+Joint 0: ,-0.2,-0.02,0.229
+Joint 1: ,0.4,0.585,0.901
+Joint 2: ,0.4,0.365,0.413
+Joint 3: ,0.9,1.084,1.012
+Joint 4: ,0.9,0.979,1.073
+Joint 5: ,0.9,0.923,0.714
+Joint 6: ,0.0,0.565,0.534
+Trial,11,Sim Type,5,Distance Weight,0.9,Random Seed,165,Min Iterations,2500,Distance cost,0.3814569106161996,Manip Cost,0.0,Total cost,0.3433112195545796,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.179,0.247
+Total Cost,0.0,0.14425,0.34331
+Local Manip Cost,0.0,0.0,0.0
+Joint 0: ,-0.2,-0.022,0.39
+Joint 1: ,0.4,0.474,0.837
+Joint 2: ,0.4,0.409,0.1
+Joint 3: ,0.9,1.117,0.995
+Joint 4: ,0.9,0.807,1.057
+Joint 5: ,0.9,0.926,0.718
+Joint 6: ,0.0,0.456,0.723
+Trial,12,Sim Type,5,Distance Weight,0.9,Random Seed,180,Min Iterations,2500,Distance cost,0.38307255578606614,Manip Cost,0.09326045198666076,Total cost,0.35409134540612563,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.229,0.199
+Total Cost,0.0,0.18434,0.35409
+Local Manip Cost,0.0,0.0,0.27978135595998227
+Joint 0: ,-0.2,0.002,0.22
+Joint 1: ,0.4,0.592,0.931
+Joint 2: ,0.4,0.424,0.442
+Joint 3: ,0.9,1.091,0.961
+Joint 4: ,0.9,0.863,0.969
+Joint 5: ,0.9,0.973,0.78
+Joint 6: ,0.0,0.188,0.189
+Trial,13,Sim Type,5,Distance Weight,0.9,Random Seed,195,Min Iterations,2500,Distance cost,0.37705529839113605,Manip Cost,0.09236042303462977,Total cost,0.34858581085548546,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.191,0.231
+Total Cost,0.0,0.15348,0.34859
+Local Manip Cost,0.0,0.0,0.2770812691038893
+Joint 0: ,-0.2,-0.008,0.242
+Joint 1: ,0.4,0.557,0.921
+Joint 2: ,0.4,0.422,0.389
+Joint 3: ,0.9,1.043,0.94
+Joint 4: ,0.9,0.891,0.983
+Joint 5: ,0.9,0.951,0.815
+Joint 6: ,0.0,0.016,0.236
+Trial,14,Sim Type,5,Distance Weight,0.9,Random Seed,210,Min Iterations,2500,Distance cost,0.37810760952313305,Manip Cost,0.08616659349402304,Total cost,0.3489135079202221,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,2.489413894e-11,1e-20
+Distance to Last Node,0.0,0.182,0.241
+Total Cost,0.0,0.14614,0.34891
+Local Manip Cost,0.0,0.0,0.2584997804820691
+Joint 0: ,-0.2,-0.019,0.206
+Joint 1: ,0.4,0.512,0.918
+Joint 2: ,0.4,0.425,0.473
+Joint 3: ,0.9,1.087,0.997
+Joint 4: ,0.9,0.865,1.015
+Joint 5: ,0.9,0.899,0.717
+Joint 6: ,0.0,0.503,0.22
+Trial,15,Sim Type,5,Distance Weight,0.9,Random Seed,225,Min Iterations,2500,Distance cost,0.37638130270969633,Manip Cost,0.1051991919933521,Total cost,0.3492630916380619,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,4.499705769e-11
+Distance to Last Node,0.0,0.212,0.209
+Total Cost,0.0,0.17092,0.34926
+Local Manip Cost,0.0,0.0,0.31559757598005633
+Joint 0: ,-0.2,0.06,0.201
+Joint 1: ,0.4,0.64,0.932
+Joint 2: ,0.4,0.36,0.478
+Joint 3: ,0.9,0.96,0.986
+Joint 4: ,0.9,0.985,1.072
+Joint 5: ,0.9,0.854,0.715
+Joint 6: ,0.0,0.393,0.55
+Trial,16,Sim Type,5,Distance Weight,0.9,Random Seed,240,Min Iterations,2500,Distance cost,0.3766002025378623,Manip Cost,0.09146621166408068,Total cost,0.34808680345048415,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.202,0.219
+Total Cost,0.0,0.16292,0.34809
+Local Manip Cost,0.0,0.0,0.27439863499224204
+Joint 0: ,-0.2,0.007,0.232
+Joint 1: ,0.4,0.555,0.91
+Joint 2: ,0.4,0.405,0.415
+Joint 3: ,0.9,1.059,0.972
+Joint 4: ,0.9,0.797,0.98
+Joint 5: ,0.9,0.924,0.756
+Joint 6: ,0.0,-0.204,-0.252
+Trial,17,Sim Type,5,Distance Weight,0.9,Random Seed,255,Min Iterations,2500,Distance cost,0.37684327373263066,Manip Cost,0.0893747286438999,Total cost,0.3480964192237576,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.196,0.226
+Total Cost,0.0,0.1574,0.3481
+Local Manip Cost,0.0,0.0,0.26812418593169973
+Joint 0: ,-0.2,0.032,0.313
+Joint 1: ,0.4,0.538,0.863
+Joint 2: ,0.4,0.34,0.258
+Joint 3: ,0.9,1.059,0.981
+Joint 4: ,0.9,0.829,0.973
+Joint 5: ,0.9,0.93,0.725
+Joint 6: ,0.0,0.298,0.66
+Trial,18,Sim Type,5,Distance Weight,0.9,Random Seed,270,Min Iterations,2500,Distance cost,0.37805702740106617,Manip Cost,0.09317858180673783,Total cost,0.34956918284163335,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,3.829821331e-11,1e-20
+Distance to Last Node,0.0,0.191,0.232
+Total Cost,0.0,0.15356,0.34957
+Local Manip Cost,0.0,0.0,0.2795357454202135
+Joint 0: ,-0.2,0.111,0.248
+Joint 1: ,0.4,0.596,0.912
+Joint 2: ,0.4,0.237,0.384
+Joint 3: ,0.9,0.912,0.942
+Joint 4: ,0.9,0.857,0.944
+Joint 5: ,0.9,0.914,0.807
+Joint 6: ,0.0,0.471,0.157
+Trial,19,Sim Type,5,Distance Weight,0.9,Random Seed,285,Min Iterations,2500,Distance cost,0.3751962971788176,Manip Cost,0.09337656457592168,Total cost,0.347014323918528,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,2.602163785e-11,4.406103511e-11
+Distance to Last Node,0.0,0.171,0.248
+Total Cost,0.0,0.13787,0.34701
+Local Manip Cost,0.0,0.0,0.28012969372776503
+Joint 0: ,-0.2,-0.001,0.245
+Joint 1: ,0.4,0.552,0.903
+Joint 2: ,0.4,0.364,0.396
+Joint 3: ,0.9,1.008,0.957
+Joint 4: ,0.9,0.894,0.918
+Joint 5: ,0.9,0.911,0.763
+Joint 6: ,0.0,0.33,0.471
+Trial,20,Sim Type,5,Distance Weight,0.9,Random Seed,300,Min Iterations,2500,Distance cost,0.375413524082709,Manip Cost,0.0916921427700151,Total cost,0.34704138595143963,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.197,0.223
+Total Cost,0.0,0.15852,0.34704
+Local Manip Cost,0.0,0.0,0.2750764283100453
+Joint 0: ,-0.2,-0.016,0.227
+Joint 1: ,0.4,0.568,0.913
+Joint 2: ,0.4,0.463,0.446
+Joint 3: ,0.9,1.038,0.943
+Joint 4: ,0.9,0.823,0.844
+Joint 5: ,0.9,0.931,0.772
+Joint 6: ,0.0,0.0,-0.393
+Trial,21,Sim Type,5,Distance Weight,0.9,Random Seed,315,Min Iterations,2500,Distance cost,0.37898714111370313,Manip Cost,0.08419619656159127,Total cost,0.34950804665849194,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,3.99701338e-11,1e-20
+Distance to Last Node,0.0,0.043,0.227,0.154
+Total Cost,0.0,0.03479,0.21713,0.34951
+Local Manip Cost,0.0,0.0,0.0,0.3367847862463651
+Joint 0: ,-0.2,-0.168,0.095,0.284
+Joint 1: ,0.4,0.452,0.662,0.888
+Joint 2: ,0.4,0.409,0.361,0.307
+Joint 3: ,0.9,0.922,1.037,0.954
+Joint 4: ,0.9,0.898,0.887,0.958
+Joint 5: ,0.9,0.897,0.887,0.78
+Joint 6: ,0.0,-0.0,0.456,0.55
+Trial,22,Sim Type,5,Distance Weight,0.9,Random Seed,330,Min Iterations,2500,Distance cost,0.3885521742057176,Manip Cost,0.0,Total cost,0.34969695678514584,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,6.10868676e-11
+Distance to Last Node,0.0,0.189,0.246
+Total Cost,0.0,0.152,0.3497
+Local Manip Cost,0.0,0.0,0.0
+Joint 0: ,-0.2,0.052,0.29
+Joint 1: ,0.4,0.448,0.883
+Joint 2: ,0.4,0.255,0.306
+Joint 3: ,0.9,1.132,0.95
+Joint 4: ,0.9,0.75,0.92
+Joint 5: ,0.9,1.029,0.763
+Joint 6: ,0.0,0.503,0.518
+Trial,23,Sim Type,5,Distance Weight,0.9,Random Seed,345,Min Iterations,2500,Distance cost,0.38324943096197406,Manip Cost,0.0,Total cost,0.3449244878657767,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1.0,1e-20
+Distance to Last Node,0.0,0.198,0.23
+Total Cost,0.0,0.15955,0.34492
+Local Manip Cost,0.0,0.0,0.0
+Joint 0: ,-0.2,0.066,0.307
+Joint 1: ,0.4,0.476,0.867
+Joint 2: ,0.4,0.304,0.28
+Joint 3: ,0.9,1.112,0.962
+Joint 4: ,0.9,0.782,0.888
+Joint 5: ,0.9,0.966,0.736
+Joint 6: ,0.0,0.283,0.314
+Trial,24,Sim Type,5,Distance Weight,0.9,Random Seed,360,Min Iterations,2500,Distance cost,0.3774364433015208,Manip Cost,0.09497901047893985,Total cost,0.3491907000192627,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,2.652037005e-11,4.38874199e-11
+Distance to Last Node,0.0,0.194,0.228
+Total Cost,0.0,0.15622,0.34919
+Local Manip Cost,0.0,0.0,0.28493703143681953
+Joint 0: ,-0.2,0.026,0.259
+Joint 1: ,0.4,0.572,0.9
+Joint 2: ,0.4,0.329,0.361
+Joint 3: ,0.9,1.019,0.957
+Joint 4: ,0.9,0.848,0.96
+Joint 5: ,0.9,0.913,0.776
+Joint 6: ,0.0,0.361,0.566
+Trial,25,Sim Type,5,Distance Weight,0.9,Random Seed,375,Min Iterations,2500,Distance cost,0.3770864932153058,Manip Cost,0.10200004072922819,Total cost,0.34957784796669805,Object Reduction,0.02,Contact Sample Chance,0.0,Parent finding radius R,0.25,Step Size,0.1,Goal Area Sample Probability,0.1,Goal Area Delta,0.15
+Closest Taxel Manip,1.0,1e-20,1e-20
+Distance to Last Node,0.0,0.206,0.216
+Total Cost,0.0,0.16576,0.34958
+Local Manip Cost,0.0,0.0,0.3060001221876846
+Joint 0: ,-0.2,-0.003,0.19
+Joint 1: ,0.4,0.624,0.93
+Joint 2: ,0.4,0.449,0.513
+Joint 3: ,0.9,0.997,0.99
+Joint 4: ,0.9,0.865,0.976
+Joint 5: ,0.9,0.839,0.718
+Joint 6: ,0.0,0.401,0.675
