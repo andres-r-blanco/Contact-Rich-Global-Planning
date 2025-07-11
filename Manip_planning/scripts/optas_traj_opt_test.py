@@ -4,10 +4,18 @@ import sys
 import pathlib
 INIT_PATH = r"/home/rishabh/Andres"
 sys.path.insert(0, INIT_PATH + "/Manip_planning/optas/example")
+sys.path.insert(1, INIT_PATH + "/Manip_planning/mp-osc/pybullet_planning_master")
+
+
 
 
 # PyBullet
-import pybullet_api
+import pybullet_api as p
+
+from pybullet_tools.utils import add_data_path, create_box, create_cylinder, quat_from_euler, connect, dump_body, disconnect, wait_for_user, \
+    get_movable_joints, get_sample_fn, set_joint_positions, get_joint_name, LockRenderer, link_from_name, get_link_pose, \
+    multiply, Pose, Point, interpolate_poses, HideOutput, draw_pose, set_camera_pose, load_pybullet, \
+    assign_link_colors, add_line, point_from_pose, remove_handles, BLUE, INF
 
 # OpTaS
 import optas
@@ -149,6 +157,20 @@ class Planner(Manager):
 
         return Plan(self.kuka, plan)
 
+def setup_obstacles(object_reduction = 0.02):
+    obstacle_dimensions = []
+    box1_position = [0.35, -0.3, 0.13]
+    box1_dims = [0.26-object_reduction,1-object_reduction,0.14-object_reduction]
+    col_box_id1 = create_box(box1_position,box1_dims)
+    cyl_position1 = (0.35,-0.3,0.3)
+    cyl_quat1 = quat_from_euler([3.14/2, 0, 0])
+    rad1 = 0.18 - object_reduction
+    h1 = 1 - 2*object_reduction
+    col_cyl_id1 = create_cylinder(rad1, h1, cyl_position1, cyl_quat1)
+    # p.changeVisualShape(col_cyl_id1, -1, rgbaColor=[0.2,0.2,0.2,1])
+    
+    obstacles = [col_cyl_id1,col_box_id1]
+    return obstacles, obstacle_dimensions
 
 def main(gui=True):
     # Initialize planner
@@ -162,23 +184,25 @@ def main(gui=True):
     # Setup PyBullet
     hz = 50
     dt = 1.0 / float(hz)
-    pb = pybullet_api.PyBullet(dt, gui=gui)
+    pb = p.PyBullet(dt, gui=gui)
+    set_camera_pose(camera_point=[0.9, 0.2, 1], target_point = [0.35, -0.2, 0.13]) 
+    setup_obstacles()
     if planner.kuka_name == "med7":
-        kuka = pybullet_api.KukaLBR()
+        kuka = p.KukaLBR()
     else:
-        kuka = pybullet_api.KukaLWR()
+        kuka = p.KukaLWR()
     kuka.reset(plan(0.0))
     pb.start()
 
-    start_time = pybullet_api.time.time()
+    start_time = p.time.time()
 
     # Main loop
     while True:
-        t = pybullet_api.time.time() - start_time
+        t = p.time.time() - start_time
         if t > planner.Tmax:
             break
         kuka.cmd(plan(t))
-        pybullet_api.time.sleep(dt*float(gui))
+        p.time.sleep(dt*float(gui))
 
     pb.stop()
     pb.close()
@@ -188,3 +212,6 @@ def main(gui=True):
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+
