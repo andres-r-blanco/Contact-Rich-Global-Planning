@@ -154,7 +154,7 @@ def main():
         for old_closest in old_closests:
             for w in weight_val:
                 for oLD_COST in old_costs:
-                    if old_costs is True and old_closest is False:
+                    if oLD_COST is True and old_closest is False:
                         continue
                     args.js_waypoint_csv_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/cost_comparison_reach/cost_comparison_reach_weight{w}_contactsamplechance0.0_objreduction{obj}_old_cost{oLD_COST}_old_closest{old_closest}_Min Iterations2500.csv"
                     args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_cost_comparison_reach/mpc_cost_comparison_reach_weight{w}_contactsamplechance0.0_objreduction{obj}_old_cost{oLD_COST}_old_closest{old_closest}_Min Iterations2500.csv"
@@ -446,7 +446,6 @@ def mpc_robot_interactive(args, gym_instance):
                 # print("q_des:", q_des)
                 # start = time.time()
                 move_robot(robot_id, q_des)
-                input()
                 # data saving stuff
                 curr_time = time.time() - start_time
                 curr_q = current_robot_state['position']
