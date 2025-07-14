@@ -1,9 +1,11 @@
 import optas
 import numpy as np
 import sys
+import os
+
 from optas.templates import Manager
 
-INIT_PATH = r"C:\Users\arbxe\EmPRISE code\CRGP"
+INIT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.insert(0, INIT_PATH + "/Manip_planning/optas/example")
 sys.path.insert(0, INIT_PATH + "/Manip_planning/mp-osc/multipriority/scripts")
 sys.path.insert(1, INIT_PATH + "/Manip_planning/mp-osc/pybullet_planning_master")

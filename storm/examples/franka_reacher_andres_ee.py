@@ -101,7 +101,7 @@ import time
 
 LOGGER_RUNNING = False
 TACTILE_KINOVA_URDF = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/GEN3_URDF_V12_w_taxels.urdf"
-CSV_FOLDER_LOCATION = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/new_reach_over_body"
+CSV_FOLDER_LOCATION = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/cost_comparison_reach"
 CSV_FILE_NAME = "nrob_weight1_contactsamplechance0.0_objreduction0.0_Min Iterations4000"
 JS_WAYPOINT_CSV_PATH = os.path.join(CSV_FOLDER_LOCATION, CSV_FILE_NAME)
 JOINT_INDICES = [0,1,2,3,4,5,6]
@@ -114,7 +114,7 @@ DISTANCE_THRESHOLD = 0.2
 # from multipriority.bandit import PriorityLinUCB
 # from collections import deque
         
-def setup_pybullet_env(sim_type = 3):
+def setup_pybullet_env(sim_type = 5):
     if p.isConnected():
         p.disconnect()
     p.connect(p.GUI)
@@ -129,7 +129,7 @@ def setup_pybullet_env(sim_type = 3):
     plane_id = p.loadURDF("plane.urdf") 
     robot_id = p.loadURDF(TACTILE_KINOVA_URDF, [0, 0, 0],useFixedBase=1)
     
-    if sim_type == 3:
+    if sim_type == 5:
         set_camera_pose(camera_point=[0.9, 0.2, 1], target_point = [0.35, -0.2, 0.13])
         box1_position = [0.35, -0.3, 0.13]
         box1_dims = [0.26,1,0.14]
@@ -314,9 +314,9 @@ def mpc_robot_interactive(args, gym_instance):
             'time': [],
             'joint_position': [],
             'joint_norm_distance_so_far': [],
-            'manipulability': [],
-            'distance_to_taxel': [],
-            'closest_taxel_id': [],
+            'manipulabilities': [],
+            'distance_to_taxels': [],
+            'closest_taxel_ids': [],
         }
         cumulative_distance = 0.0
         previous_q = init_config
@@ -382,13 +382,13 @@ def mpc_robot_interactive(args, gym_instance):
                 curr_q = current_robot_state['position']
                 step_distance = np.linalg.norm(angle_diff(curr_q, previous_q))
                 cumulative_distance += step_distance
-                manipulability, lowest_signed_distance, closest_taxel_id = calculate_taxel_manip_and_dist(robot_id, q_des[:7], obstacles)
+                manipulabilites, lowest_signed_distances, closest_taxel_ids = calculate_taxel_manip_and_dist(robot_id, q_des[:7], obstacles)
                 log_data['time'].append(curr_time)
                 log_data['joint_position'].append(curr_q.tolist())
                 log_data['joint_norm_distance_so_far'].append(cumulative_distance)
-                log_data['manipulability'].append(manipulability)
-                log_data['distance_to_taxel'].append(lowest_signed_distance)
-                log_data['closest_taxel_id'].append(closest_taxel_id)
+                log_data['manipulabilities'].append(manipulabilites)
+                log_data['distance_to_taxels'].append(lowest_signed_distances)
+                log_data['closest_taxel_ids'].append(closest_taxel_ids)
                 previous_q = curr_q
 
                 # print(f"Pybullet robot move step took {time.time() - start:.3f} seconds")
@@ -399,7 +399,7 @@ def mpc_robot_interactive(args, gym_instance):
                 #     break
 
                 # Check if MPC has been running too long
-                max_mpc_runtime = 420  # Maximum runtime in seconds (7 minutes)
+                max_mpc_runtime = 40  # Maximum runtime in seconds
                 if curr_time > max_mpc_runtime:
                     print(f"MPC has been running for too long ({curr_time:.2f} seconds). Breaking and moving to next trial.")
                     got_stuck = True
@@ -463,16 +463,19 @@ if __name__ == '__main__':
     weight_list = [1,0.8]
     object_reduction_list = [0.0,0.02]
     min_iterations = 2000
-    trial_num = 1
+    trial_num = 25
     
-    args.sim_type = 6
+    args.sim_type = 5
     args.trial_num = trial_num
     
     if args.sim_type == 3:
         args.g_pos = [0.60, -0.42,  0.41]
         args.init_config = [-0.3,0.3,0.4,1.2,0.5,1.2,0]
         args.g_pos_state = [0.347,0.899,0.231,0.817,0.681,0.91,-1.744]
-
+    elif args.sim_type == 5:
+        args.g_pos = [0.60, -0.42,  0.41]
+        args.init_config = [-0.2,0.4,0.4,0.9,0.9,0.9,0]
+        args.g_pos_state = [0.347,0.89,0.231,0.817,0.681,0.91,-1.744]
     elif args.sim_type == 6:
         args.g_pos = [0.45, 0.25, 0.5]
         args.init_config = [0,-0.7,0,1.5,0,1.5,0]
@@ -482,7 +485,7 @@ if __name__ == '__main__':
     
     # args.g_pos_state = [-2.20135674, -1.20621985,  1.33341749,  0.60052824,  1.55639591,  1.47572172,-1.93047825]
     # args.js_waypoint_csv_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/new_reach_over_body/nrob_weight0.0_contactsamplechance0.0_objreduction0.0_Min Iterations4000.csv"
-    # args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/mpc_mink_reach_over_body/mink_mpc_no_planning_ee.csv"
+    args.output_save_file = f"/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/data/manip_data/cost_comparison_reach/cost_comparison_reach_mpc_no_planning_ee.csv"
 
     sim_params = load_yaml(join_path(get_gym_configs_path(),'physx.yml'))
     sim_params['headless'] = args.headless
