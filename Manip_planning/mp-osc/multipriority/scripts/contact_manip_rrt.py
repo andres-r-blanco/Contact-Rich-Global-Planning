@@ -98,19 +98,19 @@ RANDOM_SEED = 25
 
 VIZ = False
 def new_main():
-    data_gathering()
-    # trial_num = 1
-    # sIM_type = 5
-    # wEIGHT_FOR_DISTANCE = 0
-    # mIN_PERCENT_MANIP_INCREASE = 0
-    # min_iterations = 1000
-    # lAZY = False
-    # oLD_COST = False
-    # old_closest = False
-    # uPDATE_PATH = False
-    # seed = 30
-    # iNCREASE_WEIGHT = False
-    # test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, 0.02, 0.0, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, old_closest, uPDATE_PATH, iNCREASE_WEIGHT, seed = seed)
+    # data_gathering()
+    trial_num = 1
+    sIM_type = 5
+    wEIGHT_FOR_DISTANCE = 0
+    mIN_PERCENT_MANIP_INCREASE = 0
+    min_iterations = 1000
+    lAZY = False
+    oLD_COST = False
+    old_closest = False
+    uPDATE_PATH = False
+    seed = 30
+    iNCREASE_WEIGHT = False
+    test_main(trial_num, sIM_type, min_iterations, wEIGHT_FOR_DISTANCE, 0.02, 0.0, mIN_PERCENT_MANIP_INCREASE, lAZY, oLD_COST, old_closest, uPDATE_PATH, iNCREASE_WEIGHT, seed = seed)
 
 def data_gathering():
     

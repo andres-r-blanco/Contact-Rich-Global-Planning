@@ -3,13 +3,13 @@ import numpy as np
 import sys
 from optas.templates import Manager
 
-INIT_PATH = r"/home/rishabh/Andres"
+INIT_PATH = r"C:\Users\arbxe\EmPRISE code\CRGP"
 sys.path.insert(0, INIT_PATH + "/Manip_planning/optas/example")
 sys.path.insert(0, INIT_PATH + "/Manip_planning/mp-osc/multipriority/scripts")
 sys.path.insert(1, INIT_PATH + "/Manip_planning/mp-osc/pybullet_planning_master")
 from pybullet_api import *
 
-TACTILE_KINOVA_URDF = "/home/rishabh/Andres/Manip_planning/mp-osc/multipriority/urdfs/GEN3_URDF_V12_w_taxels.urdf"
+TACTILE_KINOVA_URDF = INIT_PATH + "/Manip_planning/mp-osc/multipriority/urdfs/GEN3_URDF_V12_w_taxels.urdf"
 
 from pybullet_tools.utils import add_data_path, create_box, create_cylinder, quat_from_euler, connect, dump_body, disconnect, wait_for_user, \
     get_movable_joints, get_sample_fn, set_joint_positions, get_joint_name, LockRenderer, link_from_name, get_link_pose, \
