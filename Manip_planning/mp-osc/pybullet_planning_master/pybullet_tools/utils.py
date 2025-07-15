@@ -2783,8 +2783,8 @@ def create_cylinder(radius, height, position, quat, mass=STATIC_MASS, color=BLUE
     collision_id, visual_id = create_shape(get_cylinder_geometry(radius, height), pose = (position, quat), color=color, **kwargs)
     return create_body(collision_id, visual_id, mass=mass)
 
-def create_capsule(radius, height, mass=STATIC_MASS, color=BLUE, **kwargs):
-    collision_id, visual_id = create_shape(get_capsule_geometry(radius, height), color=color, **kwargs)
+def create_capsule(radius, height,position, quat, mass=STATIC_MASS, color=BLUE, **kwargs):
+    collision_id, visual_id = create_shape(get_capsule_geometry(radius, height), pose = (position, quat), color=color, **kwargs)
     return create_body(collision_id, visual_id, mass=mass)
 
 def create_sphere(radius, mass=STATIC_MASS, color=BLUE, **kwargs):

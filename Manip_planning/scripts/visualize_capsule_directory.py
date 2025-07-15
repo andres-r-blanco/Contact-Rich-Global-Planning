@@ -66,6 +66,18 @@ def add_capsule_visuals(capsule_data, robot_id, link_name_to_index):
 
     return capsule_ids
 
+def dot(pos,color = [1,0,0,1],dot_radius = 0.01):
+    # Create a small visual sphere at the end-effector's position
+
+    # Create a visual shape for the dot (small sphere)
+    dot_visual_shape = p.createVisualShape(p.GEOM_SPHERE, radius=dot_radius, rgbaColor=color)
+    # Create the body for the visual shape (this places the sphere at the end-effector position)
+    p.createMultiBody(
+        baseMass=0,  # Mass of 0 means it's static and won't be affected by physics
+        baseVisualShapeIndex=dot_visual_shape,
+        basePosition=pos
+    )
+
 def update_capsules(capsule_ids, robot_id):
     for body_id, link_idx, local_pos, local_quat in capsule_ids:
         print(f"Updating capsule {body_id} for link {link_idx}")
@@ -94,6 +106,36 @@ q = [-0.2, 0.4, 0.4, 0.9, 0.9, 0.9, 0]
 for i, value in enumerate(q):
     p.resetJointState(robot_id, i, value)
 # Create and track capsules
+# Plot capsule endpoints in the correct link frames
+for link_name, capsules in capsule_data.items():
+    link_index = link_name_to_index.get(link_name)
+    if link_index is None:
+        print(f"[WARN] Link '{link_name}' not found in URDF.")
+        continue
+    if link_index == -1:
+        # Base link: world frame
+        link_world_pos, link_world_ori = [0, 0, 0], [0, 0, 0, 1]
+    else:
+        link_state = p.getLinkState(robot_id, link_index, computeForwardKinematics=True)
+        link_world_pos = link_state[4]
+        link_world_ori = link_state[5]
+    for capsule in capsules:
+        # Transform endpoints to world frame
+        p1_local = capsule['p1_local']
+        p2_local = capsule['p2_local']
+        radius = capsule['radius']
+        p1_world, _ = p.multiplyTransforms(link_world_pos, link_world_ori, p1_local, [0, 0, 0, 1])
+        p2_world, _ = p.multiplyTransforms(link_world_pos, link_world_ori, p2_local, [0, 0, 0, 1])
+        dot(p1_world, color=[0, 1, 0, 1], dot_radius=radius)
+        dot(p2_world, color=[0, 1, 0, 1], dot_radius=radius)
+        # Draw a red line between the endpoints
+        p.addUserDebugLine(p1_world, p2_world, [1, 0, 0], lineWidth=2)
+
+# Set all robot links to half transparency (alpha=0.5)
+for i in range(-1, p.getNumJoints(robot_id)):
+    p.changeVisualShape(robot_id, i, rgbaColor=[1, 1, 1, 0.5])
+input()
+
 capsule_ids = add_capsule_visuals(capsule_data, robot_id, link_name_to_index)
 update_capsules(capsule_ids, robot_id)
 # Run simulation loop
@@ -102,4 +144,6 @@ while p.isConnected():
     # update_capsules(capsule_ids, robot_id)
     p.stepSimulation()
     time.sleep(1/240)
+
+
 
