@@ -95,8 +95,11 @@ class SimpleJointSpacePlanner(Manager):
         builder.add_cost_term("minimize_acceleration", w_min_acc * optas.sumsqr(ddQ))
 
         # Constraint: link2obstacle capsule collision avoidance
-        builder.capsule_collision_avoidance_constraints(self.name, self.capsule_obstacle_names, link_collision_capsule_data, link_names=None)
+        obstacle_capsules = builder.capsule_collision_avoidance_constraints(self.name, self.capsule_obstacle_names, link_collision_capsule_data, link_names=None)
         
+        #Cost: manipulability at taxels
+        builder.add_manipulability_cost(self.name, obstacle_capsules)
+
         # Constraint: final velocity is zero
         builder.fix_configuration(self.name, t=-1, time_deriv=1)
 

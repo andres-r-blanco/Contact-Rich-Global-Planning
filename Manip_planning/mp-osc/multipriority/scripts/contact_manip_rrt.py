@@ -497,7 +497,7 @@ def calculate_manip_cost(lowest_signed_distances, manips, max_penetration = MAX_
         epsilon = 1e-10
         mu_min = 1e-10  
         close_cost_factor1 = 1.5
-        closet_cost_factor2 = 4
+        close_cost_factor2 = 4
         
         manip_costs = []
         for i, lowest_signed_distance in enumerate(lowest_signed_distances):
@@ -518,7 +518,7 @@ def calculate_manip_cost(lowest_signed_distances, manips, max_penetration = MAX_
                 # penetration_cost = 0
             else:
                 # penetration_cost = math.exp(-(2.5*lowest_signed_distance/MAX_PENETRATION))/(10)
-                closeness_cost = math.exp(-(closet_cost_factor2*(adjusted_lsd)/DISTANCE_THRESHOLD))
+                closeness_cost = math.exp(-(close_cost_factor2*(adjusted_lsd)/DISTANCE_THRESHOLD))
             
             final_manip_cost = 2*closeness_cost*scaled_manip_cost
             manip_costs.append(final_manip_cost)
