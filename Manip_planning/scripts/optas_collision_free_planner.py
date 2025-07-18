@@ -2,6 +2,7 @@ import numpy as np
 import sys
 import os
 from scipy.spatial.transform import Rotation as R
+import xml.etree.ElementTree as ET
 
 
 INIT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -28,12 +29,15 @@ from pybullet_tools.utils import add_data_path, create_box, create_cylinder, cre
     
 from contact_manip_rrt import dot
 
+MANIP_WEIGHT = 0.4
+
 class SimpleJointSpacePlanner(Manager):
-    def __init__(self, filename, ee_link, capsule_obstacle_names, duration):
+    def __init__(self, filename, ee_link, capsule_obstacle_names, taxel_info, duration):
         self.duration = duration
         self.ee_link = ee_link
         self.filename = filename
         self.capsule_obstacle_names = capsule_obstacle_names
+        self.taxel_info = taxel_info
         super().__init__()
 
     def setup_solver(self, orientation_constraint=False):
@@ -98,7 +102,7 @@ class SimpleJointSpacePlanner(Manager):
         obstacle_capsules = builder.capsule_collision_avoidance_constraints(self.name, self.capsule_obstacle_names, link_collision_capsule_data, link_names=None)
         
         #Cost: manipulability at taxels
-        builder.add_manipulability_cost(self.name, obstacle_capsules)
+        builder.add_manipulability_cost(self.name, MANIP_WEIGHT, obstacle_capsules, self.taxel_info)
 
         # Constraint: final velocity is zero
         builder.fix_configuration(self.name, t=-1, time_deriv=1)
@@ -169,7 +173,10 @@ def main(gui=True):
 
     duration = 4.0  # seconds
     _,_, capsule_obstacle_names,capsule_obstacle_dimensions = setup_obstacles()
-    planner = SimpleJointSpacePlanner(robot_urdf, "EndEffector_Link", capsule_obstacle_names, duration)
+    taxel_info = parse_urdf_for_taxels(robot_urdf, taxel_prefix="Taxel_")
+    print(taxel_info)
+    input()
+    planner = SimpleJointSpacePlanner(robot_urdf, "EndEffector_Link", capsule_obstacle_names, taxel_info, duration)
     
     #setup collision constraint parameters
     params = {}
@@ -223,6 +230,44 @@ def main(gui=True):
 
     return 0
 
+def parse_urdf_for_taxels(urdf_path, taxel_prefix="Taxel_"):
+    """
+    Parses a URDF file and returns a list of (taxel_name, parent_link, local_position) tuples.
+    Taxel position is taken from the <visual><origin xyz=...> of the link.
+    Assumes taxels are links with names starting with 'Taxel_' and are attached via a fixed joint.
+    """
+    tree = ET.parse(urdf_path)
+    root = tree.getroot()
+    taxel_info = []
+
+    # Build a mapping from taxel link name to parent link via joint
+    taxel_parent_map = {}
+    for joint in root.findall("joint"):
+        child = joint.find("child")
+        parent = joint.find("parent")
+        if child is not None and parent is not None:
+            taxel_name = child.attrib["link"]
+            if taxel_name.startswith(taxel_prefix):
+                parent_link = parent.attrib["link"]
+                taxel_parent_map[taxel_name] = parent_link
+
+    # Now get the position from the link's visual/origin
+    for link in root.findall("link"):
+        link_name = link.attrib["name"]
+        if link_name.startswith(taxel_prefix):
+            visual = link.find("visual")
+            if visual is not None:
+                origin_elem = visual.find("origin")
+                if origin_elem is not None:
+                    xyz = origin_elem.attrib.get("xyz", "0 0 0")
+                    local_pos = np.array([float(x) for x in xyz.split()])
+                else:
+                    local_pos = np.zeros(3)
+            else:
+                local_pos = np.zeros(3)
+            parent_link = taxel_parent_map.get(link_name, None)
+            taxel_info.append((link_name, parent_link, local_pos))
+    return taxel_info
 
 if __name__ == "__main__":
     main()
