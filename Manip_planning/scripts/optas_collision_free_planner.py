@@ -135,7 +135,7 @@ class SimpleJointSpacePlanner(Manager):
         plan = self.solver.interpolate(solution[f"{self.name}/q"], self.duration)
         return plan
 
-def setup_obstacles(object_reduction = 0.05):
+def setup_obstacles(object_reduction = 0.0):
     obstacle_dimensions = []
     box1_position = [0.35, -0.3, 0.13]
     box1_dims = [0.26-object_reduction,1-object_reduction,0.14-object_reduction]
@@ -169,13 +169,12 @@ def main(gui=True):
     # q0 = np.deg2rad([60, 45, 0, -90, 0, -45, 0])
     # q0 = np.array([-0.2,0.4,0.4,0.9,0.9,0.9,0])
     q0 = np.array([1.6,0.7,0,1.5,0,1.5,0])
+    # q0 = np.array([1.8,1.3,-1.4,0.7,-0.5,0.8,0]) # flat on other side
     robot.reset(q0)
 
     duration = 4.0  # seconds
-    _,_, capsule_obstacle_names,capsule_obstacle_dimensions = setup_obstacles()
+    _,_, capsule_obstacle_names,capsule_obstacle_dimensions = setup_obstacles(object_reduction=0.0)
     taxel_info = parse_urdf_for_taxels(robot_urdf, taxel_prefix="Taxel_")
-    print(taxel_info)
-    input()
     planner = SimpleJointSpacePlanner(robot_urdf, "EndEffector_Link", capsule_obstacle_names, taxel_info, duration)
     
     #setup collision constraint parameters
@@ -191,6 +190,9 @@ def main(gui=True):
         params[obstacle_name + "_position1"] = obs_dims[0]
         params[obstacle_name + "_position2"] = obs_dims[1]
         params[obstacle_name + "_radii"] =  obs_dims[2]
+    for taxel_info_tuple in taxel_info:
+        taxel_name, parent_link_name, local_pos = taxel_info_tuple
+        params[taxel_name + "_local_position"] = local_pos
     
 
     qc = robot.q()
@@ -255,6 +257,7 @@ def parse_urdf_for_taxels(urdf_path, taxel_prefix="Taxel_"):
     for link in root.findall("link"):
         link_name = link.attrib["name"]
         if link_name.startswith(taxel_prefix):
+            taxel_name = link_name
             visual = link.find("visual")
             if visual is not None:
                 origin_elem = visual.find("origin")
@@ -265,8 +268,8 @@ def parse_urdf_for_taxels(urdf_path, taxel_prefix="Taxel_"):
                     local_pos = np.zeros(3)
             else:
                 local_pos = np.zeros(3)
-            parent_link = taxel_parent_map.get(link_name, None)
-            taxel_info.append((link_name, parent_link, local_pos))
+            parent_link_name = taxel_parent_map.get(taxel_name, None)
+            taxel_info.append((taxel_name, parent_link_name, local_pos))
     return taxel_info
 
 if __name__ == "__main__":
